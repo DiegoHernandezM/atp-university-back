@@ -9,6 +9,8 @@ export default withMT({
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/js/**/*.jsx',
+        './src/**/*.{js,ts,jsx,tsx}',
+        './index.html'
     ],
 
     theme: {
