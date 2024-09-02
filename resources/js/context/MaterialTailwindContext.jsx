@@ -43,8 +43,6 @@ function reducer(state, action) {
         return { ...state, openConfigurator: action.value };
     case "SET_FIXED_NAVBAR":
       return { ...state, fixedNavbar: action.payload };
-      case "OPEN_CONFIGURATOR":
-    return { ...state, openConfigurator: action.value };
     default:
       return state;
   }

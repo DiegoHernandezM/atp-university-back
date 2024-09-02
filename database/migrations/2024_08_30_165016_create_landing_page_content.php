@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('landing_page_content', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('section1_video');
-            $table->string('section1_video_description');
-            $table->json('section2_counts');
-            $table->json('section3_image');
-            $table->json('section3_vision');
-            $table->json('section3_mission');
-            $table->json('section4_services');
-            $table->json('section5_simulators');
+            $table->string('section1_video')->nullable();
+            $table->text('section1_video_description')->nullable();
+            $table->json('section2_counts')->default('{}')->nullable();
+            $table->string('section3_image')->nullable();
+            $table->text('section3_vision')->nullable();
+            $table->text('section3_mission')->nullable();
+            $table->json('section4_services')->nullable();
+            $table->json('section5_simulators')->nullable();
             $table->timestamps();
         });
     }

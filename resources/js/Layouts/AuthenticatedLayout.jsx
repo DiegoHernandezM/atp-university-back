@@ -21,7 +21,7 @@ export default function Authenticated({ user, header, children }) {
           pages: [
               { icon: <Bars3Icon className="h-5 w-5" />, name: 'Dahsboard', path: route('dashboard') },
               { icon: <UserCircleIcon className="h-5 w-5" />, name: 'Perfil', path: route('profile.edit') },
-              { icon: <Cog6ToothIcon className="h-5 w-5" />, name: 'Landing', path: '/aqui-poner-ruta' },
+              { icon: <Cog6ToothIcon className="h-5 w-5" />, name: 'Landing', path: route('landing.edit') },
           ],
       },
       {
