@@ -60,11 +60,11 @@ export function DashboardNavbar() {
               color="blue-gray"
               className="font-normal"
             >
-              {page || 'Default Page'}
+              {page || ''}
             </Typography>
           </Breadcrumbs>
           <Typography variant="h6" color="blue-gray">
-            {page || 'Default Page'}
+            {page || ''}
           </Typography>
         </div>
         <div className="flex items-center">

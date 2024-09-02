@@ -15,12 +15,12 @@ export function MaterialTailwindProvider({ children }) {
     </MaterialTailwindContext.Provider>
   );
 }
-
+const storageSidenavType = localStorage.getItem('setSidenavType');
 const initialState = {
   fixedNavbar: false,
   openSidenav: false,
-  sidenavColor: "dark",
-  sidenavType: "white",
+  sidenavColor: "white",
+  sidenavType: storageSidenavType || "white",
   transparentNavbar: true,
   openConfigurator: false,
 };
@@ -43,6 +43,8 @@ function reducer(state, action) {
         return { ...state, openConfigurator: action.value };
     case "SET_FIXED_NAVBAR":
       return { ...state, fixedNavbar: action.payload };
+      case "OPEN_CONFIGURATOR":
+    return { ...state, openConfigurator: action.value };
     default:
       return state;
   }
@@ -53,11 +55,13 @@ export function setOpenSidenav(dispatch, value) {
 }
 
 export function setOpenConfigurator(dispatch, value) {
-  dispatch({ type: "SET_FIXED_NAVBAR", payload: value });
+    dispatch({ type: "OPEN_CONFIGURATOR", value });
 }
 
 
 export function setSidenavType(dispatch, value) {
+  console.log("selecciono: "+value);
+  localStorage.setItem('setSidenavType', value);
   dispatch({ type: "SIDENAV_TYPE", value });
 }
 
