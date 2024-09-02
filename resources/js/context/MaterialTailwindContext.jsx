@@ -63,6 +63,7 @@ export function setSidenavType(dispatch, value) {
   console.log("selecciono: "+value);
   localStorage.setItem('setSidenavType', value);
   dispatch({ type: "SIDENAV_TYPE", value });
+  location.reload();
 }
 
 export function setSidenavColor(dispatch, value) {
