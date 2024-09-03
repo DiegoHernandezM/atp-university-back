@@ -16,12 +16,12 @@ return new class extends Migration
             $table->string('title');
             $table->string('section1_video')->nullable();
             $table->text('section1_video_description')->nullable();
-            $table->json('section2_counts')->default('{}')->nullable();
+            $table->json('section2_counts')->default('[{ "title": "", "quantity": "", "image": null }]')->nullable();
             $table->string('section3_image')->nullable();
             $table->text('section3_vision')->nullable();
             $table->text('section3_mission')->nullable();
-            $table->json('section4_services')->nullable();
-            $table->json('section5_simulators')->nullable();
+            $table->json('section4_services')->default('[{ "title": "", "link": "", "image": null }]')->nullable();
+            $table->json('section5_simulators')->default('[{ "title": "", "description": "", "file": null }]')->nullable();
             $table->timestamps();
         });
     }

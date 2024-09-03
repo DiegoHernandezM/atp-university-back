@@ -1,6 +1,27 @@
 import { Avatar, Button, Carousel, IconButton, Typography } from '@material-tailwind/react';
-import React, { useState } from 'react';
+import { motion, useInView } from "framer-motion";
+import React, { useRef } from 'react';
 
+
+const containerVariants = {
+    hidden: { opacity: 1 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.4,
+        },
+    },
+};
+
+const countVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0 },
+};
+
+const serviceVariants = {
+    hidden: { opacity: 0, scale: 0.5 },
+    visible: { opacity: 1, scale: 1 },
+};
 
 const NavBar = ({ title, fixed }) => {
     return (
@@ -25,47 +46,69 @@ const NavBar = ({ title, fixed }) => {
 };
 
 export default function LandingPage({ landingData, fixedNav = true }) {
-    const section1_video_extension = landingData.section1_video.split('.').pop().toLowerCase();
+    const section1_video_extension = landingData.section1_video?.split('.').pop().toLowerCase();
+    const ref = useRef;
+    const isInView = useInView(ref);
     return (
         <div className="landing-page">
             {/* Sección de video con descripción */}
             <NavBar title={landingData?.title} fixed={fixedNav} />
             <section id="video" className="video-section bg-gradient-to-r from-blue-500 to-purple-600 text-white py-20">
-                <div className="container mx-auto px-4 text-center">
+                <motion.div initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 2 }} className="container mx-auto px-4 text-center">
                     <div className="mb-6">
-                        {['mp4', 'webm', 'ogg', 'mov'].includes(section1_video_extension) ? (<video className="w-full max-w-2xl mx-auto rounded-lg shadow-lg" controls>
+                        {['mp4', 'webm', 'ogg', 'mov'].includes(section1_video_extension) ? (<video className="w-full max-w-2xl mx-auto rounded-lg shadow-lg" autoPlay loop>
                             <source src={`/images/${landingData.section1_video}`} type="video/mp4" />
                             Tu navegador no soporta el elemento de video.
                         </video>) : (
-                            <img src={`/images/${landingData.section1_video}`} alt="Media content" className="w-full" />
+                            <img src={`/images/${landingData.section1_video}`} alt="" className="w-full" />
                         )}
-
                     </div>
                     <p className="text-xl">{landingData?.section1_video_description}</p>
-                </div>
+                </motion.div>
             </section>
 
             {/* Sección de estadísticas numéricas */}
             <section id="statistics" className="statistics-section py-20 bg-gray-100">
                 <div className="container mx-auto px-4 text-center">
                     <h2 className="text-3xl font-bold mb-12">Estadísticas</h2>
-                    <div className="flex flex-wrap justify-center">
-                        {JSON.parse(landingData?.section2_counts).map((count, index) => (
-                            <div key={`count-div-${index}`} className="w-full md:w-1/4 px-4 mb-8">
-                                <div className="bg-white p-6 rounded-lg shadow-md">
-                                    <h3 className="text-5xl font-bold text-blue-500 mb-4">{count.quantity}</h3>
-                                    <p className="text-gray-600">{count.title}</p>
+                    <motion.div
+                        variants={containerVariants}
+                        initial="hidden"
+                        whileInView="visible"
+                        // viewport={{ once: true }}
+                        transition={{ duration: 1.5 }}
+                        className="flex flex-wrap justify-center mb-16">
+                        {landingData.section2_counts ? JSON.parse(landingData.section2_counts).map((count, index) => (
+                            <motion.div variants={countVariants} key={`count-div-${index}`} className="w-full md:w-1/4 px-4 ml-6 mb-8 relative h-full w-full">
+                                <img
+                                    src={`/images/${count.image}`}
+                                    alt=""
+                                    className="h-full w-full object-cover"
+                                    width={'100%'}
+                                    height={'100%'}
+                                />
+                                <div className="absolute inset-0 grid h-full w-full items-center">
+                                    <div className="p-12 rounded-lg shadow-md bg-black/55 ">
+                                        <h3 className="text-5xl font-bold text-white mb-4">{count.quantity}</h3>
+                                        <h3 className="text-xl font-bold text-white">{count.title}</h3>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+
+                            </motion.div>
+                        )) : null}
+                    </motion.div>
                 </div>
             </section>
 
             {/* Sección de misión y visión */}
             <section id="mission-vision" className="mission-vision-section py-20">
                 <div className="container mx-auto px-4 text-center">
-                    <div className="relative w-full max-w-2xl mx-auto overflow-hidden">
+                    <motion.div initial={{ opacity: 0, y: 100 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1.5 }}
+                        className="relative w-full max-w-2xl mx-auto overflow-hidden">
                         <Carousel loop={true} className="rounded-xl" prevArrow={({ handlePrev }) => (
                             <IconButton
                                 variant="text"
@@ -169,7 +212,7 @@ export default function LandingPage({ landingData, fixedNav = true }) {
 
                         </Carousel>
 
-                    </div>
+                    </motion.div>
                 </div>
 
             </section>
@@ -178,16 +221,20 @@ export default function LandingPage({ landingData, fixedNav = true }) {
             <section id="services" className="services-section py-20 bg-gray-100">
                 <div className="container mx-auto px-4 text-center">
                     <h2 className="text-3xl font-bold mb-12">Servicios ofrecidos</h2>
-                    <div className="flex flex-wrap -mx-4">
-                        {JSON.parse(landingData?.section4_services).map((service, index) => (
-                            <div key={`service-div-${index}`} className="w-full md:w-1/4 px-4 mb-8">
+                    <motion.div variants={containerVariants}
+                        initial="hidden"
+                        whileInView="visible"
+                        // viewport={{ once: true }}
+                        transition={{ duration: 2.5 }} className="flex flex-wrap -mx-4">
+                        {landingData.section4_services ? JSON.parse(landingData.section4_services).map((service, index) => (
+                            <motion.div variants={serviceVariants} key={`service-div-${index}`} className="w-full md:w-1/3 px-4 mb-8">
                                 <div className="bg-white p-6 rounded-lg shadow-md">
-                                    <Avatar src="https://docs.material-tailwind.com/img/face-2.jpg" alt="avatar" size="xxl" />
+                                    <a href={service.link} target="_blank"><Avatar src={`/images/${service.image}`} alt="avatar" size="xxl" /></a>
                                     <h3 className="text-xl font-semibold mb-4">{service.title}</h3>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            </motion.div>
+                        )) : null}
+                    </motion.div>
                 </div>
             </section>
             {/* Sección de slider de imágenes */}
@@ -196,46 +243,67 @@ export default function LandingPage({ landingData, fixedNav = true }) {
                 <div className="container mx-auto px-4 text-center">
                     <h2 className="text-3xl font-bold mb-12">Simuladores</h2>
                     <div className="max-w-2xl mx-auto overflow-hidden">
-                        {JSON.parse(landingData.section5_simulators).length > 0 ? (<Carousel loop={true} className="rounded-xl">
-                            {JSON.parse(landingData?.section5_simulators).map((simulator, index) => (
-                                <img src={simulator.file} key={`file-${index}`} alt={`Simulador ${index}`} className="h-full w-full object-cover" />
-                            ))}
-                        </Carousel>) : null}
+                        {landingData.section5_simulators && JSON.parse(landingData.section5_simulators).length > 0 ? (
+                            <Carousel loop={true} className="rounded-xl">
+                                {JSON.parse(landingData?.section5_simulators).map((simulator, index) => {
+                                    const extension = simulator.file.split('.').pop().toLowerCase();
+                                    return (
+                                        <figure className="relative h-96 w-full">
+                                            {['mp4', 'webm', 'ogg', 'mov'].includes(extension) ? (<video className="w-full max-w-2xl mx-auto rounded-lg shadow-lg" autoPlay loop>
+                                                <source src={`/images/${simulator.file}`} type="video/mp4" />
+                                                Tu navegador no soporta el elemento de video.
+                                            </video>) : (
+                                                <img src={`/images/${simulator.file}`} alt="" key={`file-${index}`} className="h-full w-full object-cover" />
+                                            )}
+                                            <figcaption className="absolute bottom-8 left-2/4 flex w-[calc(100%-4rem)] -translate-x-2/4 justify-between rounded-xl border border-white bg-white/75 py-4 px-6 shadow-lg shadow-black/5 saturate-200 backdrop-blur-sm">
+                                                <div>
+                                                    <Typography variant="h5" color="blue-gray">
+                                                        {simulator.title}
+                                                    </Typography>
+                                                    <Typography color="gray" className="mt-2 font-normal">
+                                                        {simulator.description}
+                                                    </Typography>
+                                                </div>
+                                            </figcaption>
+                                        </figure>
+                                    )
+                                })}
+                            </Carousel>) : null}
 
                     </div>
                 </div>
-            </section>
+            </section >
 
 
             {/* Sección de opiniones de clientes */}
-            <section id="testimonials" className="testimonials-carousel py-20">
+            < section id="testimonials" className="testimonials-carousel py-20" >
                 <div className="container mx-auto px-4 text-center">
-                    <h2 className="text-3xl font-bold mb-12">Opiniones de Nuestros Clientes</h2>
+                    <h2 className="text-3xl font-bold mb-12">Opiniones de Nuestros Estudiantes</h2>
                     <div className="flex overflow-x-auto space-x-4">
                         <div className="flex-none w-full md:w-1/3 p-4">
                             <div className="bg-white p-6 rounded-lg shadow-md">
-                                <p className="text-gray-600 italic">"Excelente servicio y atención al cliente. ¡Lo recomiendo!"</p>
-                                <h4 className="text-xl font-semibold mt-4">- Cliente 1</h4>
+                                <p className="text-gray-600 italic">"Excelente servicio y atención. ¡Lo recomiendo ampliamente!"</p>
+                                <h4 className="text-xl font-semibold mt-4">- Estudiante 1</h4>
                             </div>
                         </div>
                         <div className="flex-none w-full md:w-1/3 p-4">
                             <div className="bg-white p-6 rounded-lg shadow-md">
-                                <p className="text-gray-600 italic">"Un producto que realmente ha hecho la diferencia en nuestro negocio."</p>
-                                <h4 className="text-xl font-semibold mt-4">- Cliente 2</h4>
+                                <p className="text-gray-600 italic">"Los cursos que realmente han hecho la diferencia."</p>
+                                <h4 className="text-xl font-semibold mt-4">- Estudiante 2</h4>
                             </div>
                         </div>
                         <div className="flex-none w-full md:w-1/3 p-4">
                             <div className="bg-white p-6 rounded-lg shadow-md">
-                                <p className="text-gray-600 italic">"Una experiencia increíble, ¡sin duda volveré a trabajar con ellos!"</p>
-                                <h4 className="text-xl font-semibold mt-4">- Cliente 3</h4>
+                                <p className="text-gray-600 italic">"Una experiencia increíble, ¡sin duda me volveré piloto!"</p>
+                                <h4 className="text-xl font-semibold mt-4">- Estudiante 3</h4>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* Sección de contacto */}
-            <section id="contact" className="contact-section py-20 bg-blue-500 text-white">
+            < section id="contact" className="contact-section py-20 bg-blue-500 text-white" >
                 <div className="container mx-auto px-4 text-center">
                     <h2 className="text-3xl font-bold mb-6">¿Quieres más información de nuestros servicios?</h2>
                     <p className="text-xl mb-6">Contáctanos completando el formulario y te responderemos pronto.</p>
@@ -255,8 +323,8 @@ export default function LandingPage({ landingData, fixedNav = true }) {
                         <button type="submit" className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">Enviar</button>
                     </form>
                 </div>
-            </section>
-        </div>
+            </section >
+        </div >
     );
 };
 

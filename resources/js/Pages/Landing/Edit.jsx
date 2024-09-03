@@ -6,7 +6,6 @@ import React, { useState } from 'react';
 import LandingPage from '../LandingPage';
 
 export default function Edit({ auth, landingData }) {
-    console.log(landingData);
     const { data, setData, post, progress } = useForm({
         title: landingData?.title || '',
         section1_video: null,
@@ -27,10 +26,14 @@ export default function Edit({ auth, landingData }) {
         }
     };
 
-    const handleCountChange = (index, field, value) => {
+    const handleCountChange = (index, field, value, event = null) => {
         const updatedCounts = [...data.section2_counts];
         updatedCounts[index][field] = value;
         setData('section2_counts', updatedCounts);
+
+        if (event && event.target.type === 'file') {
+            submit();
+        }
     };
 
     const addCount = () => {
@@ -42,10 +45,14 @@ export default function Edit({ auth, landingData }) {
         setData('section2_counts', updatedCounts);
     };
 
-    const handleServiceChange = (index, field, value) => {
+    const handleServiceChange = (index, field, value, event = null) => {
         const updatedServices = [...data.section4_services];
         updatedServices[index][field] = value;
         setData('section4_services', updatedServices);
+
+        if (event && event.target.type === 'file') {
+            submit();
+        }
     };
 
     const addService = () => {
@@ -57,14 +64,17 @@ export default function Edit({ auth, landingData }) {
         setData('section4_services', updatedServices);
     };
 
-    const handleSimulatorChange = (index, field, value) => {
+    const handleSimulatorChange = (index, field, value, event = null) => {
         const updatedSimulators = [...data.section5_simulators];
         updatedSimulators[index][field] = value;
         setData('section5_simulators', updatedSimulators);
+        if (event && event.target.type === 'file') {
+            submit();
+        }
     };
 
     const addSimulator = () => {
-        setData('section5_simulators', [...data.section5_simulators, { title: '', quantity: '', image: null }]);
+        setData('section5_simulators', [...data.section5_simulators, { title: '', description: '', file: null }]);
     };
 
     const removeSimulator = (index) => {
@@ -72,15 +82,23 @@ export default function Edit({ auth, landingData }) {
         setData('section5_simulators', updatedSimulators);
     };
 
-    function submit(e) {
-        e.preventDefault()
+    function submit(e = null) {
+        if (e) {
+            e.preventDefault();
+        }
+        const formData = new FormData();
+        for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+                if (key === 'section2_counts' || key === 'section4_services' || key === 'section5_simulators') {
+                    formData.append(key, JSON.stringify(data[key]));
+                } else {
+                    formData.append(key, data[key]);
+                }
+            }
+        }
+
         post('/landing', {
-            data: {
-                ...data,
-                section2_counts: JSON.stringify(data.section2_counts),
-                section4_services: JSON.stringify(data.section4_services),
-                section5_simulators: JSON.stringify(data.section5_simulators)
-            },
+            data: formData,
             preserveScroll: true,
             onFinish: () => {
                 console.log('Formulario enviado con éxito');
@@ -195,9 +213,9 @@ export default function Edit({ auth, landingData }) {
                                             </Button>
                                             <input
                                                 type="file"
-                                                name="image"
+                                                name={`image-${index}`}
                                                 id={`image-${index}`}
-                                                onChange={(e) => handleCountChange(index, 'image', e.target.value)}
+                                                onChange={(e) => handleCountChange(index, 'image', e.target.files[0], e)}
                                                 className="hidden"
                                                 accept="image/*"
                                             />
@@ -334,9 +352,9 @@ export default function Edit({ auth, landingData }) {
                                             </Button>
                                             <input
                                                 type="file"
-                                                name="image"
-                                                id={`image-${index}`}
-                                                onChange={(e) => handleServiceChange(index, 'image', e.target.value)}
+                                                name={`s_image-${index}`}
+                                                id={`s_image-${index}`}
+                                                onChange={(e) => handleServiceChange(index, 'image', e.target.files[0], e)}
                                                 className="hidden"
                                                 accept="image/*"
                                             />
@@ -365,7 +383,7 @@ export default function Edit({ auth, landingData }) {
                                                 id={`link-${index}`}
                                                 value={service.link ?? ''}
                                                 onBlur={submit}
-                                                onChange={(e) => handleCountChange(index, 'link', e.target.value)}
+                                                onChange={(e) => handleServiceChange(index, 'link', e.target.value)}
                                                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                             />
                                         </div>
@@ -391,7 +409,7 @@ export default function Edit({ auth, landingData }) {
                                             <Typography variant="h6" color="blue-gray" className="mb-1">
                                                 Video, Imagen o GIF del Simulador
                                             </Typography>
-                                            <Button size="sm" variant="gradient" className="rounded-full flex items-center gap-3" onClick={() => document.getElementById(`si_image-${index}`).click()}>
+                                            <Button size="sm" variant="gradient" className="rounded-full flex items-center gap-3" onClick={() => document.getElementById(`file-${index}`).click()}>
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     fill="none"
@@ -410,9 +428,9 @@ export default function Edit({ auth, landingData }) {
                                             </Button>
                                             <input
                                                 type="file"
-                                                name="file"
+                                                name={`file-${index}`}
                                                 id={`file-${index}`}
-                                                onChange={(e) => handleSimulatorChange(index, e)}
+                                                onChange={(e) => handleSimulatorChange(index, 'file', e.target.files[0], e)}
                                                 className="hidden"
                                                 accept="image/*,video/*"
                                             />
@@ -425,7 +443,7 @@ export default function Edit({ auth, landingData }) {
                                                 id={`title-${index}`}
                                                 value={simulator.title ?? ''}
                                                 onBlur={submit}
-                                                onChange={(e) => handleSimulatorChange(index, e)}
+                                                onChange={(e) => handleSimulatorChange(index, 'title', e.target.value)}
                                                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                             />
                                         </div>
@@ -437,7 +455,7 @@ export default function Edit({ auth, landingData }) {
                                                 id={`description-${index}`}
                                                 value={simulator.description ?? ''}
                                                 onBlur={submit}
-                                                onChange={(e) => handleSimulatorChange(index, e)}
+                                                onChange={(e) => handleSimulatorChange(index, 'description', e.target.value)}
                                                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                             />
                                         </div>
