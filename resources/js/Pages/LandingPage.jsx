@@ -1,6 +1,6 @@
-import { Avatar, Button, Carousel, IconButton, Typography } from '@material-tailwind/react';
-import { motion, useInView } from "framer-motion";
-import React, { useRef } from 'react';
+import { Avatar, Carousel, IconButton, Typography } from '@material-tailwind/react';
+import { motion } from "framer-motion";
+import React from 'react';
 
 
 const containerVariants = {
@@ -33,10 +33,10 @@ const NavBar = ({ title, fixed }) => {
                 {fixed ? (<div className="hidden md:flex space-x-8">
                     <a href="#video" className="text-gray-700 hover:text-blue-500">Inicio</a>
                     <a href="#statistics" className="text-gray-700 hover:text-blue-500">Estadísticas</a>
-                    <a href="#mission-vision" className="text-gray-700 hover:text-blue-500">Misión y Visión</a>
+                    <a href="#mission-vision" className="text-gray-700 hover:text-blue-500">Nosotros</a>
                     <a href="#services" className="text-gray-700 hover:text-blue-500">Servicios</a>
-                    <a href="#gallery" className="text-gray-700 hover:text-blue-500">Galería</a>
-                    <a href="#testimonials" className="text-gray-700 hover:text-blue-500">Opiniones</a>
+                    <a href="#gallery" className="text-gray-700 hover:text-blue-500">Simuladores</a>
+                    <a href="#testimonials" className="text-gray-700 hover:text-blue-500">Testimonios</a>
                     <a href="#contact" className="text-gray-700 hover:text-blue-500">Contacto</a>
                 </div>) : null}
 
@@ -47,8 +47,6 @@ const NavBar = ({ title, fixed }) => {
 
 export default function LandingPage({ landingData, fixedNav = true }) {
     const section1_video_extension = landingData.section1_video?.split('.').pop().toLowerCase();
-    const ref = useRef;
-    const isInView = useInView(ref);
     return (
         <div className="landing-page">
             {/* Sección de video con descripción */}
@@ -105,6 +103,7 @@ export default function LandingPage({ landingData, fixedNav = true }) {
             {/* Sección de misión y visión */}
             <section id="mission-vision" className="mission-vision-section py-20">
                 <div className="container mx-auto px-4 text-center">
+                    <h2 className="text-3xl font-bold mb-12">Nosotros</h2>
                     <motion.div initial={{ opacity: 0, y: 100 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1.5 }}
@@ -246,27 +245,32 @@ export default function LandingPage({ landingData, fixedNav = true }) {
                         {landingData.section5_simulators && JSON.parse(landingData.section5_simulators).length > 0 ? (
                             <Carousel loop={true} className="rounded-xl">
                                 {JSON.parse(landingData?.section5_simulators).map((simulator, index) => {
-                                    const extension = simulator.file.split('.').pop().toLowerCase();
-                                    return (
-                                        <figure className="relative h-96 w-full">
-                                            {['mp4', 'webm', 'ogg', 'mov'].includes(extension) ? (<video className="w-full max-w-2xl mx-auto rounded-lg shadow-lg" autoPlay loop>
-                                                <source src={`/images/${simulator.file}`} type="video/mp4" />
-                                                Tu navegador no soporta el elemento de video.
-                                            </video>) : (
-                                                <img src={`/images/${simulator.file}`} alt="" key={`file-${index}`} className="h-full w-full object-cover" />
-                                            )}
-                                            <figcaption className="absolute bottom-8 left-2/4 flex w-[calc(100%-4rem)] -translate-x-2/4 justify-between rounded-xl border border-white bg-white/75 py-4 px-6 shadow-lg shadow-black/5 saturate-200 backdrop-blur-sm">
-                                                <div>
-                                                    <Typography variant="h5" color="blue-gray">
-                                                        {simulator.title}
-                                                    </Typography>
-                                                    <Typography color="gray" className="mt-2 font-normal">
-                                                        {simulator.description}
-                                                    </Typography>
-                                                </div>
-                                            </figcaption>
-                                        </figure>
-                                    )
+                                    if (simulator.file) {
+                                        const extension = simulator.file.split('.').pop().toLowerCase();
+                                        return (
+                                            <figure className="relative h-96 w-full">
+                                                {['mp4', 'webm', 'ogg', 'mov'].includes(extension) ? (<video className="w-full max-w-2xl mx-auto rounded-lg shadow-lg" autoPlay loop>
+                                                    <source src={`/images/${simulator.file}`} type="video/mp4" />
+                                                    Tu navegador no soporta el elemento de video.
+                                                </video>) : (
+                                                    <img src={`/images/${simulator.file}`} alt="" key={`file-${index}`} className="h-full w-full object-cover" />
+                                                )}
+                                                <figcaption className="absolute bottom-8 left-2/4 flex w-[calc(100%-4rem)] -translate-x-2/4 justify-between rounded-xl border border-white bg-white/75 py-4 px-6 shadow-lg shadow-black/5 saturate-200 backdrop-blur-sm">
+                                                    <div>
+                                                        <Typography variant="h5" color="blue-gray">
+                                                            {simulator.title}
+                                                        </Typography>
+                                                        <Typography color="gray" className="mt-2 font-normal">
+                                                            {simulator.description}
+                                                        </Typography>
+                                                    </div>
+                                                </figcaption>
+                                            </figure>
+                                        )
+                                    } else {
+                                        return null
+                                    }
+
                                 })}
                             </Carousel>) : null}
 
@@ -278,7 +282,7 @@ export default function LandingPage({ landingData, fixedNav = true }) {
             {/* Sección de opiniones de clientes */}
             < section id="testimonials" className="testimonials-carousel py-20" >
                 <div className="container mx-auto px-4 text-center">
-                    <h2 className="text-3xl font-bold mb-12">Opiniones de Nuestros Estudiantes</h2>
+                    <h2 className="text-3xl font-bold mb-12">Testimonios de Nuestros Estudiantes</h2>
                     <div className="flex overflow-x-auto space-x-4">
                         <div className="flex-none w-full md:w-1/3 p-4">
                             <div className="bg-white p-6 rounded-lg shadow-md">
