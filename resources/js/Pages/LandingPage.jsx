@@ -57,10 +57,10 @@ export default function LandingPage({ landingData, fixedNav = true }) {
                     transition={{ duration: 2 }} className="container mx-auto px-4 text-center">
                     <div className="mb-6">
                         {['mp4', 'webm', 'ogg', 'mov'].includes(section1_video_extension) ? (<video className="w-full max-w-2xl mx-auto rounded-lg shadow-lg" autoPlay loop>
-                            <source src={`/images/${landingData.section1_video}`} type="video/mp4" />
+                            <source src={`/storage/images/${landingData.section1_video}`} type="video/mp4" />
                             Tu navegador no soporta el elemento de video.
                         </video>) : (
-                            <img src={`/images/${landingData.section1_video}`} alt="" className="w-full" />
+                            <img src={`/storage/images/${landingData.section1_video}`} alt="" className="w-full" />
                         )}
                     </div>
                     <p className="text-xl">{landingData?.section1_video_description}</p>
@@ -81,7 +81,7 @@ export default function LandingPage({ landingData, fixedNav = true }) {
                         {landingData.section2_counts ? JSON.parse(landingData.section2_counts).map((count, index) => (
                             <motion.div variants={countVariants} key={`count-div-${index}`} className="w-full md:w-1/4 px-4 ml-6 mb-8 relative h-full w-full">
                                 <img
-                                    src={`/images/${count.image}`}
+                                    src={`/storage/images/${count.image}`}
                                     alt=""
                                     className="h-full w-full object-cover"
                                     width={'100%'}
@@ -228,7 +228,7 @@ export default function LandingPage({ landingData, fixedNav = true }) {
                         {landingData.section4_services ? JSON.parse(landingData.section4_services).map((service, index) => (
                             <motion.div variants={serviceVariants} key={`service-div-${index}`} className="w-full md:w-1/3 px-4 mb-8">
                                 <div className="bg-white p-6 rounded-lg shadow-md">
-                                    <a href={service.link} target="_blank"><Avatar src={`/images/${service.image}`} alt="avatar" size="xxl" /></a>
+                                    <a href={service.link} target="_blank"><Avatar src={`/storage/images/${service.image}`} alt="avatar" size="xxl" /></a>
                                     <h3 className="text-xl font-semibold mb-4">{service.title}</h3>
                                 </div>
                             </motion.div>
@@ -250,10 +250,10 @@ export default function LandingPage({ landingData, fixedNav = true }) {
                                         return (
                                             <figure className="relative h-96 w-full">
                                                 {['mp4', 'webm', 'ogg', 'mov'].includes(extension) ? (<video className="w-full max-w-2xl mx-auto rounded-lg shadow-lg" autoPlay loop>
-                                                    <source src={`/images/${simulator.file}`} type="video/mp4" />
+                                                    <source src={`/storage/images/${simulator.file}`} type="video/mp4" />
                                                     Tu navegador no soporta el elemento de video.
                                                 </video>) : (
-                                                    <img src={`/images/${simulator.file}`} alt="" key={`file-${index}`} className="h-full w-full object-cover" />
+                                                    <img src={`/storage/images/${simulator.file}`} alt="" key={`file-${index}`} className="h-full w-full object-cover" />
                                                 )}
                                                 <figcaption className="absolute bottom-8 left-2/4 flex w-[calc(100%-4rem)] -translate-x-2/4 justify-between rounded-xl border border-white bg-white/75 py-4 px-6 shadow-lg shadow-black/5 saturate-200 backdrop-blur-sm">
                                                     <div>
