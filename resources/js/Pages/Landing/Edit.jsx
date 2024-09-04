@@ -186,7 +186,7 @@ export default function Edit({ auth, landingData }) {
 
                             <div className="p-4 sm:p-6 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                                 <Typography variant="h4" color="blue-gray" className="mb-1">
-                                    Sección 2: Contadores
+                                    Sección 2: Estadísticas
                                 </Typography>
                                 {data.section2_counts.map((count, index) => (
                                     <div key={index} className="border border-gray-800 p-6 rounded-md mb-4 space-y-2">
