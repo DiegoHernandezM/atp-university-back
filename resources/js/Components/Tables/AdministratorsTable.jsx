@@ -32,7 +32,10 @@ const AdministratorsTable = ({ users }) => {
 
   const handleOpenDrawer = () => setOpenDrawer(true);
 
-  const handleCloseDrawer = () => setOpenDrawer(false);
+  const handleCloseDrawer = () => {
+    setCurrentUser(null);
+    setOpenDrawer(false)
+  };
 
   const handleFormSuccess = (message) => {
     setSuccessMessage(message);

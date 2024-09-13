@@ -31,20 +31,18 @@ export function DashboardNavbar() {
   return (
     <Navbar
       color={fixedNavbar ? "white" : "transparent"}
-      className={`rounded-xl transition-all ${
-        fixedNavbar
+      className={`rounded-xl transition-all ${fixedNavbar
           ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5"
           : "px-0 py-1"
-      }`}
+        }`}
       fullWidth
       blurred={fixedNavbar}
     >
       <div className="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-center">
         <div className="capitalize">
           <Breadcrumbs
-            className={`bg-transparent p-0 transition-all ${
-              fixedNavbar ? "mt-1" : ""
-            }`}
+            className={`bg-transparent p-0 transition-all ${fixedNavbar ? "mt-1" : ""
+              }`}
           >
             <Link href={`/${layout}`}>
               <Typography
@@ -76,8 +74,13 @@ export function DashboardNavbar() {
           >
             <Bars3Icon strokeWidth={3} className="h-6 w-6 text-blue-gray-500" />
           </IconButton>
-          <Link href="/logout">
+          <form method="POST" action="/logout">
+            {/* Agrega el token CSRF para proteger la solicitud POST */}
+            <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]').getAttribute('content')} />
+
+            {/* Botón visible en pantallas grandes */}
             <Button
+              type="submit"  // Hacemos que este botón envíe el formulario
               variant="text"
               color="blue-gray"
               className="hidden items-center gap-1 px-4 xl:flex normal-case"
@@ -85,14 +88,17 @@ export function DashboardNavbar() {
               <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
               Salir
             </Button>
+
+            {/* Botón visible en pantallas pequeñas */}
             <IconButton
+              type="submit"  // Hacemos que este botón también envíe el formulario
               variant="text"
               color="blue-gray"
               className="grid xl:hidden"
             >
               <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
             </IconButton>
-          </Link>
+          </form>
           <Menu>
             <MenuHandler>
               <IconButton variant="text" color="blue-gray">

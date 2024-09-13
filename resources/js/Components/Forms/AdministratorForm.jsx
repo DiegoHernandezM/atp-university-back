@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Drawer, Button, Input } from "@material-tailwind/react";
+import { Drawer, Button, Input, IconButton } from "@material-tailwind/react";
 import { useForm } from '@inertiajs/react'; // Importa useForm desde Inertia
 import InputError from '@/Components/InputError';
 
@@ -61,10 +61,28 @@ const AdministratorsForm = ({ open, onClose, onSuccess, currentUser }) => {
   return (
     <React.Fragment>
       <Drawer placement="right" open={open} onClose={onClose} className="p-4" size={500}>
-        <div className="p-4">
+        <div className="flex items-center justify-between px-4 pb-2">
           <h3 className="text-lg font-bold">
             {isEditing ? "Editar Administrador" : "Agregar Nuevo Administrador"}
           </h3>
+          <IconButton variant="text" color="blue-gray" onClick={onClose}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="h-5 w-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </IconButton>
+        </div>
+        <div className="p-4">
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <Input

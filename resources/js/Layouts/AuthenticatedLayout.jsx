@@ -7,30 +7,58 @@ import { MaterialTailwindProvider } from '@/context/MaterialTailwindContext';
 import {
   UserCircleIcon,
   Cog6ToothIcon,
-  BellIcon,
+  ArrowLeftEndOnRectangleIcon,
   UserGroupIcon,
   Bars3Icon,
 } from '@heroicons/react/24/solid';
 
 export default function Authenticated({ user, header, children }) {
   const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+  const handleLogout = async (e) => {
+    e.preventDefault(); // Evita el comportamiento por defecto del enlace
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Obtener el token CSRF
+
+    try {
+      const response = await fetch(route('logout'), {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': csrfToken,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        window.location.href = '/'; // Redirigir después de hacer logout
+      } else {
+        console.error('Error al cerrar sesión');
+      }
+    } catch (error) {
+      console.error('Hubo un problema con la solicitud', error);
+    }
+  }
   const routes = [
     {
       layout: 'dashboard',
-      title: 'Main',
+      title: 'Principal',
       pages: [
-        { icon: <Bars3Icon className="h-5 w-5" />, name: 'Dahsboard', path: route('dashboard') },
-        { icon: <UserGroupIcon className="h-5 w-5" />, name: 'Administradores', path: route('administrators.get') },
-        { icon: <UserCircleIcon className="h-5 w-5" />, name: 'Perfil', path: route('profile.edit') },
-        { icon: <Cog6ToothIcon className="h-5 w-5" />, name: 'Landing', path: route('landing.edit') },
+        { icon: <Bars3Icon className="h-5 w-5" />, name: 'Dahsboard', path: route('dashboard'), isFunction: false, },
+        { icon: <UserGroupIcon className="h-5 w-5" />, name: 'Administradores', path: route('administrators.get'), isFunction: false },
+        { icon: <UserCircleIcon className="h-5 w-5" />, name: 'Perfil', path: route('profile.edit'), isFunction: false },
+        { icon: <Cog6ToothIcon className="h-5 w-5" />, name: 'Landing', path: route('landing.edit'), isFunction: false },
       ],
     },
     {
       layout: 'dashboard',
-      title: 'Auth Pages',
+      title: 'Accesos',
       pages: [
-        { icon: <UserCircleIcon className="h-5 w-5" />, name: 'Sign In', path: '/sign-in' },
-        { icon: <UserCircleIcon className="h-5 w-5" />, name: 'Sign Up', path: '/sign-up' },
+        {
+          icon: <ArrowLeftEndOnRectangleIcon className="h-5 w-5" />,
+          name: 'Salir',
+          path: route('logout'),
+          isFunction: true,
+          handleClick: handleLogout
+        },
       ],
     },
     // Puedes agregar más secciones aquí
