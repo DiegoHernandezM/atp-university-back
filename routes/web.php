@@ -18,14 +18,11 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Routes
+    require base_path('routes/profile/profile.php');
+    require base_path('routes/landing/landing.php');
+    require base_path('routes/administrators/administrators.php');
 });
 
-Route::middleware('auth')->group(function () {
-    Route::get('/landing', [LandingPageController::class, 'edit'])->name('landing.edit');
-    Route::post('/landing', [LandingPageController::class, 'store'])->name('landing.store');
-});
 
 require __DIR__ . '/auth.php';
