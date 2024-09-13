@@ -1,40 +1,70 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Drawer, Button, Input } from "@material-tailwind/react";
 import { useForm } from '@inertiajs/react'; // Importa useForm desde Inertia
 import InputError from '@/Components/InputError';
 
-
-const AdministratorsForm = ({ open, onClose, onSuccess }) => {
-  const { data, setData, post, reset, errors } = useForm({
+const AdministratorsForm = ({ open, onClose, onSuccess, currentUser }) => {
+  const isEditing = !!currentUser;
+  const { data, setData, post, reset, errors, put } = useForm({
     name: '',
     email: '',
     password: '',
   });
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (isEditing) {
+      setData({
+        name: currentUser.name,
+        email: currentUser.email,
+        password: '',
+      });
+    } else {
+      reset();
+    }
+  }, [currentUser, isEditing]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
 
-    post(route('administrators.store'), {
-      onSuccess: () => {
-        setLoading(false);
-        reset();
-        onSuccess("Administrador creado correctamente.");
-        onClose();
-      },
-      onError: (errors) => {
-        console.error(errors);
-        setLoading(false);
-      }
-    });
+    if (isEditing) {
+      // Si estamos editando, hacemos un PUT o PATCH
+      put(route('administrators.update', currentUser.id), {
+        ...data,
+        onSuccess: () => {
+          setLoading(false);
+          onSuccess("Administrador actualizado correctamente.");
+          onClose();
+        },
+        onError: (errors) => {
+          console.error(errors);
+          setLoading(false);
+        }
+      });
+    } else {
+      post(route('administrators.store'), {
+        onSuccess: () => {
+          setLoading(false);
+          reset();
+          onSuccess("Administrador creado correctamente.");
+          onClose();
+        },
+        onError: (errors) => {
+          console.error(errors);
+          setLoading(false);
+        }
+      });
+    }
   };
 
   return (
     <React.Fragment>
       <Drawer placement="right" open={open} onClose={onClose} className="p-4" size={500}>
         <div className="p-4">
-          <h3 className="text-lg font-bold">Agregar Nuevo Administrador</h3>
+          <h3 className="text-lg font-bold">
+            {isEditing ? "Editar Administrador" : "Agregar Nuevo Administrador"}
+          </h3>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <Input
@@ -88,7 +118,7 @@ const AdministratorsForm = ({ open, onClose, onSuccess }) => {
               {errors.password && <InputError message={errors.password} className="mt-2" />} {/* Muestra error si existe */}
             </div>
             <Button type="submit" color="blue-gray" fullWidth disabled={loading}>
-              {loading ? "Enviando..." : "Crear Administrador"}
+              {loading ? "Enviando..." : isEditing ? "Actualizar Administrador" : "Crear Administrador"}
             </Button>
           </form>
         </div>

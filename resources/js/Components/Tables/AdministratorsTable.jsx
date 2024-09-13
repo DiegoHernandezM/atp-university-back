@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Input, Alert, IconButton, Tooltip, Typography, Card, CardBody, CardHeader, CardFooter } from '@material-tailwind/react';
-import { MagnifyingGlassIcon, PencilIcon, PlusIcon } from '@heroicons/react/24/solid';
+import { MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
 
 import AdministratorsForm from '../Forms/AdministratorForm';
 
@@ -11,8 +11,8 @@ const AdministratorsTable = ({ users }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(5);
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(null);  // Estado para el mensaje de éxito
-
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   // Filtrar usuarios por búsqueda
   useEffect(() => {
@@ -31,11 +31,19 @@ const AdministratorsTable = ({ users }) => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleOpenDrawer = () => setOpenDrawer(true);
+
   const handleCloseDrawer = () => setOpenDrawer(false);
+
   const handleFormSuccess = (message) => {
     setSuccessMessage(message);
     setTimeout(() => setSuccessMessage(null), 3000);
   };
+
+  const handleEditClick = (user) => {
+    setCurrentUser(user);
+    setOpenDrawer(true);
+  };
+
   return (
     <>
       {successMessage && <Alert color="green">{successMessage}</Alert>}
@@ -84,11 +92,26 @@ const AdministratorsTable = ({ users }) => {
                   </td>
                   <td className="p-4">{user.email}</td>
                   <td className="p-4">
-                    <Tooltip content="Edit User">
-                      <IconButton variant="text">
-                        <PencilIcon className="h-4 w-4" />
-                      </IconButton>
-                    </Tooltip>
+                    <div className="flex items-center space-x-2">
+                      <Tooltip content="Editar">
+                        <IconButton variant="text" onClick={() => handleEditClick(user)}>
+                          <PencilIcon className="h-4 w-4" />
+                        </IconButton>
+                      </Tooltip>
+                      <form method="POST" action={route('administrators.destroy', user.id)} onSubmit={(e) => {
+                        if (!window.confirm(`¿Estás seguro que deseas eliminar a ${user.name}?`)) {
+                          e.preventDefault();
+                        }
+                      }}>
+                        <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]').getAttribute('content')} />
+                        <input type="hidden" name="_method" value="DELETE" />
+                        <Tooltip content="Eliminar">
+                          <IconButton type="submit" variant="text" color="red">
+                            <TrashIcon className="h-4 w-4" />
+                          </IconButton>
+                        </Tooltip>
+                      </form>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -100,7 +123,7 @@ const AdministratorsTable = ({ users }) => {
           <Button variant="outlined" size="sm" onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(filteredUsers.length / usersPerPage)}>Siguiente</Button>
         </CardFooter>
       </Card>
-      <AdministratorsForm open={openDrawer} onClose={handleCloseDrawer} onSuccess={handleFormSuccess} />
+      <AdministratorsForm open={openDrawer} onClose={handleCloseDrawer} onSuccess={handleFormSuccess} currentUser={currentUser} />
     </>
 
   );

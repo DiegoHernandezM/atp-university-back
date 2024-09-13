@@ -7,6 +7,7 @@ use App\Services\AdministratorService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 use function Termwind\render;
 
@@ -34,7 +35,6 @@ class AdministratorsController extends Controller
         try {
             $validated = $request->validated();
             $service->createAdministrator($validated);
-            session()->flash('success', 'Administrador creado correctamente.');
             return redirect()->route('administrators.get');
         } catch(\Exception $e) {
             return redirect()->route('administrators.get')->withErrors(['error' => 'Hubo un problema al crear el administrador. Inténtalo de nuevo.']);
@@ -46,16 +46,23 @@ class AdministratorsController extends Controller
     {
         try {
             $validated = $request->validated();
-            /*
             if ($request->filled('password')) {
                 $validated['password'] = Hash::make($validated['password']);
             } else {
                 unset($validated['password']);
             }
-            $repository->updateUser($user, $validated);
+            $service->updateAdministrator($user, $validated);
+            return redirect()->route('administrators.get');
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
 
-            return redirect()->route('users.list')->with('success', 'Administrador actualizado correctamente.');
-            */
+    public function  destroy(User $user, AdministratorService $service)
+    {
+        try {
+            $service->delete($user);
+            return redirect()->route('administrators.get');
         } catch (\Exception $e) {
             return $e->getMessage();
         }
