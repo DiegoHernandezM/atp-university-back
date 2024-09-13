@@ -15,7 +15,7 @@ class AdministratorService
 
     public function getAdministrators()
     {
-        return $this->mUser->all();
+        return $this->mUser->orWhereDoesntHave('student')->get();
     }
 
     public function createAdministrator($data)
