@@ -25,5 +25,8 @@ Route::middleware('auth')->group(function () {
     require base_path('routes/student/student.php');
 });
 
+// public
+require base_path('routes/public/public.php');
+
 
 require __DIR__ . '/auth.php';
