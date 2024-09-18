@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
     require base_path('routes/landing/landing.php');
     require base_path('routes/administrators/administrators.php');
     require base_path('routes/student/student.php');
+    require base_path('routes/contacts/contacts.php');
 });
 
 // public
