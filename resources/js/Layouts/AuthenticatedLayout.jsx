@@ -6,10 +6,12 @@ import Configurator from '@/Components/Layouts/Configurator';
 import { MaterialTailwindProvider } from '@/context/MaterialTailwindContext';
 import {
   UserCircleIcon,
+  UsersIcon,
   Cog6ToothIcon,
   ArrowLeftEndOnRectangleIcon,
   UserGroupIcon,
   Bars3Icon,
+  IdentificationIcon
 } from '@heroicons/react/24/solid';
 
 export default function Authenticated({ user, header, children }) {
@@ -44,8 +46,10 @@ export default function Authenticated({ user, header, children }) {
       pages: [
         { icon: <Bars3Icon className="h-5 w-5" />, name: 'Dahsboard', path: route('dashboard'), isFunction: false, },
         { icon: <UserGroupIcon className="h-5 w-5" />, name: 'Administradores', path: route('administrators.get'), isFunction: false },
+        { icon: <UsersIcon className="h-5 w-5" />, name: 'Estudiantes', path: route('students.index'), isFunction: false },
         { icon: <UserCircleIcon className="h-5 w-5" />, name: 'Perfil', path: route('profile.edit'), isFunction: false },
         { icon: <Cog6ToothIcon className="h-5 w-5" />, name: 'Landing', path: route('landing.edit'), isFunction: false },
+        { icon: <IdentificationIcon className="h-5 w-5" />, name: 'Contactos', path: route('contacts.get'), isFunction: false },
       ],
     },
     {

@@ -58,7 +58,7 @@ class AdministratorsController extends Controller
         }
     }
 
-    public function  destroy(User $user, AdministratorService $service)
+    public function destroy(User $user, AdministratorService $service)
     {
         try {
             $service->delete($user);
