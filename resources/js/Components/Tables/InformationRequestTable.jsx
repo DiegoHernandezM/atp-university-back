@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Input, Alert, IconButton, Tooltip, Typography, Card, CardBody, CardHeader, CardFooter } from '@material-tailwind/react';
 import { MagnifyingGlassIcon, EyeIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
+import ContactDialog from '../Dialogs/ContactsDialog';
 
 
 const AdministratorRequestTable = ({ informationRequests }) => {
@@ -139,6 +140,7 @@ const AdministratorRequestTable = ({ informationRequests }) => {
           <Button variant="outlined" size="sm" onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(filteredPersons.length / personsPerPage)}>Siguiente</Button>
         </CardFooter>
       </Card>
+      <ContactDialog open={openDrawer} onClose={handleCloseDrawer} currentPerson={currentPerson} />
     </>
 
   );

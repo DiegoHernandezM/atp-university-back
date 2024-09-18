@@ -4,12 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ContactFormRequest;
 use App\Models\ContactForm;
-use App\Models\LandingPageContent;
 use App\Services\ContactFormService;
 use Inertia\Inertia;
 use Stevebauman\Location\Facades\Location;
-
-use function Pest\Laravel\call;
 
 class ContactFormController extends Controller
 {
