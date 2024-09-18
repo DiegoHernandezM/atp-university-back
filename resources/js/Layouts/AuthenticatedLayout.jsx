@@ -11,6 +11,7 @@ import {
   ArrowLeftEndOnRectangleIcon,
   UserGroupIcon,
   Bars3Icon,
+  IdentificationIcon
 } from '@heroicons/react/24/solid';
 
 export default function Authenticated({ user, header, children }) {
@@ -48,6 +49,7 @@ export default function Authenticated({ user, header, children }) {
         { icon: <UsersIcon className="h-5 w-5" />, name: 'Estudiantes', path: route('students.index'), isFunction: false },
         { icon: <UserCircleIcon className="h-5 w-5" />, name: 'Perfil', path: route('profile.edit'), isFunction: false },
         { icon: <Cog6ToothIcon className="h-5 w-5" />, name: 'Landing', path: route('landing.edit'), isFunction: false },
+        { icon: <IdentificationIcon className="h-5 w-5" />, name: 'Contactos', path: route('contacts.get'), isFunction: false },
       ],
     },
     {
