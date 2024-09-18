@@ -4,22 +4,7 @@ import { Carousel, IconButton, Typography } from '@material-tailwind/react';
 
 export default function MisionVision({ landingData }) {
   return (
-    <section id="mission-vision" className="mission-vision-section py-20 relative bg-gray-100">
-      {/* Líneas amarillas que comienzan del lado superior izquierdo */}
-      <div className="absolute inset-0">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1440 320"
-          className="absolute top-0 left-0 w-full h-full"
-          preserveAspectRatio="none"
-        >
-          {/* Líneas ajustadas para comenzar desde la esquina superior izquierda */}
-          <path fill="none" stroke="#FFD700" strokeWidth="2" d="M0 0C200 100 400 200 600 250C800 300 1000 320 1200 300C1400 280 1500 180 1440 120L1440 320Z" />
-          <path fill="none" stroke="#FFD700" strokeWidth="2" d="M0 50C200 150 400 250 600 300C800 350 1000 370 1200 350C1400 330 1500 230 1440 170L1440 320Z" />
-          <path fill="none" stroke="#FFD700" strokeWidth="2" d="M0 100C200 200 400 300 600 350C800 400 1000 420 1200 400C1400 380 1500 280 1440 220L1440 320Z" />
-          <path fill="none" stroke="#FFD700" strokeWidth="2" d="M0 150C200 250 400 350 600 400C800 450 1000 470 1200 450C1400 430 1500 330 1440 270L1440 320Z" />
-        </svg>
-      </div>
+    <section id="mission-vision" className="statistics-section py-20 bg-transparent relative overflow-hidden">
 
       <div className="container mx-auto px-4 text-center">
         <motion.div
