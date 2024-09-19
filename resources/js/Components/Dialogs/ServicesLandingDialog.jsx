@@ -71,7 +71,7 @@ export default function ServicesLandingDialog({ open, onClose, selectedService }
               className="bg-transparent w-24 h-24 rounded-full border-2 border-gray-400 flex items-center justify-center text-center text-blue-800 hover:text-white hover:bg-blue-400 transition-colors"
             >
               <img
-                src="/storage/images/wp.png" // Asegúrate de tener el ícono de WhatsApp
+                src="/storage/wp.png" // Asegúrate de tener el ícono de WhatsApp
                 alt="WhatsApp"
                 className="w-full h-full object-contain rounded-full"
               />
@@ -80,10 +80,8 @@ export default function ServicesLandingDialog({ open, onClose, selectedService }
           </div>
         </div>
 
-        <Dialog open={openSecondaryDialog} size="md" handler={handleOpenSecondaryDialog} className="bg-gradient-to-b from-gray-100 to-white">
-
-            <CoursesLandingTable />
-
+        <Dialog open={openSecondaryDialog} size="sm" handler={handleOpenSecondaryDialog} className="bg-gradient-to-b from-gray-100 to-white">
+          <CoursesLandingTable />
         </Dialog>
       </DialogBody>
 
