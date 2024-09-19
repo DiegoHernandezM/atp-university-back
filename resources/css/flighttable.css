@@ -1,7 +1,7 @@
 /* FlightTable.css */
 @font-face {
     font-family: 'DS Digital';
-    src: url('/fonts/ds-digital.ttf') format('truetype');
+    src: url('/public/fonts/ds-digital.ttf') format('truetype');
   }
 
   .flight-table {
