@@ -1,7 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
+import ServicesLandingDialog from "../Dialogs/ServicesLandingDialog";
 
 export default function Services({ landingData, containerVariants }) {
+  const [open, setOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
+
+  const handleOpen = (service) => {
+    setSelectedService(service);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedService(null);
+  };
+
   const serviceVariants = {
     hidden: { opacity: 0, scale: 0.5 },
     visible: { opacity: 1, scale: 1 },
@@ -21,27 +35,27 @@ export default function Services({ landingData, containerVariants }) {
         >
           {landingData.section4_services ? JSON.parse(landingData.section4_services).map((service, index) => (
             <motion.div
-              variants={serviceVariants}
               key={`service-div-${index}`}
-              className="w-full flex justify-center items-center"
+              variants={serviceVariants}
+              className="w-full flex justify-center items-center cursor-pointer"
+              onClick={() => handleOpen(service)}
             >
               {/* Contenedor de imagen circular */}
               <div className="flex flex-col items-center">
-                <a href={service.link} target="_blank" rel="noopener noreferrer">
-                  <div className="w-32 h-32 rounded-full bg-gray-400 mb-4 flex justify-center items-center">
-                    <img
-                      src={`/storage/images/${service.image}`}
-                      alt={service.title}
-                      className="w-full h-full rounded-full object-cover"
-                    />
-                  </div>
-                </a>
+                <div className="w-32 h-32 rounded-full bg-gray-400 mb-4 flex justify-center items-center shadow-xl shadow-gray-500/50">
+                  <img
+                    src={`/storage/images/${service.image}`}
+                    alt={service.title}
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                </div>
                 {/* Texto debajo de la imagen */}
                 <h3 className="text-xl font-semibold">{service.title}</h3>
               </div>
             </motion.div>
           )) : null}
         </motion.div>
+        <ServicesLandingDialog open={open} onClose={handleClose} selectedService={selectedService} />
       </div>
     </section>
   );
