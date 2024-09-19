@@ -25,7 +25,7 @@ export default function NavBar({ title, fixed }) {
           <a href="#statistics" className="text-gray-700 hover:text-blue-500">Estadísticas</a>
           <a href="#mission-vision" className="text-gray-700 hover:text-blue-500">Nosotros</a>
           <a href="#services" className="text-gray-700 hover:text-blue-500">Servicios</a>
-          <a href="#gallery" className="text-gray-700 hover:text-blue-500">Simuladores</a>
+          <a href="#simulators" className="text-gray-700 hover:text-blue-500">Simuladores</a>
           <a href="#testimonials" className="text-gray-700 hover:text-blue-500">Testimonios</a>
           <a href="#contact" className="text-gray-700 hover:text-blue-500">Contacto</a>
         </div>
