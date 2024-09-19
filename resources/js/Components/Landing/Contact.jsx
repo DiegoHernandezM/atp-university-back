@@ -31,7 +31,7 @@ export default function Contact() {
     });
   };
   return (
-    <section id="contact" className="contact-section py-20 bg-blue-500 text-white">
+    <section id="contact" className="contact-section py-20 text-white bg-gradient-to-b from-[#2196F3] to-[#FAFAFA]">
       <div className="container mx-auto px-4 text-center">
         <h2 className="text-3xl font-bold mb-6">¿Quieres más información de nuestros servicios?</h2>
         <p className="text-xl mb-6">Contáctanos completando el formulario y te responderemos pronto.</p>

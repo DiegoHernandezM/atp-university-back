@@ -3,7 +3,7 @@ import { Carousel, Typography } from '@material-tailwind/react';
 
 export default function Simulators({ landingData }) {
   return (
-    <section id="simulators" className="py-20 relative overflow-hidden bg-gradient-to-b from-[#8C8C8C] to-[#E0E0E0]">
+    <section id="simulators" className="py-20 relative overflow-hidden bg-gradient-to-b from-[#8C8C8C] to-[#EEEEEE]">
 
       {/* Título centrado */}
       <div className="container mx-auto px-4 text-center">
@@ -73,6 +73,11 @@ export default function Simulators({ landingData }) {
             <line x1="350" y1="70" x2="400" y2="100" stroke="#FFD700" strokeWidth="2" />
             <line x1="400" y1="100" x2="1440" y2="100" stroke="#FFD700" strokeWidth="2" />
             <circle cx="1440" cy="100" r="5" stroke="#FFD700" strokeWidth="2" fill="none" />
+
+            {/* Segunda línea */}
+            <circle cx="10" cy="90" r="5" stroke="#FFD700" strokeWidth="2" fill="none" />
+            <line x1="15" y1="90" x2="1440" y2="90" stroke="#FFD700" strokeWidth="2" />
+            <circle cx="1440" cy="50" r="5" stroke="#FFD700" strokeWidth="2" fill="none" />
           </svg>
         </div>
 

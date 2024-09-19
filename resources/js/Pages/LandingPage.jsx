@@ -31,7 +31,7 @@ export default function LandingPage({ landingData, fixedNav = true }) {
       <NavBar title={landingData?.title} fixed={fixedNav} />
       <PrincipalVideo landingData={landingData} />
       <Metricts landingData={landingData} containerVariants={containerVariants} countVariants={countVariants} />
-      <div className="relative mission-vision-section py-20 relative bg-gradient-to-b from-[#E0E0E0] to-[#8C8C8C]">
+      <div className="relative mission-vision-section py-20 relative bg-gradient-to-b from-[#EEEEEE] to-[#8C8C8C]">
         {/* SVG de las líneas, con z-index bajo */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <svg
