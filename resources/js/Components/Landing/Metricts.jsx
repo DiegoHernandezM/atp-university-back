@@ -4,7 +4,7 @@ import CountUp from 'react-countup';
 
 export default function Metricts({ landingData, containerVariants, countVariants }) {
   return (
-    <section id="statistics" className="services-section py-20 bg-gray-100">
+    <section id="statistics" className="services-section py-20 bg-gradient-to-b from-[#8C8C8C] to-[#E0E0E0]">
       <div className="container mx-auto px-4 text-center">
         <h2 className="text-4xl font-bold mb-12">NUESTRAS ESTADÍSTICAS</h2>
         <motion.div

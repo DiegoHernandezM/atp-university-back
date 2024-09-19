@@ -3,7 +3,7 @@ import { Carousel, Typography } from '@material-tailwind/react';
 
 export default function Simulators({ landingData }) {
   return (
-    <section id="simulators" className="py-20 relative bg-gray-100 overflow-hidden">
+    <section id="simulators" className="py-20 relative overflow-hidden bg-gradient-to-b from-[#8C8C8C] to-[#E0E0E0]">
 
       {/* Título centrado */}
       <div className="container mx-auto px-4 text-center">
