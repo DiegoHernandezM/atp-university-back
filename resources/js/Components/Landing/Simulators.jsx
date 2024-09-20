@@ -12,7 +12,11 @@ export default function Simulators({ landingData }) {
 
         {/* Carousel de simuladores */}
         {landingData.section5_simulators && JSON.parse(landingData.section5_simulators).length > 0 ? (
-          <Carousel loop={true} className="rounded-xl">
+          <Carousel
+            autoplay={true}
+            loop={true}
+            className="rounded-xl relative"
+          >
             {JSON.parse(landingData?.section5_simulators).map((simulator, index) => {
               if (simulator.file) {
                 const extension = simulator.file.split('.').pop().toLowerCase();
