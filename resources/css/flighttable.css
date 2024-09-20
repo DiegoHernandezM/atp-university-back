@@ -43,3 +43,10 @@
   td.delayed {
     color: orange;
   }
+
+  @media (max-width: 768px) {
+    .flight-table th, .flight-table td {
+      font-size: 1rem; /* Ajusta este valor para hacer el texto más pequeño en dispositivos móviles */
+      padding: 10px; /* Opcional: Reduce el padding para que se vea mejor en móviles */
+    }
+  }
