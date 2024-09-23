@@ -33,7 +33,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="py-20 bg-gradient-to-b from-[#2196F3] to-[#2196F3] text-white">
+    <section id="contact" className="py-20 bg-gradient-to-b from-[#203764] to-[#203764] text-white">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold mb-6">¿Quieres más información de nuestros servicios?</h2>
         <p className="text-md mb-8">Contáctanos completando el formulario y te responderemos pronto.</p>
@@ -102,6 +102,9 @@ export default function Contact() {
           {/* Información de contacto (4 columnas en dispositivos grandes) */}
           <div className="col-span-12 md:col-span-4 text-white">
             <div className="bg-white p-8 rounded-lg shadow-lg text-gray-700">
+              <div className="mb-6">
+                <img src={`/storage/images/logo.png`} alt="Logo" className="mx-auto h-20 w-25" /> {/* Ajusta el tamaño del logo según sea necesario */}
+              </div>
               <h3 className="text-xl font-bold mb-4">Información de contacto</h3>
               <ul className="space-y-4">
                 <li>

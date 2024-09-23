@@ -31,7 +31,7 @@ export default function LandingPage({ landingData, fixedNav = true }) {
       <NavBar title={landingData?.title} fixed={fixedNav} />
       <PrincipalVideo landingData={landingData} />
       <Metricts landingData={landingData} containerVariants={containerVariants} countVariants={countVariants} />
-      <div className="relative mission-vision-section py-20 relative bg-gradient-to-b from-[#FFFFFF] to-[#EEEEEE]">
+      <div className="relative mission-vision-section py-20 relative bg-gradient-to-b from-[#BDBDBD] to-[#EEEEEE]">
         {/* SVG de las líneas, con z-index bajo */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <svg
@@ -62,7 +62,7 @@ export default function LandingPage({ landingData, fixedNav = true }) {
           <Services landingData={landingData} containerVariants={containerVariants} />
         </div>
       </div>
-      <div className="relative mission-vision-section py-20 relative bg-gradient-to-b from-[#EEEEEE] to-[#FFFFFF]">
+      <div className="relative mission-vision-section py-20 relative bg-gradient-to-b from-[#EEEEEE] to-[#BDBDBD]">
         {/* SVG de las líneas, con z-index bajo */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <svg
