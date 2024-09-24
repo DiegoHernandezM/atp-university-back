@@ -30,8 +30,8 @@ export default function Metricts({ landingData, containerVariants, countVariants
 
               {/* Title and description */}
               <div className="mt-4">
-                <h1 className="text-3xl font-bold mb-8 text-gray-800">{count.title}</h1>
-                <h1 className="text-gray-600 mt-2">{count.description}</h1>
+                <h1 className="text-3xl font-bold mb-8 text-black">{count.title}</h1>
+                <h1 className="text-black mt-2">{count.description}</h1>
               </div>
             </motion.div>
           )) : null}

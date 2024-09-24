@@ -3,12 +3,12 @@ import '../../../css/flighttable.css';
 
 export default function CoursesLandingTable() {
   const flights = [
-    { date: '18-OCT-2024', course: 'CIAC PREP', code: 'AA830', remark: 'CUPO 20 PERSONAS' },
-    { date: '20-OCT-2024', course: 'CIAC PREP', code: 'BB267', remark: 'SIN CUPO' },
-    { date: '01-SEP-2024', course: 'CIAC PREP', code: 'CC281', remark: 'CANCELADO' },
-    { date: '15-SEP-2024', course: 'CIAC PREP', code: 'DD1032', remark: 'CUPO 10 PERSONAS' },
-    { date: '10-ENE-2025', course: 'CIAC PREP', code: 'EE4818', remark: 'PENDIENTE' },
-    { date: '20-FEB-2025', course: 'CIAC PREP', code: 'FFN418', remark: 'PENDIENTE' },
+    { day: '18', month: 'OCTUBRE', course: 'CIAC PREP', code: 'AA830', remark: 'CUPO 20 PERSONAS' },
+    { day: '20', month: 'OCTUBRE', course: 'CIAC PREP', code: 'BB267', remark: 'SIN CUPO' },
+    { day: '01', month: 'SEPTIEMBRE', course: 'CIAC PREP', code: 'CC281', remark: 'CANCELADO' },
+    { day: '15', month: 'SEPTIEMBRE', course: 'CIAC PREP', code: 'DD1032', remark: 'CUPO 10 PERSONAS' },
+    { day: '10', month: 'ENERO', course: 'CIAC PREP', code: 'EE4818', remark: 'PENDIENTE' },
+    { day: '20', month: 'FEBRERO', course: 'CIAC PREP', code: 'FFN418', remark: 'PENDIENTE' },
   ];
 
   return (
@@ -17,15 +17,17 @@ export default function CoursesLandingTable() {
         <thead>
           <tr>
             <th>DIA</th>
+            <th>MES</th>
             <th>CURSO</th>
             <th>CODIGO</th>
-            <th>ANOTACIONES</th>
+            <th>REMARKS</th>
           </tr>
         </thead>
         <tbody>
           {flights.map((flight, index) => (
             <tr key={index}>
-              <td>{flight.date}</td>
+              <td>{flight.day}</td>
+              <td>{flight.month}</td>
               <td>{flight.course}</td>
               <td>{flight.code}</td>
               <td>{flight.remark}</td>
