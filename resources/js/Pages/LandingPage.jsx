@@ -35,7 +35,7 @@ export default function LandingPage({ landingData, fixedNav = true }) {
         {/* SVG de las líneas, con z-index bajo */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <img
-            src={`/storage/images/lin.png`}
+            src={`/storage/lin.png`}
             alt="image 2"
             className="h-full w-full object-cover rounded-l-lg"
           />

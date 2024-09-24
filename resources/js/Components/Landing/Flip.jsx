@@ -64,6 +64,7 @@ export default class Flip extends React.Component {
       letterSpacing: '-2px',  // Hace que los números se vean más angostos
       height: '120px',  // Ajusta la altura de los números
       transform: 'scaleY(1.5)',  // Hace que los números se vean más altos
+      width: '400px'
     };
 
     return (
