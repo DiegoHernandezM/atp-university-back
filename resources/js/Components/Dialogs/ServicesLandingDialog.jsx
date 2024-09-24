@@ -67,7 +67,7 @@ export default function ServicesLandingDialog({ open, onClose, selectedService }
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed enim quis est varius rutrum. Vestibulum ornare elit dolor, eget rutrum nulla rutrum et. Nullam finibus tincidunt feugiat. Phasellus quis ullamcorper massa, in ornare enim. In interdum volutpat magna in lacinia. Morbi arcu felis, venenatis non erat nec, porttitor consectetur enim. Proin sit amet mollis eros. Quisque id fringilla ipsum. Phasellus convallis augue ac dui venenatis sodales.
         </Typography>
         {/* Diálogo secundario */}
-        <Dialog open={openSecondaryDialog} size="md" handler={handleOpenSecondaryDialog} className="bg-gradient-to-b from-gray-100 to-white">
+        <Dialog open={openSecondaryDialog} size="sm" handler={handleOpenSecondaryDialog} className="bg-gradient-to-b from-gray-100 to-white">
           <CoursesLandingTable />
         </Dialog>
       </DialogBody>
