@@ -92,10 +92,16 @@ export default function Contact() {
                 {errors.message && <InputError message={errors.message} className="mt-2" />}
               </div>
               <div className="flex items-center gap-4">
-                <Button type="submit" color="blue-gray" fullWidth disabled={loading}>
+                <Button
+                  type="submit"
+                  style={{ backgroundColor: '#203764', color: '#fff' }} // Cambiar el color del fondo y el texto
+                  fullWidth
+                  disabled={loading}
+                >
                   Enviar mensaje
                 </Button>
               </div>
+
             </form>
           </div>
 
