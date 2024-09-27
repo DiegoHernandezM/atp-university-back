@@ -15,15 +15,68 @@ class LandingPageService
         $this->content = LandingPageContent::first();
     }
 
-    public function store($request)
+    public function createWelcomeSection($request)
     {
         $data = $request->all();
 
         if ($request->hasFile('section1_video')) {
+            $files = $request->file('section1_video');
+            if (is_array($files)) {
+                foreach ($files as $file) {
+                    $this->content->update([
+                        'section1_video' => $this->saveFile('section1_video', $file),
+                        'title' => $data['title'],
+                        'section1_video_description' => $data['section1_video_description']
+                    ]);
+                }
+            }
+        }
+        return $this->content;
+    }
+
+    public function createMetrictsSection($request)
+    {
+        $data = $request->all();
+        if (isset($data['section2_counts'])) {
+            $metricts = json_encode($data['section2_counts']);
+            $this->content->update([
+                'section2_counts' => $metricts,
+            ]);
+        }
+        return $this->content;
+    }
+
+    public function createAboutSection($request)
+    {
+        $data = $request->all();
+
+        if ($request->hasFile('section3_image')) {
+            $files = $request->file('section3_image');
+            if (is_array($files)) {
+                foreach ($files as $file) {
+                    $this->content->update([
+                        'section3_image' => $this->saveFile('section3_image', $file),
+                        'section3_about' => $data['section3_about'],
+                        'section3_mission' => $data['section3_mission'],
+                        'section3_vision' => $data['section3_vision']
+                    ]);
+                }
+            }
+        }
+        return $this->content;
+    }
+
+    public function store($request)
+    {
+        $data = $request->all();
+        dd($data);
+
+        if ($request->hasFile('section1_video')) {
+            dd($request->all());
             $file = $request->file('section1_video');
             $this->content->update(['section1_video' => $this->saveFile('section1_video', $file)]);
         }
-        foreach ($data['section2_counts'] as $key => $count) {
+        /*foreach ($data['section2_counts'] as $key => $count) {
             $file = $count['image'];
             if ($file instanceof UploadedFile) {
                 $fileName = $this->saveFile('section2_counts', $file, $key, 'image');
@@ -45,17 +98,17 @@ class LandingPageService
                 $fileName = $this->saveFile('section5_simulators', $file, $key, 'file');
                 $data['section5_simulators'][$key]['file'] = $fileName;
             }
-        }
+        }*/
 
         $this->content->update([
             'title' => $data['title'],
             'section1_video_description' => $data['section1_video_description'],
-            'section2_counts' => $data['section2_counts'],
-            'section3_image' => $data['section3_image'],
-            'section3_vision' => $data['section3_vision'],
-            'section3_mission' => $data['section3_mission'],
-            'section4_services' => $data['section4_services'],
-            'section5_simulators' => $data['section5_simulators']
+            // 'section2_counts' => $data['section2_counts'],
+            //'section3_image' => $data['section3_image'],
+            //'section3_vision' => $data['section3_vision'],
+            //'section3_mission' => $data['section3_mission'],
+            //'section4_services' => $data['section4_services'],
+            //'section5_simulators' => $data['section5_simulators']
         ]);
 
         return $this->content;

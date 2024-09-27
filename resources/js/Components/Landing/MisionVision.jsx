@@ -10,7 +10,7 @@ export default function MisionVision({ landingData }) {
           <div className="relative h-full w-full flex items-center flex-col-reverse md:flex-row">
             <div className="hidden md:block w-1/2 h-full relative">
               <img
-                src={`/storage/images/atp-vision.jpg`}
+                src={landingData.isPrev ? landingData.section3_image : `/storage/images/${landingData.section3_image}`}
                 alt="image"
                 className="h-full w-full object-cover rounded-xl"
               />
@@ -35,7 +35,7 @@ export default function MisionVision({ landingData }) {
                 color="black"
                 className="opacity-80 sm:text-4xl lg:text-3xl xl:text-3xl relative z-10"
               >
-                {landingData?.section3_vision ?? 'Ser la firma de contabilidad de confianza para todos nuestros clientes, brindando soluciones de alta calidad y accesibles.'}
+                {landingData?.section3_about ?? 'Ser la firma de contabilidad de confianza para todos nuestros clientes, brindando soluciones de alta calidad y accesibles.'}
               </Typography>
             </div>
           </div>
@@ -44,7 +44,7 @@ export default function MisionVision({ landingData }) {
           <div className="relative h-full w-full flex items-center flex-col-reverse md:flex-row">
             <div className="hidden md:block w-1/2 h-full relative ">
               <img
-                src={`/storage/images/atp-vision.jpg`}
+                src={landingData.isPrev ? landingData.section3_image : `/storage/images/${landingData.section3_image}`}
                 alt="image 1"
                 className="h-full w-full object-cover rounded-xl"
               />
@@ -77,7 +77,7 @@ export default function MisionVision({ landingData }) {
             <div className="hidden md:block w-1/2 h-full relative ">
               {/* Imagen */}
               <img
-                src={`/storage/images/atp-vision.jpg`}
+                src={landingData.isPrev ? landingData.section3_image : `/storage/images/${landingData.section3_image}`}
                 alt="image 2"
                 className="h-full w-full object-cover rounded-xl"
                 style={{ zIndex: 1 }}

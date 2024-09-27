@@ -27,4 +27,31 @@ class LandingPageController extends Controller
             'landingData' => LandingPageContent::first()
         ]);
     }
+
+    public function welcomeSection(Request $request)
+    {
+        $this->landingPageService->createWelcomeSection($request);
+
+        return Inertia::render('Landing/Edit', [
+            'landingData' => LandingPageContent::first()
+        ]);
+    }
+
+    public function metrictsSection(Request $request)
+    {
+        $this->landingPageService->createMetrictsSection($request);
+
+        return Inertia::render('Landing/Edit', [
+            'landingData' => LandingPageContent::first()
+        ]);
+    }
+
+    public function aboutSection(Request $request)
+    {
+        $this->landingPageService->createAboutSection($request);
+
+        return Inertia::render('Landing/Edit', [
+            'landingData' => LandingPageContent::first()
+        ]);
+    }
 }
