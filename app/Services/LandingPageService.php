@@ -66,6 +66,47 @@ class LandingPageService
         return $this->content;
     }
 
+    public function createServicesSection($request)
+    {
+        $data = $request->all();
+        foreach ($data['section4_services'] as $key => $service) {
+
+            if (isset($service['button_image']['file']) && $service['button_image']['file'] instanceof UploadedFile) {
+                $file = $service['button_image']['file'];
+                $fileName = $this->saveFile('button_image', $file, $key, 'button_image');
+                $data['section4_services'][$key]['button_image']['url'] = $fileName;
+            }
+
+            if (isset($service['background_image']['file']) && $service['background_image']['file'] instanceof UploadedFile) {
+                $file = $service['background_image']['file'];
+                $fileName = $this->saveFile('background_image', $file, $key, 'background_image');
+                $data['section4_services'][$key]['background_image']['url'] = $fileName;
+            }
+        }
+
+        $this->content->section4_services = json_encode($data['section4_services']);
+        $this->content->save();
+        return $this->content;
+    }
+
+    public function createSimulatorsSection($request)
+    {
+        $data = $request->all();
+        foreach ($data['section5_simulators'] as $key => $service) {
+
+            if (isset($service['image']['file']) && $service['image']['file'] instanceof UploadedFile) {
+                $file = $service['image']['file'];
+                $fileName = $this->saveFile('image', $file, $key, 'image');
+                $data['section5_simulators'][$key]['image']['url'] = $fileName;
+            }
+        }
+
+        $this->content->section5_simulators = json_encode($data['section5_simulators']);
+        $this->content->save();
+        return $this->content;
+    }
+
+
     public function store($request)
     {
         $data = $request->all();

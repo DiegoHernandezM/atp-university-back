@@ -13,7 +13,7 @@ export default function ServicesSection({ onSuccess }) {
 
     const [landingData, setLandingData] = useState({
         section4_services: [
-            { title: '', description: '', link: '', button_image: null, background_image: null }
+            { title: '', description: '', link: '', phone: '', button_image: null, background_image: null }
         ]
     });
 
@@ -26,6 +26,7 @@ export default function ServicesSection({ onSuccess }) {
     }, [landingData]);
 
     const openModal = () => {
+        if (selectedButtonImage && selectedBackgroundImage)
         setModalIsOpen(true);
     };
 
@@ -52,10 +53,10 @@ export default function ServicesSection({ onSuccess }) {
         const file = event.target.files[0];
         if (file) {
             const fileUrl = URL.createObjectURL(file);
-            setSelectedButtonImage({ url: fileUrl, file, type: file.type });
+            setSelectedButtonImage({ url: fileUrl });
 
             const updatedServices = [...landingData.section4_services];
-            updatedServices[index].button_image = { url: fileUrl, file };
+            updatedServices[index].button_image = { url: fileUrl, file: file };
             setLandingData(prevState => ({
                 ...prevState,
                 section4_services: updatedServices
@@ -67,10 +68,10 @@ export default function ServicesSection({ onSuccess }) {
         const file = event.target.files[0];
         if (file) {
             const fileUrl = URL.createObjectURL(file);
-            setSelectedBackgroundImage({ url: fileUrl, file, type: file.type });
+            setSelectedBackgroundImage({ url: fileUrl });
 
             const updatedServices = [...landingData.section4_services];
-            updatedServices[index].background_image = { url: fileUrl, file };
+            updatedServices[index].background_image = { url: fileUrl, file: file };
             setLandingData(prevState => ({
                 ...prevState,
                 section4_services: updatedServices
@@ -84,7 +85,7 @@ export default function ServicesSection({ onSuccess }) {
             ...prevData,
             section4_services: [
                 ...prevData.section4_services,
-                { title: '', description: '', link: '', button_image: null, background_image: null }
+                { title: '', description: '', link: '', phone: '', button_image: null, background_image: null }
             ]
         }));
     };
@@ -104,7 +105,7 @@ export default function ServicesSection({ onSuccess }) {
 
         const formData = new FormData();
         formData.append('section4_services', JSON.stringify(landingData.section4_services));
-
+        console.log(formData)
         post('/landing/services', {
             data: formData,
             preserveScroll: true,
@@ -155,6 +156,16 @@ export default function ServicesSection({ onSuccess }) {
                             onChange={(e) => handleServicesChange(index, 'link', e.target.value)}
                             className="mt-1 block w-full border-gray-300 rounded-md"
                         />
+
+                      <Typography variant="h6" color="blue-gray" className="mb-1">
+                        Telefono
+                      </Typography>
+                      <input
+                        type="text"
+                        value={count.phone ?? ''}
+                        onChange={(e) => handleServicesChange(index, 'phone', e.target.value)}
+                        className="mt-1 block w-full border-gray-300 rounded-md"
+                      />
 
                         <div className="mt-4">
                             <Typography variant="h6" color="blue-gray" className="mb-1">
@@ -246,59 +257,63 @@ export default function ServicesSection({ onSuccess }) {
                     </div>
                 ))}
 
-                {/* Botón para agregar nueva sección */}
-                <div className="mt-6">
-                    <Button
-                        size="sm"
-                        variant="gradient"
-                        onClick={addNewServiceSection}
-                    >
-                        Agregar nueva sección de servicio
-                    </Button>
-                </div>
+                <div className="mt-4 flex space-x-4">
+                    {/* Botón para agregar nueva sección */}
+                    <div className="mt-6">
+                        <Button
+                            size="sm"
+                            variant="gradient"
+                            onClick={addNewServiceSection}
+                        >
+                            Agregar Servicio
+                        </Button>
+                    </div>
 
-                {/* Botón de previsualización */}
-                <div className="mt-6">
-                    <Button
-                        size="sm"
-                        variant="gradient"
-                        color="blue"
-                        disabled={!isPreviewDisabled}
-                        onClick={openModal}
-                    >
-                        Previsualizar
-                    </Button>
+                    {/* Botón de previsualización */}
+                    <div className="mt-6">
+                        <Button
+                            size="sm"
+                            variant="gradient"
+                            disabled={!isPreviewDisabled}
+                            onClick={openModal}
+                        >
+                            Previsualizar
+                        </Button>
+                    </div>
                 </div>
 
                 <Modal
                     isOpen={modalIsOpen}
                     onRequestClose={closeModal}
                     contentLabel="Previsualizar Servicios"
-                    className="Modal"
-                    overlayClassName="Overlay"
+                    style={{
+                        content: {
+                            top: '50%',
+                            left: '58%',
+                            right: 'auto',
+                            bottom: 'auto',
+                            marginRight: '-50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '100%',
+                            maxWidth: '1200px',
+                            height: 'auto',
+                            maxHeight: '700px',
+                        },
+                    }}
                 >
                     <h2>Previsualización de Servicios</h2>
-                    <ServicesPage section4_services={landingData.section4_services} />
-                    <Button
-                        size="sm"
-                        variant="gradient"
-                        onClick={closeModal}
-                    >
-                        Cerrar Previsualización
-                    </Button>
-                </Modal>
+                    <ServicesPage landingData={landingData.section4_services} isPrev={true} />
+                    <div className="mt-4 flex space-x-4">
+                        <Button onClick={closeModal}>Cerrar</Button>
 
-                {/* Botón para enviar */}
-                <div className="mt-6">
-                    <Button
-                        size="sm"
-                        variant="gradient"
-                        onClick={handleSubmit}
-                        disabled={processing || !isPreviewDisabled}
-                    >
-                        {processing ? 'Guardando...' : 'Guardar Servicios'}
-                    </Button>
-                </div>
+                        <Button
+                            onClick={handleSubmit}
+                            disabled={processing || !isPreviewDisabled}
+                        >
+                            Guardar
+                        </Button>
+                    </div>
+                </Modal>
             </header>
         </section>
     );

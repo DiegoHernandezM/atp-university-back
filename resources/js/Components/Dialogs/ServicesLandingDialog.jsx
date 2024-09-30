@@ -3,7 +3,7 @@ import { Dialog, DialogBody, DialogHeader, DialogFooter, Typography, IconButton 
 import { CalendarDateRangeIcon, CursorArrowRippleIcon } from "@heroicons/react/24/outline";
 import CoursesLandingTable from "../Tables/CoursesLandingTable";
 
-export default function ServicesLandingDialog({ open, onClose, selectedService }) {
+export default function ServicesLandingDialog({ open, onClose, selectedService, isPrev }) {
   const [openSecondaryDialog, setOpenSecondaryDialog] = useState(false);
 
   const handleOpenSecondaryDialog = () => setOpenSecondaryDialog(!openSecondaryDialog);
@@ -31,7 +31,7 @@ export default function ServicesLandingDialog({ open, onClose, selectedService }
         {/* Fondo con opacidad */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-60"
-          style={{ backgroundImage: `url('/storage/images/atp-mision.jpg')` }}
+          style={{   backgroundImage: isPrev ? `url(${selectedService?.background_image?.url})` : `url(/storage/images/${selectedService?.background_image?.url})`}}
         ></div>
 
         {/* Barra blanca opaca detrás del título */}
@@ -44,7 +44,7 @@ export default function ServicesLandingDialog({ open, onClose, selectedService }
             className="text-white text-3xl sm:text-4xl lg:text-5xl xl:text-6xl"
             style={{ color: '#203764' }}
           >
-            {selectedService?.title}
+            {selectedService?.title || ''}
           </Typography>
         </div>
       </DialogHeader>
@@ -56,7 +56,7 @@ export default function ServicesLandingDialog({ open, onClose, selectedService }
           variant="h2"
           className="text-black text-base sm:text-lg lg:text-xl"
         >
-          {selectedService?.description}
+          {selectedService?.title || ''}
         </Typography>
 
         {/* Texto adicional */}
@@ -64,7 +64,7 @@ export default function ServicesLandingDialog({ open, onClose, selectedService }
           variant="h1"
           className="text-black text-sm sm:text-base lg:text-xl mt-10 mb-20"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed enim quis est varius rutrum. Vestibulum ornare elit dolor, eget rutrum nulla rutrum et. Nullam finibus tincidunt feugiat. Phasellus quis ullamcorper massa, in ornare enim. In interdum volutpat magna in lacinia. Morbi arcu felis, venenatis non erat nec, porttitor consectetur enim. Proin sit amet mollis eros. Quisque id fringilla ipsum. Phasellus convallis augue ac dui venenatis sodales.
+          {selectedService?.description || ''}
         </Typography>
         {/* Diálogo secundario */}
         <Dialog open={openSecondaryDialog} size="sm" handler={handleOpenSecondaryDialog} className="bg-gradient-to-b from-gray-100 to-white">
@@ -77,7 +77,7 @@ export default function ServicesLandingDialog({ open, onClose, selectedService }
           {/* Botón 1 - Enlace */}
           <div className="flex flex-col items-center">
             <a
-              href="/aplicacion"
+              href={selectedService?.link || "/"}
               className="shadow-xl shadow-gray-500/50 bg-[#E0E0E0] w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full border-2 border-gray-400 flex items-center justify-center text-center text-blue-800 hover:text-white hover:bg-[#203764] transition-colors"
             >
               <CursorArrowRippleIcon className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12" />
@@ -99,7 +99,7 @@ export default function ServicesLandingDialog({ open, onClose, selectedService }
           {/* Botón 3 - WhatsApp */}
           <div className="flex flex-col items-center">
             <a
-              href="https://wa.me/1234567890"
+              href={`https://wa.me/${selectedService?.phone}`}
               target="_blank"
               rel="noopener noreferrer"
               className="shadow-xl shadow-gray-500/50 bg-[#E0E0E0] w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full border-2 border-gray-400 flex items-center justify-center text-center text-blue-800 hover:text-white hover:bg-[#203764] transition-colors"

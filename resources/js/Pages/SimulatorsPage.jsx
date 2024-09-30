@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Services from '@/Components/Landing/Services';
+import Simulators from '@/Components/Landing/Simulators.jsx';
 
 const containerVariants = {
     hidden: { opacity: 1 },
@@ -11,7 +11,7 @@ const containerVariants = {
     },
 };
 
-export default function ServicesPage({ landingData, isPrev }) {
+export default function SimulatorsPage({ landingData, isPrev }) {
     return (
         <div className="landing-page">
             <div className="relative mission-vision-section py-20 relative bg-gradient-to-b from-[#BDBDBD] to-[#EEEEEE]">
@@ -24,7 +24,7 @@ export default function ServicesPage({ landingData, isPrev }) {
                     />
                 </div>
                 <div className="relative z-10">
-                    <Services landingData={landingData} containerVariants={containerVariants} isPrev={isPrev} />
+                    <Simulators landingData={landingData} containerVariants={containerVariants} isPrev={isPrev} />
                 </div>
             </div>
         </div >

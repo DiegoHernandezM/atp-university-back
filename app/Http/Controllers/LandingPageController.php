@@ -54,4 +54,22 @@ class LandingPageController extends Controller
             'landingData' => LandingPageContent::first()
         ]);
     }
+
+    public function servicesSection(Request $request)
+    {
+        $this->landingPageService->createServicesSection($request);
+
+        return Inertia::render('Landing/Edit', [
+            'landingData' => LandingPageContent::first()
+        ]);
+    }
+
+    public function simulatorsSection(Request $request)
+    {
+        $this->landingPageService->createSimulatorsSection($request);
+
+        return Inertia::render('Landing/Edit', [
+            'landingData' => LandingPageContent::first()
+        ]);
+    }
 }

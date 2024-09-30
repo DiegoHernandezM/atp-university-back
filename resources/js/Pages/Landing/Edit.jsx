@@ -7,6 +7,7 @@ import WelcomeSection from "@/Pages/Landing/Partials/WelcomeSection.jsx";
 import MetrictsSection from "@/Pages/Landing/Partials/MetrictsSection.jsx";
 import AboutSection from "@/Pages/Landing/Partials/AboutSection.jsx";
 import ServicesSection from "@/Pages/Landing/Partials/ServicesSection.jsx";
+import SimulatorsSection from "@/Pages/Landing/Partials/SimulatorsSection.jsx";
 
 export default function Edit({ auth, landingData }) {
     const { data, setData, post, progress } = useForm({
@@ -148,9 +149,17 @@ export default function Edit({ auth, landingData }) {
 
                   <div className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                       <Typography variant="h4" color="blue-gray" className="mb-1">
-                          Nuestros Servicios
+                          Servicios
                       </Typography>
-                      <ServicesSection landingData={landingData} onSuccess={handleFormSuccess} />                  </div>
+                      <ServicesSection landingData={landingData} onSuccess={handleFormSuccess} />
+                  </div>
+
+                   <div className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                       <Typography variant="h4" color="blue-gray" className="mb-1">
+                           Simuladores
+                       </Typography>
+                       <SimulatorsSection landingData={landingData} onSuccess={handleFormSuccess} />
+                   </div>
                 </div>
             </div>
         </AuthenticatedLayout>
