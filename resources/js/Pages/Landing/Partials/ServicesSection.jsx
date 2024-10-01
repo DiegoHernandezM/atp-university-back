@@ -112,6 +112,9 @@ export default function ServicesSection({ onSuccess }) {
             onFinish: () => {
                 console.log('Formulario enviado con éxito');
                 setModalIsOpen(false);
+              setLandingData({
+                section4_services: [{ title: '', description: '', link: '', phone: '', button_image: null, background_image: null }]
+              });
                 onSuccess("Landing Page actualizada correctamente.");
             }
         });

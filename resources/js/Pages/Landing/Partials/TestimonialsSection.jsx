@@ -90,6 +90,9 @@ export default function TestimonialsSection({ onSuccess }) {
       onFinish: () => {
         console.log('Formulario enviado con éxito');
         setModalIsOpen(false);
+        setLandingData({
+          section6_testimonials: [{ name: '', description: '', image: null }]
+        });
         onSuccess("Landing Page actualizada correctamente.");
       }
     });

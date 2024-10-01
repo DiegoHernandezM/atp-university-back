@@ -25,8 +25,9 @@ export default function SimulatorsSection({ onSuccess }) {
     }, [landingData]);
 
     const openModal = () => {
-        if (selectedImage)
-            setModalIsOpen(true);
+        if (selectedImage) {
+          setModalIsOpen(true);
+        }
     };
 
     const closeModal = () => {
@@ -89,9 +90,15 @@ export default function SimulatorsSection({ onSuccess }) {
             data: formData,
             preserveScroll: true,
             onFinish: () => {
-                console.log('Formulario enviado con éxito');
-                setModalIsOpen(false);
-                onSuccess("Landing Page actualizada correctamente.");
+              console.log('Formulario enviado con éxito');
+              setModalIsOpen(false);
+              setLandingData({
+                section5_simulators: [
+                  { title: '', description: '', image: null }
+                ]
+              });
+              setSelectedImage(null);
+              onSuccess("Landing Page actualizada correctamente.");
             }
         });
     };

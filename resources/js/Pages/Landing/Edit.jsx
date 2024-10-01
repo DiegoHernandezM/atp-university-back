@@ -9,7 +9,7 @@ import AboutSection from "@/Pages/Landing/Partials/AboutSection.jsx";
 import ServicesSection from "@/Pages/Landing/Partials/ServicesSection.jsx";
 import SimulatorsSection from "@/Pages/Landing/Partials/SimulatorsSection.jsx";
 import TestimonialsSection from "@/Pages/Landing/Partials/TestimonialsSection.jsx";
-
+import ContactSection from "@/Pages/Landing/Partials/ContactSection.jsx";
 export default function Edit({ auth, landingData }) {
     const { data, setData, post, progress } = useForm({
         title: landingData?.title || '',
@@ -167,6 +167,13 @@ export default function Edit({ auth, landingData }) {
                     Testimonios
                   </Typography>
                   <TestimonialsSection landingData={landingData} onSuccess={handleFormSuccess}/>
+                </div>
+
+                <div className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                  <Typography variant="h4" color="blue-gray" className="mb-1">
+                    Contacto
+                  </Typography>
+                  <ContactSection landingData={landingData} onSuccess={handleFormSuccess}/>
                 </div>
               </div>
             </div>

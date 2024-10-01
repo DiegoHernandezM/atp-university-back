@@ -81,4 +81,13 @@ class LandingPageController extends Controller
             'landingData' => LandingPageContent::first()
         ]);
     }
+
+    public function contactSection(Request $request)
+    {
+        $this->landingPageService->createContactSection($request);
+
+        return Inertia::render('Landing/Edit', [
+            'landingData' => LandingPageContent::first()
+        ]);
+    }
 }

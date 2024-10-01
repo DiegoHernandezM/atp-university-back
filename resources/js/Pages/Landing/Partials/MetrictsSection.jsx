@@ -60,6 +60,14 @@ export default function MetrictsSection({ onSuccess }) {
             onFinish: () => {
                 console.log('Formulario enviado con éxito');
                 setModalIsOpen(false);
+              setLandingData({
+                section2_counts: [
+                  { title: '', quantity: '' },
+                  { title: '', quantity: '' },
+                  { title: '', quantity: '' },
+                  { title: '', quantity: '' }
+                ]
+              });
                 onSuccess("Landing Page actualizada correctamente.");
             }
         });

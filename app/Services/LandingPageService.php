@@ -124,6 +124,14 @@ class LandingPageService
         return $this->content;
     }
 
+    public function createContactSection($request)
+    {
+        $data = $request->all();
+        $this->content->section7_contact = json_encode($data['section7_contact']);
+        $this->content->save();
+        return $this->content;
+    }
+
 
     public function store($request)
     {

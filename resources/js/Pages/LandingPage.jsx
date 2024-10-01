@@ -47,7 +47,7 @@ export default function LandingPage({ landingData, fixedNav = true }) {
           <Testimonials landingData={landingData} />
         </div>
       </div>
-      <Contact />
+      <Contact landingData={landingData} />
     </div >
   );
 };
