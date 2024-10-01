@@ -9,3 +9,5 @@ Route::post('/landing/metricts', [LandingPageController::class, 'metrictsSection
 Route::post('/landing/about', [LandingPageController::class, 'aboutSection'])->name('landing.aboutSection');
 Route::post('/landing/services', [LandingPageController::class, 'servicesSection'])->name('landing.servicesSection');
 Route::post('/landing/simulators', [LandingPageController::class, 'simulatorsSection'])->name('landing.simulatorSection');
+Route::post('/landing/testimonials', [LandingPageController::class, 'testimonialsSection'])->name('landing.testimonialSection');
+Route::post('/landing/contact', [LandingPageController::class, 'contactSection'])->name('landing.contactSection');

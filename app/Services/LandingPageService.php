@@ -106,6 +106,24 @@ class LandingPageService
         return $this->content;
     }
 
+    public function createTestimonialsSection($request)
+    {
+        $data = $request->all();
+
+        foreach ($data['section6_testimonials'] as $key => $service) {
+
+            if (isset($service['image']['file']) && $service['image']['file'] instanceof UploadedFile) {
+                $file = $service['image']['file'];
+                $fileName = $this->saveFile('image', $file, $key, 'image');
+                $data['section6_testimonials'][$key]['image']['url'] = $fileName;
+            }
+        }
+
+        $this->content->section6_testimonials = json_encode($data['section6_testimonials']);
+        $this->content->save();
+        return $this->content;
+    }
+
 
     public function store($request)
     {

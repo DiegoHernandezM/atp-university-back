@@ -72,4 +72,13 @@ class LandingPageController extends Controller
             'landingData' => LandingPageContent::first()
         ]);
     }
+
+    public function testimonialsSection(Request $request)
+    {
+        $this->landingPageService->createTestimonialsSection($request);
+
+        return Inertia::render('Landing/Edit', [
+            'landingData' => LandingPageContent::first()
+        ]);
+    }
 }
