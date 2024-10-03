@@ -17,6 +17,10 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/dashboard-student', function () {
+    return Inertia::render('DashboardStudent');
+})->middleware(['auth', 'verified'])->name('dashboard.student');
+
 Route::middleware('auth')->group(function () {
     // Routes
     require base_path('routes/profile/profile.php');

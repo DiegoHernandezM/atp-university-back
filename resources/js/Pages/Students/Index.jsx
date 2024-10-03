@@ -12,6 +12,7 @@ export default function Students({ auth, students, ...props }) {
     return (
         <AuthenticatedLayout
             user={auth.user}
+            roles={auth.roles}
             header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Estudiantes</h2>}
         >
             <Head title="Students" />
