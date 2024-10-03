@@ -47,10 +47,17 @@ export default function Authenticated({ user, roles, header, children }) {
       pages: [
         { icon: <Bars3Icon className="h-5 w-5" />, name: 'Dahsboard', path: route('dashboard'), isFunction: false, },
         { icon: <UserGroupIcon className="h-5 w-5" />, name: 'Administradores', path: route('administrators.get'), isFunction: false },
-        { icon: <UsersIcon className="h-5 w-5" />, name: 'Estudiantes', path: route('students.index'), isFunction: false },
         { icon: <UserCircleIcon className="h-5 w-5" />, name: 'Perfil', path: route('profile.edit'), isFunction: false },
         { icon: <Cog6ToothIcon className="h-5 w-5" />, name: 'Landing', path: route('landing.edit'), isFunction: false },
         { icon: <IdentificationIcon className="h-5 w-5" />, name: 'Contactos', path: route('contacts.get'), isFunction: false },
+      ],
+    },
+    {
+      layout: 'dashboard',
+      title: 'Universidad',
+      pages: [
+        { icon: <Bars3Icon className="h-5 w-5" />, name: 'Dahsboard Universidad', path: route('dashboard'), isFunction: false, },
+        { icon: <UsersIcon className="h-5 w-5" />, name: 'Estudiantes', path: route('students.index'), isFunction: false },
       ],
     },
     {
