@@ -62,6 +62,4 @@ class StudentService
         User::where('id', $student['user_id'])->delete();
         return $student->delete();
     }
-
-
 }

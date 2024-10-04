@@ -12,7 +12,8 @@ import {
   ArrowLeftEndOnRectangleIcon,
   UserGroupIcon,
   Bars3Icon,
-  IdentificationIcon
+  IdentificationIcon,
+  BookOpenIcon
 } from '@heroicons/react/24/solid';
 
 export default function Authenticated({ user, roles, header, children }) {
@@ -58,6 +59,7 @@ export default function Authenticated({ user, roles, header, children }) {
       pages: [
         { icon: <Bars3Icon className="h-5 w-5" />, name: 'Dahsboard Universidad', path: route('dashboard'), isFunction: false, },
         { icon: <UsersIcon className="h-5 w-5" />, name: 'Estudiantes', path: route('students.index'), isFunction: false },
+        { icon: <BookOpenIcon className="h-5 w-5" />, name: 'Materias', path: route('subjects.index'), isFunction: false },
       ],
     },
     {
