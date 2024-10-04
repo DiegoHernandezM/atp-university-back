@@ -8,7 +8,7 @@ import Simulators from '@/Components/Landing/Simulators';
 import Testimonials from '@/Components/Landing/Testimonials';
 import Contact from '@/Components/Landing/Contact';
 
-export default function AboutPage({ landingData }) {
+export default function AboutPage({ landingData, isPrev }) {
     return (
         <div className="landing-page">
             <div className="relative mission-vision-section py-20 relative bg-gradient-to-b from-[#BDBDBD] to-[#EEEEEE]">
@@ -21,7 +21,7 @@ export default function AboutPage({ landingData }) {
                     />
                 </div>
                 <div className="relative z-10">
-                    <MisionVision landingData={landingData} />
+                    <MisionVision landingData={landingData} isPrev={isPrev} />
                 </div>
             </div>
         </div >

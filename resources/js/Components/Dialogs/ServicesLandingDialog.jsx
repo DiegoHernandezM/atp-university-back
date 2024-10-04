@@ -3,7 +3,7 @@ import { Dialog, DialogBody, DialogHeader, DialogFooter, Typography, IconButton 
 import { CalendarDateRangeIcon, CursorArrowRippleIcon } from "@heroicons/react/24/outline";
 import CoursesLandingTable from "../Tables/CoursesLandingTable";
 
-export default function ServicesLandingDialog({ open, onClose, selectedService, isPrev }) {
+export default function ServicesLandingDialog({ open, onClose, selectedService, isPrev = false }) {
   const [openSecondaryDialog, setOpenSecondaryDialog] = useState(false);
 
   const handleOpenSecondaryDialog = () => setOpenSecondaryDialog(!openSecondaryDialog);
@@ -31,8 +31,12 @@ export default function ServicesLandingDialog({ open, onClose, selectedService, 
         {/* Fondo con opacidad */}
         <div
           className="absolute inset-0 bg-cover bg-center opacity-60"
-          style={{   backgroundImage: isPrev ? `url(${selectedService?.background_image?.url})` : `url(/storage/images/${selectedService?.background_image?.url})`}}
-        ></div>
+          style={{
+            backgroundImage: isPrev
+                ? `url(${selectedService?.background_image?.url})`
+                : `url('/storage/images/${selectedService?.background_image?.url}')`
+          }}>
+        </div>
 
         {/* Barra blanca opaca detrás del título */}
         <div className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 bg-white opacity-50 h-16 sm:h-20 lg:h-24 xl:h-32"></div>

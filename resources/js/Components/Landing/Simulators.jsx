@@ -1,7 +1,7 @@
 import React from "react";
 import { Carousel, Typography } from '@material-tailwind/react';
 
-export default function Simulators({ landingData, isPrev }) {
+export default function Simulators({ landingData, isPrev = false }) {
     return (
         <section id="simulators" className="py-0 relative overflow-hidden bg-transparent">
 
@@ -21,14 +21,14 @@ export default function Simulators({ landingData, isPrev }) {
                             {landingData.map((simulator, index) => {
                                 return (
                                     <div className="relative h-96 w-full" key={`simulator-prev-${index}`}>
-                                        <img src={simulator.image.url} alt={simulator.title} className="h-full w-full rounded-lg object-cover" />
+                                        <img src={simulator?.image?.url ?? 'https://via.placeholder.com/1280'} alt={simulator.title} className="h-full w-full rounded-lg object-cover" />
                                         <figcaption className="absolute bottom-8 left-2/4 flex w-[calc(100%-4rem)] -translate-x-2/4 justify-between rounded-xl border border-white bg-white/75 py-4 px-6 shadow-lg shadow-black/5 saturate-200 backdrop-blur-sm">
                                             <div>
                                                 <Typography variant="h5" color="blue-gray">
-                                                    {simulator.title}
+                                                    {simulator.title ?? 'Sin dato'}
                                                 </Typography>
                                                 <Typography color="gray" className="mt-2 font-normal">
-                                                    {simulator.description}
+                                                    {simulator.description ?? 'Sin dato'}
                                                 </Typography>
                                             </div>
                                         </figcaption>
@@ -46,14 +46,19 @@ export default function Simulators({ landingData, isPrev }) {
                             {JSON.parse(landingData?.section5_simulators).map((simulator, index) => {
                                 return (
                                     <div className="relative h-96 w-full" key={`simulator-${index}`}>
-                                        <img src={`/storage/images/${simulator.image.url}`} alt={simulator.title} key={`file-${index}`} className="h-full w-full rounded-lg object-cover" />
+                                        <img
+                                            src={simulator?.image?.url ? `/storage/images/${simulator.image.url}` : 'https://via.placeholder.com/1280'}
+                                            alt={simulator.title}
+                                            key={`file-${index}`}
+                                            className="h-full w-full rounded-lg object-cover"
+                                        />
                                         <figcaption className="absolute bottom-8 left-2/4 flex w-[calc(100%-4rem)] -translate-x-2/4 justify-between rounded-xl border border-white bg-white/75 py-4 px-6 shadow-lg shadow-black/5 saturate-200 backdrop-blur-sm">
                                             <div>
                                                 <Typography variant="h5" color="blue-gray">
-                                                    {simulator.title}
+                                                    {simulator?.title ?? 'No existe titulo'}
                                                 </Typography>
                                                 <Typography color="gray" className="mt-2 font-normal">
-                                                    {simulator.description}
+                                                    {simulator?.description ?? 'No existe descripcion'}
                                                 </Typography>
                                             </div>
                                         </figcaption>

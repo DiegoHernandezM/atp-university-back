@@ -45,7 +45,7 @@ export default function Services({ landingData, containerVariants, isPrev }) {
                                 <div className="flex flex-col items-center">
                                     <div className="w-32 h-32 rounded-full bg-gray-400 mb-4 flex justify-center items-center shadow-xl shadow-gray-500/50">
                                         <img
-                                            src={service.button_image.url}
+                                            src={service?.button_image?.url ?? 'https://via.placeholder.com/128'}
                                             alt={service.title}
                                             className="w-full h-full rounded-full object-cover"
                                         />
@@ -68,14 +68,14 @@ export default function Services({ landingData, containerVariants, isPrev }) {
                                         <div className="flex flex-col items-center">
                                             <div className="w-32 h-32 rounded-full bg-gray-400 mb-4 flex justify-center items-center shadow-xl shadow-gray-500/50">
                                                 <img
-                                                    src={`/storage/images/${service.button_image.url}`}
+                                                    src={`/storage/images/${service?.button_image?.url}`}
                                                     alt={service.title}
                                                     className="w-full h-full rounded-full object-cover"
                                                 />
                                             </div>
                                             {/* Texto debajo de la imagen */}
                                             <h3 className="text-xl font-semibold">
-                                                {service.title }
+                                                {service?.title }
                                             </h3>
                                         </div>
                                     </motion.div>

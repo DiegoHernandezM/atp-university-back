@@ -167,7 +167,7 @@ export default function Contact({ landingData, isPrev }) {
                       </li>
                       <li>
                         <p className="font-medium">Teléfono</p>
-                        <p>{landingData.section7_contact?.phone || "+1 123 456 1234"}</p>
+                        <p>{landingData.section7_contact?.phone || "Sin telefono"}</p>
                       </li>
                       <li>
                         <p className="font-medium">Correo</p>

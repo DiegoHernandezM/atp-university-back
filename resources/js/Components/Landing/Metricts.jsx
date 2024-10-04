@@ -19,7 +19,7 @@ export default function Metricts({ landingData, containerVariants, countVariants
                             >
                                 {/* Efecto Flip para el número */}
                                 <h1 className="text-5xl font-bold text-white">
-                                    <Flip value={count.quantity.toString()} />
+                                    <Flip value={count?.quantity ? count.quantity.toString() : '0' } />
                                 </h1>
 
                                 {/* Título y descripción */}
@@ -39,12 +39,12 @@ export default function Metricts({ landingData, containerVariants, countVariants
                             >
                                 {/* Efecto Flip para el número */}
                                 <h1 className="text-5xl font-bold text-white">
-                                    <Flip value={count.quantity.toString()} />
+                                    <Flip value={count?.quantity ? count.quantity.toString() : ''} />
                                 </h1>
 
                                 {/* Título y descripción */}
                                 <div className="mt-4">
-                                    <h1 className="text-3xl font-bold mb-8 text-black">{count.title}</h1>
+                                    <h1 className="text-3xl font-bold mb-8 text-black">{count.title ?? 'Sin dato'}</h1>
                                     <h1 className="text-black mt-2">{count.description}</h1>
                                 </div>
                             </motion.div>

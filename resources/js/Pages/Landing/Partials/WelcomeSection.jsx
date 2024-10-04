@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import { Button, Typography, Input } from '@material-tailwind/react';
 import Modal from 'react-modal';
@@ -6,35 +6,49 @@ import WelcomePage from '../../WelcomePage.jsx';
 
 Modal.setAppElement('#app');
 
-export default function WelcomeSection({ onSuccess }) {
+export default function WelcomeSection({ landingData: initialData, onSuccess }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [landingData, setLandingData] = useState({
         title: '',
-        section1_video: '',
+        section1_video: null,
         section1_video_description: '',
-        isPrev: true,
-        type: ''
+        type: '',
+        section: ''
     });
 
-    const {setData, post, processing } = useForm();
+    const { setData, post, processing } = useForm();
+
+    // Cargar los datos de landingData al montar el componente, excepto el archivo
+    useEffect(() => {
+        setLandingData({
+            ...landingData,
+            title: initialData?.title || '',
+            section1_video: initialData?.section1_video || null,
+            section1_video_description: initialData?.section1_video_description || '',
+            section: 'welcome'
+        });
+    }, [initialData]);
 
     useEffect(() => {
         setData({
             title: landingData?.title || '',
-            section1_video: selectedFile || null,
-            section1_video_description: landingData.section1_video_description || ''
+            section1_video: selectedFile,
+            section1_video_description: landingData?.section1_video_description || '',
+            section: 'welcome'
         });
     }, [landingData, selectedFile]);
 
-
+    // Manejar la selección de archivo
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
+            if (selectedFile?.url) {
+                URL.revokeObjectURL(selectedFile.url);
+            }
             const fileUrl = URL.createObjectURL(file);
             setSelectedFile({ url: fileUrl, file, type: file.type });
-
-            setLandingData(prevState => ({
+            setLandingData((prevState) => ({
                 ...prevState,
                 section1_video: fileUrl,
                 type: file.type
@@ -43,68 +57,67 @@ export default function WelcomeSection({ onSuccess }) {
     };
 
     const openModal = () => {
-        if (selectedFile) {
+        setModalIsOpen(true);
+        /*if (selectedFile) {
             setModalIsOpen(true);
-        }
+        }*/
     };
 
     const closeModal = () => {
         setModalIsOpen(false);
+        /*if (selectedFile?.url) {
+            URL.revokeObjectURL(selectedFile.url);
+            setSelectedFile(null);
+        }*/
     };
 
     const handleChangeTitle = (e) => {
-        const newTitle = e.target.value;
-        setLandingData(prevState => ({
+        setLandingData((prevState) => ({
             ...prevState,
-            title: newTitle
+            title: e.target.value,
         }));
     };
 
     const handleChangeDescription = (e) => {
-        const newDescription = e.target.value;
-        setLandingData(prevState => ({
+        setLandingData((prevState) => ({
             ...prevState,
-            section1_video_description: newDescription
+            section1_video_description: e.target.value,
         }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        // Crear un FormData solo si hay archivo
         const formData = new FormData();
         formData.append('title', landingData.title);
         formData.append('section1_video_description', landingData.section1_video_description);
         if (selectedFile) {
             formData.append('section1_video', selectedFile.file);
         }
-
-        post('/landing/welcome', {
+        post('/landing', {
             data: formData,
             preserveScroll: true,
             onFinish: () => {
-                console.log('Formulario enviado con éxito');
-                setLandingData({
+                onSuccess("Landing Page actualizada correctamente.");
+                /*setLandingData({
                     title: '',
                     section1_video_description: '',
-                    section1_video: ''
-                });
-                setModalIsOpen(false);  // Cerrar el modal
-                setSelectedFile(null);  // Limpiar la imagen seleccionada
-                onSuccess("Landing Page actualizada correctamente.");
+                    section1_video: null
+                });*/
+                setModalIsOpen(false);
+                // setSelectedFile(null);
             }
         });
     };
 
     return (
-        <section className="p-4">
+        <section className="border p-4">
             <header>
-                <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Bienvenido</h2>
                 <div>
                     <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                         Actualiza la información de tu Landing Page.
                     </p>
                 </div>
+
                 <div className="mt-4">
                     <Typography variant="h6" color="blue-gray" className="mb-1">
                         Título
@@ -160,20 +173,6 @@ export default function WelcomeSection({ onSuccess }) {
                         className="rounded-full flex items-center gap-3"
                         onClick={() => document.getElementById('section1_file').click()}
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={2}
-                            stroke="currentColor"
-                            className="h-5 w-5"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
-                            />
-                        </svg>
                         Seleccionar Archivo
                     </Button>
 
@@ -182,11 +181,9 @@ export default function WelcomeSection({ onSuccess }) {
                         variant="gradient"
                         className="rounded-full flex items-center gap-3"
                         onClick={openModal}
-                        disabled={!selectedFile}
                     >
                         Previsualizar
                     </Button>
-
                 </div>
 
                 <Modal
@@ -196,29 +193,45 @@ export default function WelcomeSection({ onSuccess }) {
                     style={{
                         content: {
                             top: '50%',
-                            left: '58%',
+                            left: '50%',
                             right: 'auto',
                             bottom: 'auto',
                             marginRight: '-50%',
                             transform: 'translate(-50%, -50%)',
-                            width: '100%',
+                            width: '95%',
                             maxWidth: '1200px',
                             height: 'auto',
-                            maxHeight: '600px',
+                            maxHeight: '700px',
+                            padding: '50px',
+                            overflowY: 'auto',
                         },
                     }}
                 >
-                    <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Previsualización</h2>
-
-                    <div className="mt-8">
-                        <WelcomePage landingData={landingData} fixedNav={false} />
+                    <div className="absolute top-2 right-2 z-50">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            className="mr-3 h-10 w-10 cursor-pointer hover:scale-110 transition-transform duration-200"
+                            onClick={closeModal}
+                        >
+                            <path
+                                fillRule="evenodd"
+                                d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
+                                clipRule="evenodd"
+                            />
+                        </svg>
                     </div>
-                    <div className="mt-4 flex space-x-4">
+                    <br />
+                    <div className="mt-8">
+                        <WelcomePage landingData={landingData} fixedNav={false} isPrev={true} />
+                    </div>
+                    <div className="mt-4 flex flex-col sm:flex-row gap-4">
                         <Button onClick={closeModal}>Cerrar</Button>
 
                         <Button
                             onClick={handleSubmit}
-                            disabled={!landingData.title || !landingData.section1_video_description || !selectedFile || processing}
+                            disabled={processing}
                         >
                             Guardar
                         </Button>

@@ -15,7 +15,7 @@ export default function Testimonials({ landingData, isPrev }) {
                   {/* Avatar circular */}
                   <div className="w-24 h-24">
                     <img
-                      src={testimonial.image.url} // Asegúrate de que el campo 'avatar' contenga la URL de la imagen
+                      src={testimonial?.image?.url ?? 'https://via.placeholder.com/128'} // Asegúrate de que el campo 'avatar' contenga la URL de la imagen
                       alt={`Avatar de ${testimonial.name}`}
                       className="w-full h-full rounded-full object-cover"
                     />
@@ -23,8 +23,8 @@ export default function Testimonials({ landingData, isPrev }) {
 
                   {/* Texto del testimonio a la derecha */}
                   <div className="text-left">
-                    <p className="italic text-gray-600">"{testimonial.description}"</p>
-                    <h4 className="font-bold mt-2">- {testimonial.name}</h4>
+                    <p className="italic text-gray-600">"{testimonial.description ?? 'Sin dato'}"</p>
+                    <h4 className="font-bold mt-2">- {testimonial.name ?? 'Sin dato'}</h4>
                   </div>
                 </div>
               ))}
@@ -37,16 +37,16 @@ export default function Testimonials({ landingData, isPrev }) {
                   {/* Avatar circular */}
                   <div className="w-24 h-24">
                     <img
-                      src={`/storage/images/${testimonial.image.url}`} // Asegúrate de que el campo 'avatar' contenga la URL de la imagen
-                      alt={`Avatar de ${testimonial.name}`}
+                      src={`/storage/images/${testimonial?.image?.url}`} // Asegúrate de que el campo 'avatar' contenga la URL de la imagen
+                      alt={`Avatar ${testimonial.name ?? 'Sin dato'}`}
                       className="w-full h-full rounded-full object-cover"
                     />
                   </div>
 
                   {/* Texto del testimonio a la derecha */}
                   <div className="text-left">
-                    <p className="italic text-gray-600">"{testimonial.description}"</p>
-                    <h4 className="font-bold mt-2">- {testimonial.name}</h4>
+                    <p className="italic text-gray-600">"{testimonial.description ?? 'Sin Dato'}"</p>
+                    <h4 className="font-bold mt-2">- {testimonial.name ?? 'Sin Dato'}</h4>
                   </div>
                 </div>
               )) : (

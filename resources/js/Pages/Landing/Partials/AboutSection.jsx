@@ -1,12 +1,12 @@
-import {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import { Button, Typography, Input } from '@material-tailwind/react';
 import Modal from 'react-modal';
-import AboutPage from '../../AboutPage.jsx'
+import AboutPage from '../../AboutPage.jsx';
 
 Modal.setAppElement('#app');
 
-export default function AboutSection({ onSuccess }) {
+export default function AboutSection({ landingData: initialData, onSuccess }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [landingData, setLandingData] = useState({
@@ -14,28 +14,41 @@ export default function AboutSection({ onSuccess }) {
         section3_about: '',
         section3_mission: '',
         section3_vision: '',
-        isPrev: true,
-        type: ''
+        type: '',
+        section: ''
     });
 
-    const {setData, post, processing } = useForm();
+    const { setData, post, processing } = useForm();
+
+    useEffect(() => {
+        setLandingData(prevState => ({
+            ...prevState,
+            section3_image: initialData?.section3_image || null,
+            section3_about: initialData?.section3_about || '',
+            section3_mission: initialData?.section3_mission || '',
+            section3_vision: initialData?.section3_vision || '',
+            section: 'about'
+        }));
+    }, [initialData]);
 
     useEffect(() => {
         setData({
+            section3_about: landingData?.section3_about || '',
             section3_mission: landingData?.section3_mission || '',
-            section3_image: selectedFile || null,
             section3_vision: landingData?.section3_vision || '',
-            section3_about: landingData?.section3_about || ''
+            section3_image: selectedFile || null,
+            section: 'about'
         });
     }, [landingData, selectedFile]);
-
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
+            if (selectedFile?.url) {
+                URL.revokeObjectURL(selectedFile.url);
+            }
             const fileUrl = URL.createObjectURL(file);
             setSelectedFile({ url: fileUrl, file, type: file.type });
-
             setLandingData(prevState => ({
                 ...prevState,
                 section3_image: fileUrl,
@@ -45,9 +58,7 @@ export default function AboutSection({ onSuccess }) {
     };
 
     const openModal = () => {
-        if (selectedFile) {
-            setModalIsOpen(true);
-        }
+        setModalIsOpen(true);
     };
 
     const closeModal = () => {
@@ -81,39 +92,39 @@ export default function AboutSection({ onSuccess }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Crear un FormData solo si hay archivo
         const formData = new FormData();
-        formData.append('section3_vision', landingData.section3_about);
-        formData.append('section3_mission', landingData.section3_mission);
         formData.append('section3_vision', landingData.section3_vision);
+        formData.append('section3_mission', landingData.section3_mission);
+        formData.append('section3_about', landingData.section3_about);
         if (selectedFile) {
-            formData.append('section3_image', selectedFile.section3_image);
+            formData.append('section3_image', selectedFile.file); // Asegúrate de usar el archivo real
         }
 
-        post('/landing/about', {
+        post('/landing', {
             data: formData,
             preserveScroll: true,
             onFinish: () => {
                 console.log('Formulario enviado con éxito');
-                setLandingData({
+                /*setAboutData({
                     section3_about: '',
                     section3_mission: '',
                     section3_vision: '',
                     section3_image: ''
-                });
+                });*/
                 setModalIsOpen(false);
-                setSelectedFile(null);
+                // setSelectedFile(null);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 onSuccess("Landing Page actualizada correctamente.");
             }
         });
     };
 
     return (
-        <section className="p-4">
+        <section className="border p-4">
             <header>
                 <div>
                     <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                        Actualiza la información de tu Mision y Visión.
+                        Actualiza la información de tu Misión y Visión.
                     </p>
                 </div>
 
@@ -136,11 +147,11 @@ export default function AboutSection({ onSuccess }) {
 
                 <div className="mt-4">
                     <Typography variant="h6" color="blue-gray" className="mb-1">
-                        Mision
+                        Misión
                     </Typography>
                     <Input
                         name="section3_mission"
-                        placeholder="Escribe tu mision"
+                        placeholder="Escribe tu misión"
                         id="section3_mission"
                         value={landingData.section3_mission}
                         onChange={handleChangeMission}
@@ -153,11 +164,11 @@ export default function AboutSection({ onSuccess }) {
 
                 <div className="mt-4">
                     <Typography variant="h6" color="blue-gray" className="mb-1">
-                        Vision
+                        Visión
                     </Typography>
                     <Input
                         name="section3_vision"
-                        placeholder="Escribe tu vision"
+                        placeholder="Escribe tu visión"
                         id="section3_vision"
                         value={landingData.section3_vision}
                         onChange={handleChangeVision}
@@ -211,11 +222,9 @@ export default function AboutSection({ onSuccess }) {
                         variant="gradient"
                         className="rounded-full flex items-center gap-3"
                         onClick={openModal}
-                        disabled={!selectedFile}
                     >
                         Previsualizar
                     </Button>
-
                 </div>
 
                 <Modal
@@ -225,7 +234,7 @@ export default function AboutSection({ onSuccess }) {
                     style={{
                         content: {
                             top: '50%',
-                            left: '58%',
+                            left: '50%',
                             right: 'auto',
                             bottom: 'auto',
                             marginRight: '-50%',
@@ -237,17 +246,31 @@ export default function AboutSection({ onSuccess }) {
                         },
                     }}
                 >
-                    <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Previsualización</h2>
-
-                    <div className="mt-8">
-                        <AboutPage landingData={landingData} />
+                    <div className="absolute top-2 right-2 z-50">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            className="mr-3 h-10 w-10 cursor-pointer hover:scale-110 transition-transform duration-200"
+                            onClick={closeModal}
+                        >
+                            <path
+                                fillRule="evenodd"
+                                d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
+                                clipRule="evenodd"
+                            />
+                        </svg>
                     </div>
-                    <div className="mt-4 flex space-x-4">
+                    <br />
+                    <div className="mt-8">
+                        <AboutPage landingData={landingData} isPrev={true} />
+                    </div>
+                    <div className="mt-4 flex flex-col sm:flex-row gap-4">
                         <Button onClick={closeModal}>Cerrar</Button>
 
                         <Button
                             onClick={handleSubmit}
-                            disabled={!landingData.section3_vision || !landingData.section3_mission || !selectedFile || processing}
+                            disabled={processing}
                         >
                             Guardar
                         </Button>

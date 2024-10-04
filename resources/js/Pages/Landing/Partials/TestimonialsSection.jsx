@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import { Button, Typography } from '@material-tailwind/react';
 import Modal from 'react-modal';
@@ -6,27 +6,50 @@ import TestimonialsPage from '../../TestimonialsPage.jsx';
 
 Modal.setAppElement('#app');
 
-export default function TestimonialsSection({ onSuccess }) {
+export default function TestimonialsSection({ landingData: initialLandingData, onSuccess }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const { setData, post, processing } = useForm();
+
+  const parsedSectionTestimonials = typeof initialLandingData?.section6_testimonials === 'string'
+      ? JSON.parse(initialLandingData.section6_testimonials)
+      : initialLandingData.section6_testimonials;
 
   const [landingData, setLandingData] = useState({
-    section6_testimonials: [
-      { name: '', description: '', image: null }
-    ]
+    section6_testimonials: Array.isArray(parsedSectionTestimonials)
+        ? parsedSectionTestimonials
+        : [
+          { name: '', description: '', image: null }
+        ],
+    section: '',
   });
 
-  const { setData, post, processing } = useForm();
+  useEffect(() => {
+    if (initialLandingData) {
+      const parsedSectionTestimonials = typeof initialLandingData.section6_testimonials === 'string'
+          ? JSON.parse(initialLandingData.section6_testimonials)
+          : initialLandingData.section6_testimonials;
+
+      setLandingData({
+        section6_testimonials: Array.isArray(parsedSectionTestimonials)
+            ? parsedSectionTestimonials
+            : [
+              { name: '', description: '', image: null }
+            ],
+        section: 'testimonials',
+      });
+    }
+  }, [initialLandingData]);
+
 
   useEffect(() => {
     setData({
-      section6_testimonials: landingData.section6_testimonials
+      section6_testimonials: landingData.section6_testimonials,
+      section: 'testimonials'
     });
   }, [landingData]);
-
   const openModal = () => {
-    if (selectedImage)
-      setModalIsOpen(true);
+    setModalIsOpen(true);
   };
 
   const closeModal = () => {
@@ -42,9 +65,6 @@ export default function TestimonialsSection({ onSuccess }) {
     }));
   };
 
-  const isPreviewDisabled = landingData.section6_testimonials.every(
-    count => count.name.trim() !== '' && count.description.trim() !== '' && count.image !== null
-  );
 
   const handleFileChange = (event, index) => {
     const file = event.target.files[0];
@@ -84,30 +104,30 @@ export default function TestimonialsSection({ onSuccess }) {
 
     const formData = new FormData();
     formData.append('section6_testimonials', JSON.stringify(landingData.section6_testimonials));
-    post('/landing/testimonials', {
+    post('/landing', {
       data: formData,
       preserveScroll: true,
       onFinish: () => {
         console.log('Formulario enviado con éxito');
         setModalIsOpen(false);
-        setLandingData({
+        /*setLandingData({
           section6_testimonials: [{ name: '', description: '', image: null }]
-        });
+        });*/
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         onSuccess("Landing Page actualizada correctamente.");
       }
     });
   };
 
   return (
-    <section className="p-4">
+    <section className="border p-4">
       <header>
-        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Bienvenido</h2>
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
           Agrega información de Testimonios.
         </p>
-
+        <br />
         {landingData.section6_testimonials.map((count, index) => (
-          <div key={index} className="border border-gray-800 p-6 rounded-md mb-4 space-y-2">
+          <div key={index} className="border p-6 rounded-md mb-4 space-y-2">
             <Typography variant="h6" color="blue-gray" className="mb-1">
               Nombre
             </Typography>
@@ -196,7 +216,6 @@ export default function TestimonialsSection({ onSuccess }) {
             <Button
               size="sm"
               variant="gradient"
-              disabled={!isPreviewDisabled}
               onClick={openModal}
             >
               Previsualizar
@@ -211,7 +230,7 @@ export default function TestimonialsSection({ onSuccess }) {
           style={{
             content: {
               top: '50%',
-              left: '58%',
+              left: '50%',
               right: 'auto',
               bottom: 'auto',
               marginRight: '-50%',
@@ -223,14 +242,29 @@ export default function TestimonialsSection({ onSuccess }) {
             },
           }}
         >
-          <h2>Previsualización Testimonios</h2>
+          <div className="absolute top-2 right-2 z-50">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="mr-3 h-10 w-10 cursor-pointer hover:scale-110 transition-transform duration-200"
+                onClick={closeModal}
+            >
+              <path
+                  fillRule="evenodd"
+                  d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
+                  clipRule="evenodd"
+              />
+            </svg>
+          </div>
+          <br />
           <TestimonialsPage landingData={landingData.section6_testimonials} isPrev={true} />
-          <div className="mt-4 flex space-x-4">
+          <div className="mt-4 flex flex-col sm:flex-row gap-4">
             <Button onClick={closeModal}>Cerrar</Button>
 
             <Button
               onClick={handleSubmit}
-              disabled={processing || !isPreviewDisabled}
+              disabled={processing}
             >
               Guardar
             </Button>

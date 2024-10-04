@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import { Button, Typography } from '@material-tailwind/react';
 import Modal from 'react-modal';
@@ -6,27 +6,50 @@ import ServicesPage from '../../ServicesPage.jsx';
 
 Modal.setAppElement('#app');
 
-export default function ServicesSection({ onSuccess }) {
+export default function ServicesSection({ landingData: initialLandingData, onSuccess }) {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedButtonImage, setSelectedButtonImage] = useState(null);
     const [selectedBackgroundImage, setSelectedBackgroundImage] = useState(null);
+    const { setData, post, processing } = useForm();
+
+    const parsedSectionServices = typeof initialLandingData?.section4_services === 'string'
+        ? JSON.parse(initialLandingData.section4_services)
+        : initialLandingData.section4_services;
 
     const [landingData, setLandingData] = useState({
-        section4_services: [
-            { title: '', description: '', link: '', phone: '', button_image: null, background_image: null }
-        ]
+        section4_services: Array.isArray(parsedSectionServices)
+            ? parsedSectionServices
+            : [
+                { title: '', description: '', link: '', phone: '', button_image: null, background_image: null }
+            ],
+        section: '',
     });
 
-    const { setData, post, processing } = useForm();
+    useEffect(() => {
+        if (initialLandingData) {
+            const parsedSectionServices = typeof initialLandingData.section4_services === 'string'
+                ? JSON.parse(initialLandingData.section4_services)
+                : initialLandingData.section4_services;
+
+            setLandingData({
+                section4_services: Array.isArray(parsedSectionServices)
+                    ? parsedSectionServices
+                    : [
+                        { title: '', description: '', link: '', phone: '', button_image: null, background_image: null }
+                    ],
+                section: 'services',
+            });
+        }
+    }, [initialLandingData]);
 
     useEffect(() => {
         setData({
-            section4_services: landingData.section4_services
+            section4_services: landingData.section4_services,
+            section: 'services'
         });
     }, [landingData]);
 
     const openModal = () => {
-        if (selectedButtonImage && selectedBackgroundImage)
         setModalIsOpen(true);
     };
 
@@ -42,12 +65,6 @@ export default function ServicesSection({ onSuccess }) {
             section4_services: updatedServices
         }));
     };
-
-    const isPreviewDisabled = landingData.section4_services.every(
-        count => count.title.trim() !== '' && count.description.trim() !== ''
-            && count.link.trim() !== '' && count.button_image !== null
-            && count.background_image !== null
-    );
 
     const handleButtonImageChange = (event, index) => {
         const file = event.target.files[0];
@@ -105,31 +122,31 @@ export default function ServicesSection({ onSuccess }) {
 
         const formData = new FormData();
         formData.append('section4_services', JSON.stringify(landingData.section4_services));
-        console.log(formData)
-        post('/landing/services', {
+        post('/landing', {
             data: formData,
             preserveScroll: true,
             onFinish: () => {
                 console.log('Formulario enviado con éxito');
                 setModalIsOpen(false);
-              setLandingData({
-                section4_services: [{ title: '', description: '', link: '', phone: '', button_image: null, background_image: null }]
-              });
+                /* setLandingData({
+                    section4_services: [{ title: '', description: '', link: '', phone: '', button_image: null, background_image: null }]
+                });
+                */
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 onSuccess("Landing Page actualizada correctamente.");
             }
         });
     };
 
     return (
-        <section className="p-4">
+        <section className="border p-4">
             <header>
-                <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Bienvenido</h2>
                 <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                     Actualiza la información de tus Servicios.
                 </p>
-
+                <br />
                 {landingData.section4_services.map((count, index) => (
-                    <div key={index} className="border border-gray-800 p-6 rounded-md mb-4 space-y-2">
+                    <div key={index} className="border p-6 rounded-md mb-4 space-y-2">
                         <Typography variant="h6" color="blue-gray" className="mb-1">
                             Título del Servicio
                         </Typography>
@@ -277,7 +294,6 @@ export default function ServicesSection({ onSuccess }) {
                         <Button
                             size="sm"
                             variant="gradient"
-                            disabled={!isPreviewDisabled}
                             onClick={openModal}
                         >
                             Previsualizar
@@ -292,7 +308,7 @@ export default function ServicesSection({ onSuccess }) {
                     style={{
                         content: {
                             top: '50%',
-                            left: '58%',
+                            left: '50%',
                             right: 'auto',
                             bottom: 'auto',
                             marginRight: '-50%',
@@ -304,14 +320,29 @@ export default function ServicesSection({ onSuccess }) {
                         },
                     }}
                 >
-                    <h2>Previsualización de Servicios</h2>
+                    <div className="absolute top-2 right-2 z-50">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            className="mr-3 h-10 w-10 cursor-pointer hover:scale-110 transition-transform duration-200"
+                            onClick={closeModal}
+                        >
+                            <path
+                                fillRule="evenodd"
+                                d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
+                                clipRule="evenodd"
+                            />
+                        </svg>
+                    </div>
+                    <br />
                     <ServicesPage landingData={landingData.section4_services} isPrev={true} />
-                    <div className="mt-4 flex space-x-4">
+                    <div className="mt-4 flex flex-col sm:flex-row gap-4">
                         <Button onClick={closeModal}>Cerrar</Button>
 
                         <Button
                             onClick={handleSubmit}
-                            disabled={processing || !isPreviewDisabled}
+                            disabled={processing}
                         >
                             Guardar
                         </Button>
