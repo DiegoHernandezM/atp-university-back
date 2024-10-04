@@ -17,6 +17,10 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/dashboard-student', function () {
+    return Inertia::render('DashboardStudent');
+})->middleware(['auth', 'verified'])->name('dashboard.student');
+
 Route::middleware('auth')->group(function () {
     // Routes
     require base_path('routes/profile/profile.php');
@@ -24,6 +28,7 @@ Route::middleware('auth')->group(function () {
     require base_path('routes/administrators/administrators.php');
     require base_path('routes/student/student.php');
     require base_path('routes/contacts/contacts.php');
+    require base_path('routes/subjects/subjects.php');
 });
 
 // public

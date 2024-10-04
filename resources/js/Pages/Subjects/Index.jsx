@@ -4,24 +4,24 @@ import { usePage } from '@inertiajs/react';
 import { Alert } from '@material-tailwind/react';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import StudentsTable from '@/Components/Tables/StudentsTable';
+import SubjectsTable from '@/Components/Tables/SubjectsTable';
 
-export default function Students({ auth, students, ...props }) {
+export default function Students({ auth, subjects, ...props }) {
     const success = props?.flash?.success;
 
     return (
         <AuthenticatedLayout
             user={auth.user}
             roles={auth.roles}
-            header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Estudiantes</h2>}
+            header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Materias</h2>}
         >
-            <Head title="Students" />
+            <Head title="Subjects" />
             <div>
                 {success && <Alert color="green">{success}</Alert>}
             </div>
             <div className="mt-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                    <StudentsTable students={students} />
+                    <SubjectsTable subjects={subjects} />
                 </div>
             </div >
         </AuthenticatedLayout>
