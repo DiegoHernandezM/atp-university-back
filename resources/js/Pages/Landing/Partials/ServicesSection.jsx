@@ -20,7 +20,7 @@ export default function ServicesSection({ landingData: initialLandingData, onSuc
         section4_services: Array.isArray(parsedSectionServices)
             ? parsedSectionServices
             : [
-                { title: '', description: '', link: '', phone: '', button_image: null, background_image: null }
+                { title: '', description: '', link: '', phone: '', button_image: null, background_image: null, calendar:[{day: '', month: '', course: '', code: '', remark: ''}] }
             ],
         section: '',
     });
@@ -35,7 +35,7 @@ export default function ServicesSection({ landingData: initialLandingData, onSuc
                 section4_services: Array.isArray(parsedSectionServices)
                     ? parsedSectionServices
                     : [
-                        { title: '', description: '', link: '', phone: '', button_image: null, background_image: null }
+                        { title: '', description: '', link: '', phone: '', button_image: null, background_image: null, calendar: [{day: '', month: '', course: '', code: '', remark: ''}] }
                     ],
                 section: 'services',
             });
@@ -94,6 +94,21 @@ export default function ServicesSection({ landingData: initialLandingData, onSuc
                 section4_services: updatedServices
             }));
         }
+    };
+
+    const handleCalendarChange = (serviceIndex, calendarIndex, field, value) => {
+        const updatedServices = [...landingData.section4_services];
+        if (!updatedServices[serviceIndex].calendar) {
+            updatedServices[serviceIndex].calendar = [];
+        }
+        updatedServices[serviceIndex].calendar[calendarIndex] = {
+            ...updatedServices[serviceIndex].calendar[calendarIndex],
+            [field]: value
+        };
+        setLandingData(prevData => ({
+            ...prevData,
+            section4_services: updatedServices
+        }));
     };
 
     // Función para agregar una nueva sección de servicio
@@ -186,6 +201,61 @@ export default function ServicesSection({ landingData: initialLandingData, onSuc
                         onChange={(e) => handleServicesChange(index, 'phone', e.target.value)}
                         className="mt-1 block w-full border-gray-300 rounded-md"
                       />
+                        {console.log(count)}
+                        {/* Campos del calendario */}
+                        {count?.calendar.map((calendar, calendarIndex) => (
+                            <div key={calendarIndex}>
+                                <Typography variant="h6" color="blue-gray" className="mb-1">
+                                    Día
+                                </Typography>
+                                <input
+                                    type="text"
+                                    value={calendar.day ?? ''}
+                                    onChange={(e) => handleCalendarChange(index, calendarIndex, 'day', e.target.value)}
+                                    className="mt-1 block w-full border-gray-300 rounded-md"
+                                />
+
+                                <Typography variant="h6" color="blue-gray" className="mb-1">
+                                    Mes
+                                </Typography>
+                                <input
+                                    type="text"
+                                    value={calendar.month ?? ''}
+                                    onChange={(e) => handleCalendarChange(index, calendarIndex, 'month', e.target.value)}
+                                    className="mt-1 block w-full border-gray-300 rounded-md"
+                                />
+
+                                <Typography variant="h6" color="blue-gray" className="mb-1">
+                                    Curso
+                                </Typography>
+                                <input
+                                    type="text"
+                                    value={calendar.course ?? ''}
+                                    onChange={(e) => handleCalendarChange(index, calendarIndex, 'course', e.target.value)}
+                                    className="mt-1 block w-full border-gray-300 rounded-md"
+                                />
+
+                                <Typography variant="h6" color="blue-gray" className="mb-1">
+                                    Código
+                                </Typography>
+                                <input
+                                    type="text"
+                                    value={calendar.code ?? ''}
+                                    onChange={(e) => handleCalendarChange(index, calendarIndex, 'code', e.target.value)}
+                                    className="mt-1 block w-full border-gray-300 rounded-md"
+                                />
+
+                                <Typography variant="h6" color="blue-gray" className="mb-1">
+                                    Observaciones
+                                </Typography>
+                                <input
+                                    type="text"
+                                    value={calendar.remark ?? ''}
+                                    onChange={(e) => handleCalendarChange(index, calendarIndex, 'remark', e.target.value)}
+                                    className="mt-1 block w-full border-gray-300 rounded-md"
+                                />
+                            </div>
+                        ))}
 
                         <div className="mt-4">
                             <Typography variant="h6" color="blue-gray" className="mb-1">
@@ -336,6 +406,7 @@ export default function ServicesSection({ landingData: initialLandingData, onSuc
                         </svg>
                     </div>
                     <br />
+                    {console.log(landingData.section4_services)}
                     <ServicesPage landingData={landingData.section4_services} isPrev={true} />
                     <div className="mt-4 flex flex-col sm:flex-row gap-4">
                         <Button onClick={closeModal}>Cerrar</Button>
