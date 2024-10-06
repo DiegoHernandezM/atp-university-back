@@ -132,6 +132,24 @@ export default function ServicesSection({ landingData: initialLandingData, onSuc
         }));
     };
 
+  const addCalendarEntry = (serviceIndex) => {
+    const updatedServices = [...landingData.section4_services];
+    updatedServices[serviceIndex].calendar.push({ day: '', month: '', course: '', code: '', remark: '' });
+    setLandingData(prevData => ({
+      ...prevData,
+      section4_services: updatedServices
+    }));
+  };
+
+  const removeCalendarEntry = (serviceIndex, calendarIndex) => {
+    const updatedServices = [...landingData.section4_services];
+    updatedServices[serviceIndex].calendar.splice(calendarIndex, 1);
+    setLandingData(prevData => ({
+      ...prevData,
+      section4_services: updatedServices
+    }));
+  };
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -201,74 +219,125 @@ export default function ServicesSection({ landingData: initialLandingData, onSuc
                         onChange={(e) => handleServicesChange(index, 'phone', e.target.value)}
                         className="mt-1 block w-full border-gray-300 rounded-md"
                       />
-                        {console.log(count)}
-                        {/* Campos del calendario */}
-                        {count?.calendar.map((calendar, calendarIndex) => (
-                            <div key={calendarIndex}>
+                      {count?.calendar.length === 0 ? (
+                        // Si no hay fechas, se muestra el botón para agregar una
+                        <div className="mt-2 flex space-x-2">
+                          <Button size="sm" variant="gradient" onClick={() => addCalendarEntry(index)}>
+                            Agregar fecha
+                          </Button>
+                        </div>
+                      ) : (
+                        // Si hay fechas, se muestran los campos y los botones para agregar o eliminar fechas
+                        count?.calendar.map((calendar, calendarIndex) => (
+                          <div key={calendarIndex} className="mb-4">
+                            {/* Contenedor horizontal para todos los campos */}
+                            <div className="flex space-x-4 items-center">
+                              {/* Campo Día */}
+                              <div className="flex-1">
                                 <Typography variant="h6" color="blue-gray" className="mb-1">
-                                    Día
+                                  Día
                                 </Typography>
                                 <input
-                                    type="text"
-                                    value={calendar.day ?? ''}
-                                    onChange={(e) => handleCalendarChange(index, calendarIndex, 'day', e.target.value)}
-                                    className="mt-1 block w-full border-gray-300 rounded-md"
+                                  type="number"
+                                  max="31"
+                                  value={calendar.day ?? ''}
+                                  onChange={(e) => handleCalendarChange(index, calendarIndex, 'day', e.target.value)}
+                                  className="mt-1 block w-full border-gray-300 rounded-md"
                                 />
+                              </div>
 
+                              {/* Campo Mes */}
+                              <div className="flex-1">
                                 <Typography variant="h6" color="blue-gray" className="mb-1">
-                                    Mes
+                                  Mes
                                 </Typography>
-                                <input
-                                    type="text"
-                                    value={calendar.month ?? ''}
-                                    onChange={(e) => handleCalendarChange(index, calendarIndex, 'month', e.target.value)}
-                                    className="mt-1 block w-full border-gray-300 rounded-md"
-                                />
+                                <select
+                                  value={calendar.month ?? ''}
+                                  onChange={(e) => handleCalendarChange(index, calendarIndex, 'month', e.target.value)}
+                                  className="mt-1 block w-full border-gray-300 rounded-md"
+                                >
+                                  <option value="">Seleccionar mes</option>
+                                  <option value="Enero">Enero</option>
+                                  <option value="Febrero">Febrero</option>
+                                  <option value="Marzo">Marzo</option>
+                                  <option value="Abril">Abril</option>
+                                  <option value="Mayo">Mayo</option>
+                                  <option value="Junio">Junio</option>
+                                  <option value="Julio">Julio</option>
+                                  <option value="Agosto">Agosto</option>
+                                  <option value="Septiembre">Septiembre</option>
+                                  <option value="Octubre">Octubre</option>
+                                  <option value="Noviembre">Noviembre</option>
+                                  <option value="Diciembre">Diciembre</option>
+                                </select>
+                              </div>
 
+                              {/* Campo Curso */}
+                              <div className="flex-1">
                                 <Typography variant="h6" color="blue-gray" className="mb-1">
-                                    Curso
+                                  Curso
                                 </Typography>
                                 <input
-                                    type="text"
-                                    value={calendar.course ?? ''}
-                                    onChange={(e) => handleCalendarChange(index, calendarIndex, 'course', e.target.value)}
-                                    className="mt-1 block w-full border-gray-300 rounded-md"
+                                  type="text"
+                                  value={calendar.course ?? ''}
+                                  onChange={(e) => handleCalendarChange(index, calendarIndex, 'course', e.target.value)}
+                                  className="mt-1 block w-full border-gray-300 rounded-md"
                                 />
+                              </div>
 
+                              {/* Campo Código */}
+                              <div className="flex-1">
                                 <Typography variant="h6" color="blue-gray" className="mb-1">
-                                    Código
+                                  Código
                                 </Typography>
                                 <input
-                                    type="text"
-                                    value={calendar.code ?? ''}
-                                    onChange={(e) => handleCalendarChange(index, calendarIndex, 'code', e.target.value)}
-                                    className="mt-1 block w-full border-gray-300 rounded-md"
+                                  type="text"
+                                  value={calendar.code ?? ''}
+                                  onChange={(e) => handleCalendarChange(index, calendarIndex, 'code', e.target.value)}
+                                  className="mt-1 block w-full border-gray-300 rounded-md"
                                 />
+                              </div>
 
+                              {/* Campo Observaciones */}
+                              <div className="flex-1">
                                 <Typography variant="h6" color="blue-gray" className="mb-1">
-                                    Observaciones
+                                  Observaciones
                                 </Typography>
                                 <input
-                                    type="text"
-                                    value={calendar.remark ?? ''}
-                                    onChange={(e) => handleCalendarChange(index, calendarIndex, 'remark', e.target.value)}
-                                    className="mt-1 block w-full border-gray-300 rounded-md"
+                                  type="text"
+                                  value={calendar.remark ?? ''}
+                                  onChange={(e) => handleCalendarChange(index, calendarIndex, 'remark', e.target.value)}
+                                  className="mt-1 block w-full border-gray-300 rounded-md"
                                 />
+                              </div>
                             </div>
-                        ))}
 
-                        <div className="mt-4">
-                            <Typography variant="h6" color="blue-gray" className="mb-1">
-                                Agregar imagen para botón
-                            </Typography>
-                            <div className="flex flex-wrap gap-4">
-                                <input
-                                    type="file"
-                                    name="button_image"
-                                    id={`button_image_${index}`} // ID único por cada sección
-                                    className="hidden"
-                                    accept="image/*"
-                                    onChange={(e) => handleButtonImageChange(e, index)} // Cambié para que llame la función con el índice correspondiente
+                            {/* Botones para agregar/eliminar fechas */}
+                            <div className="mt-2 flex space-x-2">
+                              <Button size="sm" variant="gradient" onClick={() => addCalendarEntry(index)}>
+                                Agregar fecha
+                              </Button>
+                              <Button size="sm" variant="gradient" color="red" onClick={() => removeCalendarEntry(index, calendarIndex)}>
+                                Eliminar fecha
+                              </Button>
+
+                            </div>
+                          </div>
+                        ))
+                      )}
+
+                      <div className="mt-4">
+                        <Typography variant="h6" color="blue-gray" className="mb-1">
+                          Agregar imagen para botón
+                        </Typography>
+                        <div className="flex flex-wrap gap-4">
+                          <input
+                            type="file"
+                            name="button_image"
+                            id={`button_image_${index}`} // ID único por cada sección
+                            className="hidden"
+                            accept="image/*"
+                            onChange={(e) => handleButtonImageChange(e, index)} // Cambié para que llame la función con el índice correspondiente
                                 />
                                 <Button
                                     size="sm"
@@ -406,7 +475,6 @@ export default function ServicesSection({ landingData: initialLandingData, onSuc
                         </svg>
                     </div>
                     <br />
-                    {console.log(landingData.section4_services)}
                     <ServicesPage landingData={landingData.section4_services} isPrev={true} />
                     <div className="mt-4 flex flex-col sm:flex-row gap-4">
                         <Button onClick={closeModal}>Cerrar</Button>
