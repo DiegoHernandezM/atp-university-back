@@ -219,7 +219,7 @@ export default function ServicesSection({ landingData: initialLandingData, onSuc
                         onChange={(e) => handleServicesChange(index, 'phone', e.target.value)}
                         className="mt-1 block w-full border-gray-300 rounded-md"
                       />
-                      {count?.calendar.length === 0 ? (
+                      {count?.calendar?.length === 0 ? (
                         // Si no hay fechas, se muestra el botón para agregar una
                         <div className="mt-2 flex space-x-2">
                           <Button size="sm" variant="gradient" onClick={() => addCalendarEntry(index)}>
@@ -228,7 +228,7 @@ export default function ServicesSection({ landingData: initialLandingData, onSuc
                         </div>
                       ) : (
                         // Si hay fechas, se muestran los campos y los botones para agregar o eliminar fechas
-                        count?.calendar.map((calendar, calendarIndex) => (
+                        count?.calendar?.map((calendar, calendarIndex) => (
                           <div key={calendarIndex} className="mb-4">
                             {/* Contenedor horizontal para todos los campos */}
                             <div className="flex space-x-4 items-center">
