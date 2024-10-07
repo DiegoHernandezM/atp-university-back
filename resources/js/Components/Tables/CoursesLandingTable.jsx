@@ -68,7 +68,7 @@ export default function CoursesLandingTable({ flights }) {
           </tr>
         </thead>
         <tbody>
-          {flights.map((flight, index) => (
+          {flights?.map((flight, index) => (
             <tr key={index}>
               <td>{flight.day}</td>
               <td>{flight.month}</td>
