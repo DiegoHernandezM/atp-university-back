@@ -117,7 +117,7 @@ export default function ServicesSection({ landingData: initialLandingData, onSuc
             ...prevData,
             section4_services: [
                 ...prevData.section4_services,
-                { title: '', description: '', link: '', phone: '', button_image: null, background_image: null }
+                { title: '', description: '', link: '', phone: '', button_image: null, background_image: null, calendar:[{day: '', month: '', course: '', code: '', remark: ''}] }
             ]
         }));
     };
