@@ -72,7 +72,7 @@ export default function ServicesLandingDialog({ open, onClose, selectedService, 
         </Typography>
         {/* Diálogo secundario */}
         <Dialog open={openSecondaryDialog} size="sm" handler={handleOpenSecondaryDialog} className="bg-gradient-to-b from-gray-100 to-white">
-          <CoursesLandingTable />
+          <CoursesLandingTable flights={selectedService?.calendar} />
         </Dialog>
       </DialogBody>
       <DialogFooter className="flex justify-center space-x-2 mt-20">

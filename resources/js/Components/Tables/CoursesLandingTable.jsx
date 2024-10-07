@@ -1,14 +1,6 @@
 import React from 'react';
 
-export default function CoursesLandingTable() {
-  const flights = [
-    { day: '18', month: 'OCTUBRE', course: 'CIAC PREP', code: 'AA830', remark: 'CUPO 20 PERSONAS' },
-    { day: '20', month: 'OCTUBRE', course: 'CIAC PREP', code: 'BB267', remark: 'SIN CUPO' },
-    { day: '01', month: 'SEPTIEMBRE', course: 'CIAC PREP', code: 'CC281', remark: 'CANCELADO' },
-    { day: '15', month: 'SEPTIEMBRE', course: 'CIAC PREP', code: 'DD1032', remark: 'CUPO 10 PERSONAS' },
-    { day: '10', month: 'ENERO', course: 'CIAC PREP', code: 'EE4818', remark: 'PENDIENTE' },
-    { day: '20', month: 'FEBRERO', course: 'CIAC PREP', code: 'FFN418', remark: 'PENDIENTE' },
-  ];
+export default function CoursesLandingTable({ flights }) {
 
   return (
     <div className="flight-table">
