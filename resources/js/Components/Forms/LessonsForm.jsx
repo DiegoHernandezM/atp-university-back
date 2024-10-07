@@ -3,9 +3,10 @@ import { Drawer, Button, Input, IconButton, Textarea } from "@material-tailwind/
 import { useForm } from '@inertiajs/react'; // Importa useForm desde Inertia
 import InputError from '@/Components/InputError';
 
-const LessonsForm = ({ open, onClose, onSuccess, currentLesson }) => {
+const LessonsForm = ({ open, onClose, onSuccess, currentLesson, subject }) => {
   const isEditing = !!currentLesson;
   const { data, setData, post, reset, errors, put } = useForm({
+    subject: subject.id,
     title: '',
     description: ''
   });
@@ -14,6 +15,7 @@ const LessonsForm = ({ open, onClose, onSuccess, currentLesson }) => {
   useEffect(() => {
     if (isEditing) {
       setData({
+        subject: subject.id,
         title: currentLesson.title,
         description: currentLesson.description
       });
@@ -41,7 +43,7 @@ const LessonsForm = ({ open, onClose, onSuccess, currentLesson }) => {
         }
       });
     } else {
-      post(route('lesson.store'), {
+      post(route('lessons.store'), {
         onSuccess: () => {
           setLoading(false);
           reset();

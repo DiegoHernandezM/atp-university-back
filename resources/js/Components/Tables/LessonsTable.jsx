@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Input, Alert, IconButton, Tooltip, Typography, Card, CardBody, CardHeader, CardFooter } from '@material-tailwind/react';
-import { MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon, ArrowUturnLeftIcon } from '@heroicons/react/24/solid';
+import { MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon, ArrowUturnLeftIcon, NewspaperIcon } from '@heroicons/react/24/solid';
 
 import LessonsForm from '../Forms/LessonsForm.jsx';
+import ResourcesDialog from '../Dialogs/ResourcesDialog.jsx'
 
 
 const LessonsTable = ({ lessons, subject }) => {
@@ -14,10 +15,13 @@ const LessonsTable = ({ lessons, subject }) => {
   const [successMessage, setSuccessMessage] = useState(null);
   const [currentLesson, setCurrentLesson] = useState(null);
 
+  // Drawer para contenido
+  const [openContent, setOpenContent] = useState(false);
+
   // Filtrar usuarios por búsqueda
   useEffect(() => {
     const filtered = lessons.filter((lesson) =>
-      lesson.name.toLowerCase().includes(search.toLowerCase())
+      lesson.title.toLowerCase().includes(search.toLowerCase())
     );
     setFilteredLessons(filtered);
   }, [search, lessons]);
@@ -47,6 +51,16 @@ const LessonsTable = ({ lessons, subject }) => {
     setOpenDrawer(true);
   };
 
+  const handleContentClick = (lesson) => {
+    setCurrentLesson(lesson);
+    setOpenContent(true);
+  };
+
+  const handleCloseContent = () => {
+    setCurrentLesson(null);
+    setOpenContent(false)
+  };
+
   return (
     <>
       {successMessage && <Alert color="green">{successMessage}</Alert>}
@@ -55,7 +69,7 @@ const LessonsTable = ({ lessons, subject }) => {
           <div className="mb-4 flex flex-col justify-between gap-8 md:flex-row md:items-center">
             <div>
               <Typography variant="h5" color="blue-gray">
-                {`Lista de Lecciones de la materia: ${subject.title}`}
+                {`Lista de lecciones de la materia: ${subject.title}`}
               </Typography>
               <Typography color="gray" className="mt-1 font-normal">
                 Administra tus lecciones a continuación
@@ -94,13 +108,20 @@ const LessonsTable = ({ lessons, subject }) => {
                 <tr key={lesson.id}>
                   <td className="p-4">
                     <div className="flex items-center gap-3">
-                      <Typography className="font-bold">{lesson.subect.title}</Typography>
+                      <Typography className="font-bold">
+                        {subject.title ? subject.title : 'Sin título'}
+                      </Typography>
                     </div>
                   </td>
                   <td className="p-4">{lesson.title}</td>
                   <td className="p-4">{lesson.description}</td>
                   <td className="p-4">
                     <div className="flex items-center space-x-2">
+                      <Tooltip content="Contenido">
+                        <IconButton variant="text" onClick={() => handleContentClick(lesson)}>
+                          <NewspaperIcon className="h-4 w-4" />
+                        </IconButton>
+                      </Tooltip>
                       <Tooltip content="Editar">
                         <IconButton variant="text" onClick={() => handleEditClick(lesson)}>
                           <PencilIcon className="h-4 w-4" />
@@ -131,7 +152,8 @@ const LessonsTable = ({ lessons, subject }) => {
           <Button variant="outlined" size="sm" onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(filteredLessons.length / lessonsPerPage)}>Siguiente</Button>
         </CardFooter>
       </Card>
-      <LessonsForm open={openDrawer} onClose={handleCloseDrawer} onSuccess={handleFormSuccess} currentLesson={currentLesson} />
+      <LessonsForm open={openDrawer} onClose={handleCloseDrawer} onSuccess={handleFormSuccess} currentLesson={currentLesson} subject={subject} />
+      <ResourcesDialog open={openContent} onClose={handleCloseContent} currentLesson={currentLesson} subject={subject} />
     </>
 
   );
