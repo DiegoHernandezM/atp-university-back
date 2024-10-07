@@ -1,31 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Input, Alert, IconButton, Tooltip, Typography, Card, CardBody, CardHeader, CardFooter } from '@material-tailwind/react';
-import { MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon, XCircleIcon, CheckCircleIcon, ListBulletIcon } from '@heroicons/react/24/solid';
+import { MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon, ArrowUturnLeftIcon } from '@heroicons/react/24/solid';
 
-import SubjectsForm from '../Forms/SubjectsForm.jsx';
+import LessonsForm from '../Forms/LessonsForm.jsx';
 
 
-const SubjectsTable = ({ subjects }) => {
+const LessonsTable = ({ lessons, subject }) => {
   const [search, setSearch] = useState('');
-  const [filteredSubjects, setFilteredSubjects] = useState(subjects);
+  const [filteredLessons, setFilteredLessons] = useState(lessons);
   const [currentPage, setCurrentPage] = useState(1);
-  const [subjectsPerPage] = useState(5);
+  const [lessonsPerPage] = useState(5);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
-  const [currentSubjetc, setCurrentSubject] = useState(null);
+  const [currentLesson, setCurrentLesson] = useState(null);
 
   // Filtrar usuarios por búsqueda
   useEffect(() => {
-    const filtered = subjects.filter((subject) =>
-      subject.title.toLowerCase().includes(search.toLowerCase())
+    const filtered = lessons.filter((lesson) =>
+      lesson.name.toLowerCase().includes(search.toLowerCase())
     );
-    setFilteredSubjects(filtered);
-  }, [search, subjects]);
+    setFilteredLessons(filtered);
+  }, [search, lessons]);
 
   // Calcular los usuarios actuales en la página
-  const indexOfLastSubject = currentPage * subjectsPerPage;
-  const indexOfFirstSubject = indexOfLastSubject - subjectsPerPage;
-  const currentSubjects = filteredSubjects.slice(indexOfFirstSubject, indexOfLastSubject);
+  const indexOfLastLesson = currentPage * lessonsPerPage;
+  const indexOfFirstLesson = indexOfLastLesson - lessonsPerPage;
+  const currentLessons = filteredLessons.slice(indexOfFirstLesson, indexOfLastLesson);
 
   // Cambiar página
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -33,7 +33,7 @@ const SubjectsTable = ({ subjects }) => {
   const handleOpenDrawer = () => setOpenDrawer(true);
 
   const handleCloseDrawer = () => {
-    setCurrentSubject(null);
+    setCurrentLesson(null);
     setOpenDrawer(false)
   };
 
@@ -42,8 +42,8 @@ const SubjectsTable = ({ subjects }) => {
     setTimeout(() => setSuccessMessage(null), 3000);
   };
 
-  const handleEditClick = (subject) => {
-    setCurrentSubject(subject);
+  const handleEditClick = (lesson) => {
+    setCurrentLesson(lesson);
     setOpenDrawer(true);
   };
 
@@ -55,10 +55,10 @@ const SubjectsTable = ({ subjects }) => {
           <div className="mb-4 flex flex-col justify-between gap-8 md:flex-row md:items-center">
             <div>
               <Typography variant="h5" color="blue-gray">
-                Lista de Materias
+                {`Lista de Lecciones de la materia: ${subject.title}`}
               </Typography>
               <Typography color="gray" className="mt-1 font-normal">
-                Administra tus materias a continuación
+                Administra tus lecciones a continuación
               </Typography>
             </div>
             <div className="flex w-full shrink-0 gap-2 md:w-max">
@@ -73,6 +73,9 @@ const SubjectsTable = ({ subjects }) => {
               <Button className="flex items-center gap-3" size="sm" onClick={handleOpenDrawer}>
                 <PlusIcon strokeWidth={2} className="h-4 w-4" /> Nuevo
               </Button>
+              <Button className="flex items-center gap-3" size="sm" onClick={() => window.location.href = route('subjects.index')}>
+                <ArrowUturnLeftIcon strokeWidth={2} className="h-4 w-4" /> Regresar
+              </Button>
             </div>
           </div>
         </CardHeader>
@@ -80,42 +83,31 @@ const SubjectsTable = ({ subjects }) => {
           <table className="w-full min-w-max table-auto text-left">
             <thead>
               <tr>
-                <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">Título</th>
+                <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">Materia</th>
+                <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">Titulo</th>
                 <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">Descripción</th>
-                <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">Estado</th>
                 <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {currentSubjects.map((subject, index) => (
-                <tr key={subject.id}>
+              {currentLessons.map((lesson, index) => (
+                <tr key={lesson.id}>
                   <td className="p-4">
                     <div className="flex items-center gap-3">
-                      <Typography className="font-bold">{subject.title}</Typography>
+                      <Typography className="font-bold">{lesson.subect.title}</Typography>
                     </div>
                   </td>
-                  <td className="p-4">{subject.description}</td>
-                  <td className="p-4">
-                    {subject.status === 'active' ? (
-                      <CheckCircleIcon className="h-4 w-4 text-green-500" /> // Ícono para activo
-                    ) : (
-                      <XCircleIcon className="h-4 w-4 text-red-500" /> // Ícono para inactivo
-                    )}
-                  </td>
+                  <td className="p-4">{lesson.title}</td>
+                  <td className="p-4">{lesson.description}</td>
                   <td className="p-4">
                     <div className="flex items-center space-x-2">
                       <Tooltip content="Editar">
-                        <IconButton variant="text" onClick={() => handleEditClick(subject)}>
+                        <IconButton variant="text" onClick={() => handleEditClick(lesson)}>
                           <PencilIcon className="h-4 w-4" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip content="Lecciones">
-                        <IconButton variant="text" onClick={() => window.location.href = route('lessons.index', subject.id)}>
-                          <ListBulletIcon className="h-4 w-4" />
-                        </IconButton>
-                      </Tooltip>
-                      <form method="POST" action={route('subjects.destroy', subject.id)} onSubmit={(e) => {
-                        if (!window.confirm(`¿Estás seguro que deseas eliminar la materia: ${subject.name}?`)) {
+                      <form method="POST" action={route('lessons.destroy', lesson.id)} onSubmit={(e) => {
+                        if (!window.confirm(`¿Estás seguro que deseas eliminar a ${lesson.title}?`)) {
                           e.preventDefault();
                         }
                       }}>
@@ -136,13 +128,13 @@ const SubjectsTable = ({ subjects }) => {
         </CardBody>
         <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
           <Button variant="outlined" size="sm" onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>Anterior</Button>
-          <Button variant="outlined" size="sm" onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(filteredSubjects.length / subjectsPerPage)}>Siguiente</Button>
+          <Button variant="outlined" size="sm" onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(filteredLessons.length / lessonsPerPage)}>Siguiente</Button>
         </CardFooter>
       </Card>
-      <SubjectsForm open={openDrawer} onClose={handleCloseDrawer} onSuccess={handleFormSuccess} currentSubject={currentSubjetc} />
+      <LessonsForm open={openDrawer} onClose={handleCloseDrawer} onSuccess={handleFormSuccess} currentLesson={currentLesson} />
     </>
 
   );
 };
 
-export default SubjectsTable;
+export default LessonsTable;
