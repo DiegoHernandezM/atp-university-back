@@ -16,7 +16,7 @@ class LessonService
 
     public function getLessons($subject)
     {
-        return $this->mLesson->where('subject_id', $subject)->get();
+        return $this->mLesson->where('subject_id', $subject)->with('resources')->get();
     }
 
     public function createLesson($data)
