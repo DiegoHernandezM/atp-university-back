@@ -17,7 +17,7 @@ import {
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 
-export default function ResourcesDialog({ open, onClose, currentLesson, subject }) {
+export default function ResourcesDialog({ open, onClose, currentLesson, successMesage }) {
   const { setData, post, reset } = useForm();
   // Estado para manejar los recursos
   const [resources, setResources] = useState([]);
@@ -59,30 +59,40 @@ export default function ResourcesDialog({ open, onClose, currentLesson, subject 
 
   function handleSaveResources() {
     const formData = new FormData();
+
+    // Añadir el ID de la lección
     formData.append('lesson_id', currentLesson.id);
 
+    // Añadir cada recurso al formData como campos individuales
     resources.forEach((resource, index) => {
-      formData.append(`resources[${index}][title]`, resource.title);
+      formData.append(`resources[${index}][id]`, resource.id || '');  // Si el id no existe, lo dejamos vacío
       formData.append(`resources[${index}][type]`, resource.type);
+      formData.append(`resources[${index}][title]`, resource.title);
+
+      // Añadir los archivos al formData si están presentes
       if (resource.file) {
         formData.append(`resources[${index}][file]`, resource.file);
       }
     });
 
+    // Enviar los datos al backend usando axios
     axios.post(`/resources/store/`, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'multipart/form-data',  // Este encabezado se ajustará automáticamente con FormData
       },
     })
       .then((response) => {
         console.log('Formulario enviado con éxito');
-        reset();
+        successMesage("Recursos de lección guardados correctamente");
+        reset();  // Limpiar los datos si es necesario
         onClose();  // Cerrar el modal si es necesario
       })
       .catch((error) => {
         console.error(error);
       });
   }
+
+
 
   return (
     <Dialog size="xxl" open={open} handler={onClose} className="h-screen p-4">

@@ -9,32 +9,22 @@ use Illuminate\Http\Request;
 
 class ResourceController extends Controller
 {
-    public function store(Request $request, Lesson $lesson_id, ResourceService $service)
+    public function store(ResourceRequest $request, ResourceService $service)
     {
-        dd($request->all());
         try {
-            dd('entro');
             // Obtener los datos validados del request
             $validatedData = $request->validated();
-            dd($validatedData);
             $resources = $validatedData['resources'];
 
-            // Iterar sobre los recursos y llamamos a la lógica de almacenamiento/actualización en el servicio
-            foreach ($resources as $resource) {
-                if (isset($resource['id'])) {
-                    // Si existe el ID, actualizar el recurso existente
-                    $service->updateResource($resource['id'], $resource);
-                } else {
-                    // Crear un nuevo recurso
-                    $service->createResource($lesson->id, $resource);
-                }
-            }
+            // Llamar a la función syncResources para crear, actualizar y eliminar recursos
+            $service->syncResources($validatedData['lesson_id'], $resources);
 
-            return redirect()->back();
+            return redirect()->back()->with('success', 'Recursos sincronizados correctamente');
         } catch (\Exception $e) {
-            return $e->getMessage();
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
 
     public function update(ResourceRequest $request, Lesson $lesson, ResourceService $service) {}
 

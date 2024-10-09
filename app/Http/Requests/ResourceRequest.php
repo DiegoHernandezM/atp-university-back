@@ -26,7 +26,7 @@ class ResourceRequest extends FormRequest
             'resources' => 'required|array', // resources debe ser un array
             'resources.*.id' => 'nullable', // id es opcional pero debe existir si se proporciona
             'resources.*.title' => 'required|string|max:255', // Título del recurso es requerido
-            'resources.*.type' => 'required|in:PDF,Video', // Tipo de recurso debe ser PDF o Video
+            'resources.*.type' => 'required|in:pdf,video', // Tipo de recurso debe ser PDF o Video
             'resources.*.file' => 'nullable|file|mimes:pdf,mp4|max:20480', // Archivo opcional, pero si está presente debe ser PDF o MP4
         ];
     }
