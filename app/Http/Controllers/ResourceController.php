@@ -7,19 +7,19 @@ use App\Models\Lesson;
 use App\Services\ResourceService;
 use Illuminate\Http\Request;
 
+
 class ResourceController extends Controller
 {
+
     public function store(ResourceRequest $request, ResourceService $service)
     {
         try {
             // Obtener los datos validados del request
             $validatedData = $request->validated();
-            $resources = $validatedData['resources'];
-
+            $resources = $validatedData['resources'] ?? [];
             // Llamar a la función syncResources para crear, actualizar y eliminar recursos
             $service->syncResources($validatedData['lesson_id'], $resources);
-
-            return redirect()->back()->with('success', 'Recursos sincronizados correctamente');
+            return redirect()->back();
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

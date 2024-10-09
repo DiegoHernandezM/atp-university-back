@@ -15,6 +15,7 @@ class ResourceService
     {
         $this->mResource = new Resource();
     }
+
     /**
      * Actualizar un recurso existente.
      */
@@ -71,19 +72,12 @@ class ResourceService
     public function handleFileUpload($file)
     {
         // Subir el archivo a S3 y obtener la ruta
-        $filePath = $file->store('resources', 's3');  // 'resources' es la carpeta en S3 donde se guardará el archivo
-
-        // Obtener la URL pública del archivo
+        $filePath = $file->store('resources', 's3');
         $url = Storage::disk('s3')->url($filePath);
-
-        // Obtener la clave (key) del archivo en S3
         $s3Key = $filePath;
-
-        // Obtener el tamaño y el tipo MIME del archivo
         $size = $file->getSize();
         $mimeType = $file->getMimeType();
 
-        // Devolver toda la información relevante
         return [
             'url' => $url,
             's3_key' => $s3Key,
@@ -96,7 +90,12 @@ class ResourceService
     {
         // Obtener todos los recursos actuales de la lección
         $existingResources = $this->mResource->where('lesson_id', $lessonId)->get();
-
+        if(count($newResources) === 0) {
+            dd('elimina todo');
+            foreach($existingResources as $resource) {
+                $this->deleteResource($resource->id);
+            }
+        }
         // Extraer los IDs de los nuevos recursos enviados en la solicitud
         $newResourceIds = collect($newResources)->pluck('id')->filter()->all();  // Filtra los IDs no nulos
 
@@ -104,7 +103,7 @@ class ResourceService
         $existingResources->each(function ($resource) use ($newResourceIds) {
             if (!in_array($resource->id, $newResourceIds)) {
                 // Eliminar el recurso de la base de datos y de S3 si no está en la nueva lista
-                $this->deleteResource($resource);
+                $this->deleteResource($resource->id);
             }
         });
 
@@ -120,8 +119,9 @@ class ResourceService
         }
     }
 
-    public function deleteResource($resource)
+    public function deleteResource($id)
     {
+        $resource = $this->mResource->find($id);
         // Eliminar el archivo de S3
         Storage::disk('s3')->delete($resource->s3_key);
         // Eliminar el recurso de la base de datos

@@ -17,9 +17,9 @@ import {
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 
-export default function ResourcesDialog({ open, onClose, currentLesson, successMesage }) {
+export default function ResourcesDialog({ open, onClose, currentLesson, successMesage, subjectId }) {
+  const [errors, setErrors] = useState({}); // Estado para los errores
   const { setData, post, reset } = useForm();
-  // Estado para manejar los recursos
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -57,42 +57,65 @@ export default function ResourcesDialog({ open, onClose, currentLesson, successM
     setResources(updatedResources);
   };
 
-  function handleSaveResources() {
-    const formData = new FormData();
+  const handleSaveResources = () => {
+    let hasError = false;
+    let newErrors = {};
 
-    // Añadir el ID de la lección
+    // Validar cada recurso
+    resources.forEach((resource, index) => {
+      if (!resource.title) {
+        hasError = true;
+        newErrors[`title_${index}`] = 'El título es requerido';
+      }
+      if (!resource.type) {
+        hasError = true;
+        newErrors[`type_${index}`] = 'El tipo es requerido';
+      }
+      // Si el recurso no tiene ID, el archivo es requerido
+      if (!resource.id && !resource.file) {
+        hasError = true;
+        newErrors[`file_${index}`] = 'El archivo es requerido para nuevos recursos';
+      }
+    });
+
+    // Si hay errores, mostrar mensajes
+    if (hasError) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // Si no hay errores, proceder con la lógica de guardado
+    const formData = new FormData();
     formData.append('lesson_id', currentLesson.id);
 
-    // Añadir cada recurso al formData como campos individuales
     resources.forEach((resource, index) => {
-      formData.append(`resources[${index}][id]`, resource.id || '');  // Si el id no existe, lo dejamos vacío
-      formData.append(`resources[${index}][type]`, resource.type);
       formData.append(`resources[${index}][title]`, resource.title);
-
-      // Añadir los archivos al formData si están presentes
+      formData.append(`resources[${index}][type]`, resource.type);
       if (resource.file) {
         formData.append(`resources[${index}][file]`, resource.file);
       }
     });
 
-    // Enviar los datos al backend usando axios
+    // Aquí va tu lógica de envío de datos (Axios, Inertia, etc.)
     axios.post(`/resources/store/`, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',  // Este encabezado se ajustará automáticamente con FormData
+        'Content-Type': 'multipart/form-data',
       },
     })
       .then((response) => {
         console.log('Formulario enviado con éxito');
         successMesage("Recursos de lección guardados correctamente");
-        reset();  // Limpiar los datos si es necesario
-        onClose();  // Cerrar el modal si es necesario
+        reset();
+        onClose();
+
+        setTimeout(() => {
+          window.location.href = `/lessons/${subjectId}`;
+        }, 2000);
       })
       .catch((error) => {
         console.error(error);
       });
-  }
-
-
+  };
 
   return (
     <Dialog size="xxl" open={open} handler={onClose} className="h-screen p-4">
@@ -113,25 +136,15 @@ export default function ResourcesDialog({ open, onClose, currentLesson, successM
         </IconButton>
       </DialogHeader>
       <DialogBody className="flex flex-col h-full space-y-4 pb-6 overflow-y-scroll">
-        {/* Contenedor con scroll, limitado a la altura disponible */}
         <div className="flex-1 overflow-y-auto space-y-4 h-1/2">
           {resources.map((resource, index) => (
             <Card key={index} className="relative">
               <CardBody>
-                {/* Input hidden para el ID */}
-                <input
-                  type="hidden"
-                  name={`resources[${index}][id]`}
-                  value={resource.id || ''}
-                />
+                <input type="hidden" name={`resources[${index}][id]`} value={resource.id || ''} />
 
                 <div>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="mb-2 text-left font-medium"
-                  >
-                    Titulo
+                  <Typography variant="small" color="blue-gray" className="mb-2 text-left font-medium">
+                    Título
                   </Typography>
                   <Input
                     color="gray"
@@ -141,20 +154,16 @@ export default function ResourcesDialog({ open, onClose, currentLesson, successM
                     value={resource.title}
                     onChange={(e) => handleResourceChange(index, 'title', e.target.value)}
                     className="placeholder:opacity-100 focus:!border-t-gray-900"
-                    containerProps={{
-                      className: "!min-w-full",
-                    }}
-                    labelProps={{
-                      className: "hidden",
-                    }}
+                    containerProps={{ className: "!min-w-full" }}
+                    labelProps={{ className: "hidden" }}
                   />
+                  {errors[`title_${index}`] && (
+                    <span className="text-red-500 text-sm">{errors[`title_${index}`]}</span>
+                  )}
                 </div>
+
                 <div>
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="mb-2 text-left font-medium"
-                  >
+                  <Typography variant="small" color="blue-gray" className="mb-2 text-left font-medium">
                     Tipo
                   </Typography>
                   <select
@@ -167,31 +176,29 @@ export default function ResourcesDialog({ open, onClose, currentLesson, successM
                     <option value="pdf">PDF</option>
                     <option value="video">Video</option>
                   </select>
+                  {errors[`type_${index}`] && (
+                    <span className="text-red-500 text-sm">{errors[`type_${index}`]}</span>
+                  )}
                 </div>
+
                 <div className="flex gap-4">
                   <div className="w-full">
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="mb-2 text-left font-medium"
-                    >
+                    <Typography variant="small" color="blue-gray" className="mb-2 text-left font-medium">
                       Archivo
                     </Typography>
                     <input
                       type="file"
                       name={`resources[${index}][file]`}
-                      onChange={(e) => handleResourceChange(index, 'file', e.target.files[0])}  // Seleccionar el primer archivo
+                      onChange={(e) => handleResourceChange(index, 'file', e.target.files[0])}
                     />
+                    {!resource.id && errors[`file_${index}`] && (
+                      <span className="text-red-500 text-sm">{errors[`file_${index}`]}</span>
+                    )}
                   </div>
                 </div>
               </CardBody>
               <CardFooter>
-                <Button
-                  variant="text"
-                  size="sm"
-                  color="red"
-                  onClick={() => handleRemoveResource(index)}
-                >
+                <Button variant="text" size="sm" color="red" onClick={() => handleRemoveResource(index)}>
                   Eliminar
                 </Button>
               </CardFooter>
@@ -199,6 +206,7 @@ export default function ResourcesDialog({ open, onClose, currentLesson, successM
           ))}
         </div>
       </DialogBody>
+
       <DialogFooter className="sticky bottom-0 flex justify-between space-x-2 bg-white py-4">
         {/* Botón Agregar contenido a la izquierda */}
         <Button size="sm" variant="text" className="flex items-center gap-2" onClick={handleAddResource}>
@@ -222,7 +230,7 @@ export default function ResourcesDialog({ open, onClose, currentLesson, successM
         {/* Botones Guardar y Cancelar a la derecha */}
         <div className="flex space-x-2">
           <Button onClick={handleSaveResources}>
-            Guardar
+            Actualizar
           </Button>
           <Button onClick={onClose}>
             Cancelar

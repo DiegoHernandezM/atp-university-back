@@ -63,7 +63,7 @@ const LessonsTable = ({ lessons, subject }) => {
 
   return (
     <>
-      <ResourcesDialog open={openContent} onClose={handleCloseContent} currentLesson={currentLesson} successMesage={handleFormSuccess} />
+      <ResourcesDialog open={openContent} onClose={handleCloseContent} currentLesson={currentLesson} successMesage={handleFormSuccess} subjectId={subject.id} />
       {successMessage && <Alert color="green">{successMessage}</Alert>}
       <Card className="h-full w-full">
         <CardHeader floated={false} shadow={false} className="rounded-none">
