@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useForm } from '@inertiajs/react';
 import {
   Input,
   Button,
@@ -13,11 +14,10 @@ import {
   CardFooter,
 } from "@material-tailwind/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { useForm } from '@inertiajs/inertia-react';
 
 
 export default function ResourcesDialog({ open, onClose, currentLesson, subject }) {
-  const { post, reset } = useForm();
+  const { setData, post, reset } = useForm();
   // Estado para manejar los recursos
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -25,6 +25,7 @@ export default function ResourcesDialog({ open, onClose, currentLesson, subject 
   // Al abrir el Dialog, cargar los recursos existentes
   useEffect(() => {
     if (currentLesson?.resources) {
+      setData(currentLesson.resources);
       setResources(currentLesson.resources);
     } else {
       // Si no hay recursos, inicializamos con un recurso vacío
@@ -55,29 +56,28 @@ export default function ResourcesDialog({ open, onClose, currentLesson, subject 
     setResources(updatedResources);
   };
 
-  const handleSaveResources = (e) => {
-    e.preventDefault();
-
+  function handleSaveResources() {
     const formData = new FormData();
-    console.log(resources);
     // Añadir el ID de la lección
     formData.append('lesson_id', currentLesson.id);
-    //formData.append('resources', JSON.stringify(landingData.section4_services));
+
     // Añadir los recursos al FormData
-    // resources.forEach((resource, index) => {
-    //     formData.append(`resources[${index}][title]`, resource.title);
-    //     formData.append(`resources[${index}][type]`, resource.type);
+    resources.forEach((resource, index) => {
+        formData.append(`resources[${index}][title]`, resource.title);
+        formData.append(`resources[${index}][type]`, resource.type);
 
-    //     // Si existe un archivo, lo agregamos también
-    //     if (resource.file) {
-    //         formData.append(`resources[${index}][file]`, resource.file);
-    //     }
-    // });
-
-
+        // Si existe un archivo, lo agregamos también
+        if (resource.file) {
+            formData.append(`resources[${index}][file]`, resource.file);
+        }
+    });
+    console.log(resources);
+    formData.forEach((value) => {
+      console.log(value);
+    });
 
     post(`/resources/store/${currentLesson.id}`, {
-      data: currentLesson.id,
+      data: formData,
       preserveScroll: true,
       onFinish: () => {
         console.log('Formulario enviado con éxito');

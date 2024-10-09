@@ -24,7 +24,7 @@ class ResourceRequest extends FormRequest
         return [
             'lesson_id' => 'required|exists:lessons,id', // Asegura que el lesson_id es válido
             'resources' => 'required|array', // resources debe ser un array
-            'resources.*.id' => 'nullable|exists:resources,id', // id es opcional pero debe existir si se proporciona
+            'resources.*.id' => 'nullable', // id es opcional pero debe existir si se proporciona
             'resources.*.title' => 'required|string|max:255', // Título del recurso es requerido
             'resources.*.type' => 'required|in:PDF,Video', // Tipo de recurso debe ser PDF o Video
             'resources.*.file' => 'nullable|file|mimes:pdf,mp4|max:20480', // Archivo opcional, pero si está presente debe ser PDF o MP4

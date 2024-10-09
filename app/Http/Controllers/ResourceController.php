@@ -9,9 +9,9 @@ use Illuminate\Http\Request;
 
 class ResourceController extends Controller
 {
-    public function store(ResourceRequest $request, ResourceService $service, $lesson_id)
+    public function store(Request $request, Lesson $lesson_id, ResourceService $service)
     {
-        dd('entro');
+        dd($request->all());
         try {
             dd('entro');
             // Obtener los datos validados del request
