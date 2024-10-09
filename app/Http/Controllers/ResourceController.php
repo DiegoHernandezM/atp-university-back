@@ -16,6 +16,7 @@ class ResourceController extends Controller
         try {
             // Obtener los datos validados del request
             $validatedData = $request->validated();
+
             $resources = $validatedData['resources'] ?? [];
             // Llamar a la función syncResources para crear, actualizar y eliminar recursos
             $service->syncResources($validatedData['lesson_id'], $resources);

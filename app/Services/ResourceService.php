@@ -91,7 +91,6 @@ class ResourceService
         // Obtener todos los recursos actuales de la lección
         $existingResources = $this->mResource->where('lesson_id', $lessonId)->get();
         if(count($newResources) === 0) {
-            dd('elimina todo');
             foreach($existingResources as $resource) {
                 $this->deleteResource($resource->id);
             }

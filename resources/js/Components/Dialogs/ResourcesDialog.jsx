@@ -89,6 +89,7 @@ export default function ResourcesDialog({ open, onClose, currentLesson, successM
     formData.append('lesson_id', currentLesson.id);
 
     resources.forEach((resource, index) => {
+      formData.append(`resources[${index}][id]`, resource.id || '');
       formData.append(`resources[${index}][title]`, resource.title);
       formData.append(`resources[${index}][type]`, resource.type);
       if (resource.file) {
@@ -110,7 +111,7 @@ export default function ResourcesDialog({ open, onClose, currentLesson, successM
 
         setTimeout(() => {
           window.location.href = `/lessons/${subjectId}`;
-        }, 2000);
+        }, 1000);
       })
       .catch((error) => {
         console.error(error);
