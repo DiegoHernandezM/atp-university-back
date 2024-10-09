@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Illuminate\Support\Facades\Auth;
+
 
 class HandleInertiaRequests extends Middleware
 {
@@ -32,7 +34,12 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $request->user()
+                    ? $request->user()->only('id', 'name', 'email') // Si el usuario está autenticado, comparte solo estos campos
+                    : null,
+                'roles' => $request->user()
+                    ? $request->user()->getRoleNames() // Si el usuario está autenticado, comparte los roles
+                    : null,
             ],
         ];
     }

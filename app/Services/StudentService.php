@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
+
 
 class StudentService
 {
@@ -30,7 +32,7 @@ class StudentService
             'email' => $data['email'],
             'password' => $passwordStudent
         ]);
-        // dd($user->id);
+        $user->assignRole('student');
 
         return Student::create([
             'name' => $data['name'],
@@ -60,6 +62,4 @@ class StudentService
         User::where('id', $student['user_id'])->delete();
         return $student->delete();
     }
-
-
 }

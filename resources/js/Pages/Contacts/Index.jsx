@@ -11,6 +11,7 @@ export default function InformationRequest({ auth, informationRequests, ...props
   return (
     <AuthenticatedLayout
       user={auth.user}
+      roles={auth.roles}
       header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Solicitud de información</h2>}
     >
       <Head title="Contacts" />
