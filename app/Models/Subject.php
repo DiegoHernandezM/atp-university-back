@@ -11,4 +11,13 @@ class Subject extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['title', 'description', 'status'];
+
+    /**
+     * Relación uno a muchos con Lesson.
+     * Una materia puede tener muchas lecciones.
+     */
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class);
+    }
 }
