@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import { useForm } from '@inertiajs/react';
 import {
   Input,
@@ -58,36 +59,30 @@ export default function ResourcesDialog({ open, onClose, currentLesson, subject 
 
   function handleSaveResources() {
     const formData = new FormData();
-    // Añadir el ID de la lección
     formData.append('lesson_id', currentLesson.id);
 
-    // Añadir los recursos al FormData
     resources.forEach((resource, index) => {
-        formData.append(`resources[${index}][title]`, resource.title);
-        formData.append(`resources[${index}][type]`, resource.type);
-
-        // Si existe un archivo, lo agregamos también
-        if (resource.file) {
-            formData.append(`resources[${index}][file]`, resource.file);
-        }
-    });
-    console.log(resources);
-    formData.forEach((value) => {
-      console.log(value);
-    });
-
-    post(`/resources/store/${currentLesson.id}`, {
-      data: formData,
-      preserveScroll: true,
-      onFinish: () => {
-        console.log('Formulario enviado con éxito');
-      },
-      onError: (errors) => {
-        console.error(errors);
-        setLoading(false);
+      formData.append(`resources[${index}][title]`, resource.title);
+      formData.append(`resources[${index}][type]`, resource.type);
+      if (resource.file) {
+        formData.append(`resources[${index}][file]`, resource.file);
       }
     });
-};
+
+    axios.post(`/resources/store/`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+      .then((response) => {
+        console.log('Formulario enviado con éxito');
+        reset();
+        onClose();  // Cerrar el modal si es necesario
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   return (
     <Dialog size="xxl" open={open} handler={onClose} className="h-screen p-4">

@@ -63,6 +63,7 @@ const LessonsTable = ({ lessons, subject }) => {
 
   return (
     <>
+      <ResourcesDialog open={openContent} onClose={handleCloseContent} currentLesson={currentLesson} subject={subject} />
       {successMessage && <Alert color="green">{successMessage}</Alert>}
       <Card className="h-full w-full">
         <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -153,7 +154,7 @@ const LessonsTable = ({ lessons, subject }) => {
         </CardFooter>
       </Card>
       <LessonsForm open={openDrawer} onClose={handleCloseDrawer} onSuccess={handleFormSuccess} currentLesson={currentLesson} subject={subject} />
-      <ResourcesDialog open={openContent} onClose={handleCloseContent} currentLesson={currentLesson} subject={subject} />
+
     </>
 
   );
