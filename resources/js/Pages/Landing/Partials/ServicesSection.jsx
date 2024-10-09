@@ -113,13 +113,13 @@ export default function ServicesSection({ landingData: initialLandingData, onSuc
 
   // Función para agregar una nueva sección de servicio
   const addNewServiceSection = () => {
-    setLandingData(prevData => ({
-      ...prevData,
-      section4_services: [
-        ...prevData.section4_services,
-        { title: '', description: '', link: '', phone: '', button_image: null, background_image: null }
-      ]
-    }));
+      setLandingData(prevData => ({
+          ...prevData,
+          section4_services: [
+              ...prevData.section4_services,
+              { title: '', description: '', link: '', phone: '', button_image: null, background_image: null, calendar:[{day: '', month: '', course: '', code: '', remark: ''}] }
+          ]
+      }));
   };
 
   // Función para eliminar una sección de servicio
