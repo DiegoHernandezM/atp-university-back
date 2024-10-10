@@ -9,9 +9,10 @@ class CourseSubject extends Pivot
 {
     use HasFactory;
 
+    protected $table = 'course_subjects';
+
     protected $fillable = [
         'course_id',
-        'subject_id',
-        'order',
+        'subject_id'
     ];
 }

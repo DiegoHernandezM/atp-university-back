@@ -58,6 +58,12 @@ class CourseService
     public function delete($id)
     {
         $course = $this->mCourse->find($id);
+        if (!$course) {
+            throw new \Exception('Curso no encontrado');
+        }
+        if ($course->subjects()->exists()) {
+            $course->subjects()->detach();
+        }
         return $course->delete();
     }
 }

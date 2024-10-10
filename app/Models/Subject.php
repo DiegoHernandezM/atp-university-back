@@ -23,8 +23,7 @@ class Subject extends Model
 
     public function courses()
     {
-        return $this->belongsToMany(Course::class, 'course_subject')
-                    ->withPivot('order')
-                    ->withTimestamps();
+        // Especifica el nombre de la tabla pivote 'course_subjects'
+        return $this->belongsToMany(Course::class, 'course_subjects');
     }
 }
