@@ -13,7 +13,7 @@ import {
   Avatar,
 } from "@material-tailwind/react";
 import {
-  UserCircleIcon,
+  ArrowLeftEndOnRectangleIcon,
   Cog6ToothIcon,
   BellIcon,
   ClockIcon,
@@ -85,7 +85,7 @@ export function DashboardNavbar() {
               color="blue-gray"
               className="hidden items-center gap-1 px-4 xl:flex normal-case"
             >
-              <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
+              <ArrowLeftEndOnRectangleIcon className="h-5 w-5 text-blue-gray-500" />
               Salir
             </Button>
 
@@ -96,7 +96,7 @@ export function DashboardNavbar() {
               color="blue-gray"
               className="grid xl:hidden"
             >
-              <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
+              <ArrowLeftEndOnRectangleIcon className="h-5 w-5 text-blue-gray-500" />
             </IconButton>
           </form>
           <Menu>
