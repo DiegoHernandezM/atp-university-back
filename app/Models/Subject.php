@@ -20,4 +20,11 @@ class Subject extends Model
     {
         return $this->hasMany(Lesson::class);
     }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'course_subject')
+                    ->withPivot('order')
+                    ->withTimestamps();
+    }
 }
