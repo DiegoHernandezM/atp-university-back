@@ -4,17 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CourseRequest;
 use App\Services\CourseService;
+use App\Services\SubjectService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CourseController extends Controller
 {
-    public function get(CourseService $service)
+    public function get(CourseService $service, SubjectService $sSubject)
     {
         try {
             $courses = $service->getCourses();
+            $subjects = $sSubject->getSubjects();
             return Inertia::render('Courses/Index', [
-                'courses' => $courses
+                'courses' => $courses,
+                'subjects' => $subjects
             ]);
         } catch(\Exception $e) {
             return $e->getMessage();
@@ -38,7 +41,7 @@ class CourseController extends Controller
         try {
             $validated = $request->validated();
             $service->updateCourse($id, $validated);
-            return "ok";
+            return redirect()->route('courses.index');
         } catch (\Exception $e) {
             return $e->getMessage();
         }
@@ -50,6 +53,16 @@ class CourseController extends Controller
             $service->delete($id);
             return redirect()->route('courses.index');
         } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function saveSubjects(Request $request, CourseService $service)
+    {
+        try {
+            $service->saveCoursesSubject($request->all());
+            return redirect()->route('courses.index');
+        } catch(\Exception $e) {
             return $e->getMessage();
         }
     }

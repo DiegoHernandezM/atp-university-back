@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
 import { Drawer, Button, Input, IconButton, Textarea } from "@material-tailwind/react";
 import { useForm, router } from '@inertiajs/react'; // Importa useForm desde Inertia
 import InputError from '@/Components/InputError';
@@ -44,32 +43,19 @@ const CoursesForm = ({ open, onClose, onSuccess, currentCourse }) => {
     }
 
     if (isEditing) {
-
-      axios.put(`/courses/update/${currentCourse.id}`, null, {
-        params: {
-          title: data.title,
-          description: data.description,
-          price: data.price,
-          file: data.file
-        },
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-        .then((response) => {
+      post(route('courses.update', currentCourse.id), {
+        data: formData,  // Usamos formData
+        onSuccess: () => {
           setLoading(false);
+          reset();
           onSuccess("Curso actualizado correctamente.");
           onClose();
-        })
-        .then(() => {
-          setTimeout(() => {
-            window.location.href = route('courses.index');
-          }, 2000);
-        })
-        .catch((error) => {
-          console.error(error);
+        },
+        onError: (errors) => {
+          console.error(errors);
           setLoading(false);
-        });
+        }
+      });
     } else {
       post(route('courses.store'), {
         data: formData,  // Usamos formData

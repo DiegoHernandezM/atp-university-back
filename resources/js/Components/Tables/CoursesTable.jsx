@@ -3,9 +3,9 @@ import { Button, Input, Alert, IconButton, Tooltip, Typography, Card, CardBody, 
 import { MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon, XCircleIcon, CheckCircleIcon, ListBulletIcon } from '@heroicons/react/24/solid';
 
 import CoursesForm from '../Forms/CoursesForm.jsx';
+import CoursesSubjectsDialog from '../Dialogs/CoursesSubjectsDialog.jsx';
 
-
-const CoursesTable = ({ courses }) => {
+const CoursesTable = ({ courses, subjects }) => {
   const [search, setSearch] = useState('');
   const [filteredCourses, setFilteredCourses] = useState(courses);
   const [currentPage, setCurrentPage] = useState(1);
@@ -13,6 +13,8 @@ const CoursesTable = ({ courses }) => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [currentCourse, setCurrentCourse] = useState(null);
+
+  const [openSubjectsDialog, setOpenSubjectsDialog] = useState(false);
 
   // Filtrar usuarios por búsqueda
   useEffect(() => {
@@ -34,7 +36,7 @@ const CoursesTable = ({ courses }) => {
 
   const handleCloseDrawer = () => {
     setCurrentCourse(null);
-    setOpenDrawer(false)
+    setOpenDrawer(false);
   };
 
   const handleFormSuccess = (message) => {
@@ -45,6 +47,17 @@ const CoursesTable = ({ courses }) => {
   const handleEditClick = (course) => {
     setCurrentCourse(course);
     setOpenDrawer(true);
+  };
+
+  const handleCloseDialog = () => {
+    setCurrentCourse(null);
+    setOpenSubjectsDialog(false);
+  };
+
+  const handleSubjectsSuccess = (message) => {
+    console.log('sntro');
+    setSuccessMessage(message);
+    setTimeout(() => setSuccessMessage(null), 3000);
   };
 
   return (
@@ -104,7 +117,13 @@ const CoursesTable = ({ courses }) => {
                         </IconButton>
                       </Tooltip>
                       <Tooltip content="Materias">
-                        <IconButton variant="text" onClick={() => window.location.href = route('lessons.index', course.id)}>
+                        <IconButton
+                          variant="text"
+                          onClick={() => {
+                            setCurrentCourse(course);  // Seteamos el curso en la variable currentCourse
+                            setOpenSubjectsDialog(true);  // Abrimos el dialogo de materias
+                          }}
+                        >
                           <ListBulletIcon className="h-4 w-4" />
                         </IconButton>
                       </Tooltip>
@@ -134,6 +153,7 @@ const CoursesTable = ({ courses }) => {
         </CardFooter>
       </Card>
       <CoursesForm open={openDrawer} onClose={handleCloseDrawer} onSuccess={handleFormSuccess} currentCourse={currentCourse} />
+      <CoursesSubjectsDialog open={openSubjectsDialog} onClose={handleCloseDialog} handleMessage={handleSubjectsSuccess} course={currentCourse} subjects={subjects} />
     </>
 
   );

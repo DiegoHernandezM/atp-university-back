@@ -25,12 +25,8 @@ class CourseRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',  // Validamos que el precio sea un número y mayor o igual a 0
+            'file' => 'nullable|file|mimes:pdf,mp4|max:20480'  // Solo PDF y MP4 con un tamaño máximo de 20MB
         ];
-
-        // Solo se requiere validar el archivo si está presente en la solicitud
-        if ($this->isMethod('post') || $this->hasFile('file')) {
-            $rules['file'] = 'nullable|file|mimes:pdf,mp4|max:20480';  // Solo PDF y MP4 con un tamaño máximo de 20MB
-        }
 
         return $rules;
     }

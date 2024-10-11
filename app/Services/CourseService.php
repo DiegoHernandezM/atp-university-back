@@ -17,7 +17,7 @@ class CourseService
 
     public function getCourses()
     {
-        return $this->mCourse->all();
+        return $this->mCourse->with('subjects')->get();
     }
 
     public function createCourse($data)
@@ -65,5 +65,12 @@ class CourseService
             $course->subjects()->detach();
         }
         return $course->delete();
+    }
+
+    public function saveCoursesSubject($data)
+    {
+        $course = Course::findOrFail($data['course_id']);
+        $course->subjects()->sync($data['aSubjects']);
+        return true;
     }
 }
