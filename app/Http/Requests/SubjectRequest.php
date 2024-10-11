@@ -22,14 +22,21 @@ class SubjectRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:255',  // Requerido siempre por defecto
             'description' => 'nullable|string|max:500',
             'status' => 'required|in:active,inactive',
+            'cover' => 'nullable|file|mimes:jpeg,jpg|max:20480',  // Solo archivos jpeg y jpg, 20MB máximo
         ];
-        if ($this->isMethod('put')) {
+
+        // Verificamos si la solicitud es para actualizar o crear un nuevo registro
+        if ($this->input('id')) {
+            // Si se envía un id, es una actualización, no requerimos que el título sea único
+            $rules['title'] = 'required|string|max:255';
         } else {
+            // Si no hay id, es creación de un nuevo registro, requerimos que el título sea único
             $rules['title'] = 'required|string|max:255|unique:subjects,title';
         }
+
         return $rules;
     }
 }

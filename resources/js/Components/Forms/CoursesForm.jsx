@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Drawer, Button, Input, IconButton, Textarea } from "@material-tailwind/react";
-import { useForm, router } from '@inertiajs/react'; // Importa useForm desde Inertia
+import { useForm } from '@inertiajs/react'; // Importa useForm desde Inertia
 import InputError from '@/Components/InputError';
 
 const CoursesForm = ({ open, onClose, onSuccess, currentCourse }) => {
   const isEditing = !!currentCourse;
-  const { data, setData, post, reset, errors, put } = useForm({
+  const { data, setData, post, reset, errors } = useForm({
     title: '',
     description: '',
     price: '',
-    file: null,  // Agregamos el archivo como parte del estado
+    status: '',
+    cover: null,
+    file: null,
   });
   const [loading, setLoading] = useState(false);
 
@@ -19,6 +21,8 @@ const CoursesForm = ({ open, onClose, onSuccess, currentCourse }) => {
         title: currentCourse.title,
         description: currentCourse.description,
         price: currentCourse.price,
+        status: currentCourse.status,
+        cover: null,
         file: null,  // Reiniciar el archivo al editar
       });
     } else {
@@ -34,12 +38,16 @@ const CoursesForm = ({ open, onClose, onSuccess, currentCourse }) => {
 
     // Agregar datos al formData
     formData.append('title', data.title);
+    formData.append('status', data.status);
     formData.append('description', data.description);
     formData.append('price', data.price);
 
     // Si se seleccionó un archivo, lo añadimos
     if (data.file) {
       formData.append('file', data.file);
+    }
+    if (data.cover) {
+      formData.append('cover', data.cover);
     }
 
     if (isEditing) {
@@ -149,6 +157,19 @@ const CoursesForm = ({ open, onClose, onSuccess, currentCourse }) => {
               {errors.price && <InputError message={errors.price} className="mt-2" />}
             </div>
             <div className="mb-4">
+              <label htmlFor="cover" className="block text-sm font-medium text-gray-700 mb-2">
+                Agrega una imagen para portada del curso (.jpg)
+              </label>
+              <input
+                type="file"
+                id="cover"
+                name="cover"
+                accept=".jpg,.jpeg"
+                onChange={(e) => setData('cover', e.target.files[0])}  // Usamos e.target.files[0] para obtener el archivo
+              />
+              {errors.cover && <InputError message={errors.cover} className="mt-2" />}
+            </div>
+            <div className="mb-4">
               <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-2">
                 Agrega video o PDF de presentación para el curso
               </label>
@@ -160,6 +181,23 @@ const CoursesForm = ({ open, onClose, onSuccess, currentCourse }) => {
                 onChange={(e) => setData('file', e.target.files[0])}  // Usamos e.target.files[0] para obtener el archivo
               />
               {errors.file && <InputError message={errors.file} className="mt-2" />}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="gender" className="block text-sm font-medium text-gray-700">
+                Esatdo
+              </label>
+              <select
+                id="status"
+                name="status"
+                value={data.status}
+                onChange={(e) => setData('status', e.target.value)}
+                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-blue-gray-200 focus:border-gray-900 focus:outline-none focus:ring-indigo-500 sm:text-sm rounded-md"
+              >
+                <option value="">Seleccione</option>
+                <option value="active">Activo</option>
+                <option value="inactive">Inactivo</option>
+              </select>
+              {errors.status && <InputError message={errors.status} className="mt-2" />}
             </div>
             <Button type="submit" color="blue-gray" fullWidth disabled={loading}>
               {loading ? "Enviando..." : isEditing ? "Actualizar Curso" : "Crear Curso"}

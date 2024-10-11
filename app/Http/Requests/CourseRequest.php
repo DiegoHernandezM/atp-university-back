@@ -25,7 +25,9 @@ class CourseRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',  // Validamos que el precio sea un número y mayor o igual a 0
-            'file' => 'nullable|file|mimes:pdf,mp4|max:20480'  // Solo PDF y MP4 con un tamaño máximo de 20MB
+            'file' => 'nullable|file|mimes:pdf,mp4|max:20480',
+            'cover' => 'nullable|file|mimes:jpeg,jpg|max:20480',
+            'status' => 'required|in:active,inactive'
         ];
 
         return $rules;

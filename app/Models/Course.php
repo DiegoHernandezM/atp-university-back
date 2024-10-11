@@ -13,7 +13,9 @@ class Course extends Model
         'title',
         'description',
         'price',
-        'introduction_media'
+        'introduction_media',
+        'status',
+        'cover'
     ];
 
     /**

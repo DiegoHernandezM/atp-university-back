@@ -94,7 +94,7 @@ const CoursesTable = ({ courses, subjects }) => {
             <thead>
               <tr>
                 <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">Título</th>
-                <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">Descripción</th>
+                <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">Estado</th>
                 <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">Precio ($)</th>
                 <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">Acciones</th>
               </tr>
@@ -107,7 +107,13 @@ const CoursesTable = ({ courses, subjects }) => {
                       <Typography className="font-bold">{course.title}</Typography>
                     </div>
                   </td>
-                  <td className="p-4">{course.description}</td>
+                  <td className="p-4">
+                    {course.status === 'active' ? (
+                      <CheckCircleIcon className="h-4 w-4 text-green-500" /> // Ícono para activo
+                    ) : (
+                      <XCircleIcon className="h-4 w-4 text-red-500" /> // Ícono para inactivo
+                    )}
+                  </td>
                   <td className="p-4">{course.price}</td>
                   <td className="p-4">
                     <div className="flex items-center space-x-2">

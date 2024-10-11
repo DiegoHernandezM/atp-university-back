@@ -29,11 +29,20 @@ class CourseService
             $fileUrl = null;
         }
 
+        if (isset($data['cover'])) {
+            $coverPath = $data['cover']->store('courses', 'public');
+            $coverUrl = Storage::url($coverPath);
+        } else {
+            $coverUrl = null;
+        }
+
         return $this->mCourse->create([
             'title' => $data['title'],
             'description' => $data['description'],
             'price' => $data['price'],
             'introduction_media' => $fileUrl,
+            'cover' => $coverUrl,
+            'status' => $data['status']
         ]);
     }
 
@@ -52,6 +61,16 @@ class CourseService
             $fileUrl = Storage::disk('s3')->url($filePath);
             $data['file'] = $fileUrl;
         }
+        if (isset($data['cover'])) {
+            if ($course->cover) {
+                $coverPath = str_replace('/storage/', '', $course->cover);
+                Storage::disk('public')->delete($coverPath);
+            }
+            $newCoverPath = $data['cover']->store('courses', 'public');
+            $coverUrl = Storage::url($newCoverPath);
+            $data['cover'] = $coverUrl;
+        }
+
         return $course->update($data);
     }
 
