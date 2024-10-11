@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
     require base_path('routes/subjects/subjects.php');
     require base_path('routes/lessons/lessons.php');
     require base_path('routes/resources/resources.php');
+    require base_path('routes/courses/courses.php');
 });
 
 // public

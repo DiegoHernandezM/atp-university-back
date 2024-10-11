@@ -3,51 +3,60 @@ import { Drawer, Button, Input, IconButton, Textarea } from "@material-tailwind/
 import { useForm } from '@inertiajs/react'; // Importa useForm desde Inertia
 import InputError from '@/Components/InputError';
 
-const SubjectsForm = ({ open, onClose, onSuccess, currentSubject }) => {
-  const isEditing = !!currentSubject;
-  const { data, setData, post, reset, errors, put } = useForm({
-    id: null,
+const CoursesForm = ({ open, onClose, onSuccess, currentCourse }) => {
+  const isEditing = !!currentCourse;
+  const { data, setData, post, reset, errors } = useForm({
     title: '',
     description: '',
+    price: '',
     status: '',
-    cover: null
+    cover: null,
+    file: null,
   });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isEditing) {
       setData({
-        id: currentSubject.id,
-        title: currentSubject.title,
-        description: currentSubject.description,
-        status: currentSubject.status,
-        cover: null
+        title: currentCourse.title,
+        description: currentCourse.description,
+        price: currentCourse.price,
+        status: currentCourse.status,
+        cover: null,
+        file: null,  // Reiniciar el archivo al editar
       });
     } else {
       reset();
     }
-  }, [currentSubject, isEditing]);
+  }, [currentCourse, isEditing]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
+
     const formData = new FormData();
+
     // Agregar datos al formData
-    formData.append('id', data.id);
     formData.append('title', data.title);
     formData.append('status', data.status);
     formData.append('description', data.description);
+    formData.append('price', data.price);
 
+    // Si se seleccionó un archivo, lo añadimos
+    if (data.file) {
+      formData.append('file', data.file);
+    }
     if (data.cover) {
       formData.append('cover', data.cover);
     }
+
     if (isEditing) {
-      // Si estamos editando, hacemos un PUT o PATCH
-      post(route('subjects.update', currentSubject.id), {
-        data: formData,
+      post(route('courses.update', currentCourse.id), {
+        data: formData,  // Usamos formData
         onSuccess: () => {
           setLoading(false);
-          onSuccess("Materia actualizada correctamente.");
+          reset();
+          onSuccess("Curso actualizado correctamente.");
           onClose();
         },
         onError: (errors) => {
@@ -56,12 +65,12 @@ const SubjectsForm = ({ open, onClose, onSuccess, currentSubject }) => {
         }
       });
     } else {
-      post(route('subjects.store'), {
-        data: formData,
+      post(route('courses.store'), {
+        data: formData,  // Usamos formData
         onSuccess: () => {
           setLoading(false);
           reset();
-          onSuccess("Materia creada correctamente.");
+          onSuccess("Curso creado correctamente.");
           onClose();
         },
         onError: (errors) => {
@@ -77,7 +86,7 @@ const SubjectsForm = ({ open, onClose, onSuccess, currentSubject }) => {
       <Drawer placement="right" open={open} onClose={onClose} className="p-4" size={500}>
         <div className="flex items-center justify-between px-4 pb-2">
           <h3 className="text-lg font-bold">
-            {isEditing ? "Editar Materia" : "Agregar Nueva Materia"}
+            {isEditing ? "Editar Curso" : "Agregar Nuevo Curso"}
           </h3>
           <IconButton variant="text" color="blue-gray" onClick={onClose}>
             <svg
@@ -131,8 +140,25 @@ const SubjectsForm = ({ open, onClose, onSuccess, currentSubject }) => {
               {errors.description && <InputError message={errors.description} className="mt-2" />}
             </div>
             <div className="mb-4">
+              <Input
+                id="price"
+                name="price"
+                value={data.price}
+                type="text"
+                size="lg"
+                label="Precio ($)"
+                placeholder="Precio ($)"
+                className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                onChange={(e) => setData('price', e.target.value)}
+              />
+              {errors.price && <InputError message={errors.price} className="mt-2" />}
+            </div>
+            <div className="mb-4">
               <label htmlFor="cover" className="block text-sm font-medium text-gray-700 mb-2">
-                Agrega una imagen para portada de la materia (.jpg)
+                Agrega una imagen para portada del curso (.jpg)
               </label>
               <input
                 type="file"
@@ -142,6 +168,19 @@ const SubjectsForm = ({ open, onClose, onSuccess, currentSubject }) => {
                 onChange={(e) => setData('cover', e.target.files[0])}  // Usamos e.target.files[0] para obtener el archivo
               />
               {errors.cover && <InputError message={errors.cover} className="mt-2" />}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-2">
+                Agrega video o PDF de presentación para el curso
+              </label>
+              <input
+                type="file"
+                id="file"
+                name="file"
+                accept=".pdf,.mp4"
+                onChange={(e) => setData('file', e.target.files[0])}  // Usamos e.target.files[0] para obtener el archivo
+              />
+              {errors.file && <InputError message={errors.file} className="mt-2" />}
             </div>
             <div className="mb-4">
               <label htmlFor="gender" className="block text-sm font-medium text-gray-700">
@@ -155,13 +194,13 @@ const SubjectsForm = ({ open, onClose, onSuccess, currentSubject }) => {
                 className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-blue-gray-200 focus:border-gray-900 focus:outline-none focus:ring-indigo-500 sm:text-sm rounded-md"
               >
                 <option value="">Seleccione</option>
-                <option value="active">Activa</option>
-                <option value="inactive">Inactiva</option>
+                <option value="active">Activo</option>
+                <option value="inactive">Inactivo</option>
               </select>
               {errors.status && <InputError message={errors.status} className="mt-2" />}
             </div>
             <Button type="submit" color="blue-gray" fullWidth disabled={loading}>
-              {loading ? "Enviando..." : isEditing ? "Actualizar Materia" : "Crear Materia"}
+              {loading ? "Enviando..." : isEditing ? "Actualizar Curso" : "Crear Curso"}
             </Button>
           </form>
         </div>
@@ -170,4 +209,4 @@ const SubjectsForm = ({ open, onClose, onSuccess, currentSubject }) => {
   );
 };
 
-export default SubjectsForm;
+export default CoursesForm;
