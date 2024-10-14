@@ -41,7 +41,7 @@ const CoursesGallery = ({ courses }) => {
                     <Typography color="white" className="mb-4 text-center">
                       {course.description}
                     </Typography>
-                    <Typography variant="h6" color="white" className="mb-4">
+                    <Typography variant="h4" color="white" className="mb-4">
                       ${course.price}
                     </Typography>
                     <Button style={{ backgroundColor: '#203764' }}>Inscribirse</Button>
