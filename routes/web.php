@@ -3,13 +3,17 @@
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\ProfileController;
 use App\Models\LandingPageContent;
+use App\Services\CourseService;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
+    $service = new CourseService;
+    $courses = $service->getCourses('landing');
     return Inertia::render('LandingPage', [
-        'landingData' => LandingPageContent::first()
+        'landingData' => LandingPageContent::first(),
+        'courses' => $courses
     ]);
 });
 

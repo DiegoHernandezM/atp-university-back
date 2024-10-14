@@ -4,7 +4,7 @@ export default function Testimonials({ landingData, isPrev }) {
   return (
     <section id="testimonials" className="testimonials-carousel py-20 bg-transparent">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-12 text-center">TESTIMONIOS</h2>
+        <h2 className="text-4xl font-bold mb-12 text-center">TESTIMONIOS</h2>
 
         {/* Condicional basado en isPrev */}
         {isPrev

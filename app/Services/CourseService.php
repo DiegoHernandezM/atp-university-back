@@ -15,9 +15,13 @@ class CourseService
         $this->mCourse = new Course();
     }
 
-    public function getCourses()
+    public function getCourses($type = null)
     {
-        return $this->mCourse->with('subjects')->get();
+        if ($type == 'landing') {
+            return $this->mCourse->where('status', 'active')->get();
+        } else {
+            return $this->mCourse->with('subjects')->get();
+        }
     }
 
     public function createCourse($data)

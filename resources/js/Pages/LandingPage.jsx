@@ -6,6 +6,7 @@ import MisionVision from '@/Components/Landing/MisionVision';
 import Services from '@/Components/Landing/Services';
 import Simulators from '@/Components/Landing/Simulators';
 import Testimonials from '@/Components/Landing/Testimonials';
+import Courses from '@/Components/Landing/CoursesGalarey';
 import Contact from '@/Components/Landing/Contact';
 
 const containerVariants = {
@@ -24,7 +25,7 @@ const countVariants = {
 };
 
 
-export default function LandingPage({ landingData, fixedNav = true }) {
+export default function LandingPage({ landingData, courses, fixedNav = true }) {
   const section1_video_extension = landingData.section1_video?.split('.').pop().toLowerCase();
   return (
     <div className="landing-page">
@@ -47,6 +48,9 @@ export default function LandingPage({ landingData, fixedNav = true }) {
           <Testimonials landingData={landingData} />
         </div>
       </div>
+      {courses && courses.length > 0 && (
+        <Courses courses={courses} />
+      )}
       <Contact landingData={landingData} />
     </div >
   );
