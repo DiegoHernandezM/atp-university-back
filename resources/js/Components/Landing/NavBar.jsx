@@ -9,7 +9,7 @@ export default function NavBar({ title, fixed }) {
 
   return (
     <nav className={`bg-[#203764] shadow-md ${fixed ? 'fixed' : ''} w-full z-50`}>
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div className="container mx-auto px-0 py-6 flex justify-between items-center">
 
         {/* Logo y Título */}
         <div className="flex items-center space-x-4">
@@ -27,6 +27,7 @@ export default function NavBar({ title, fixed }) {
           <a href="#services" className="text-white hover:text-yellow-500">Servicios</a>
           <a href="#simulators" className="text-white hover:text-yellow-500">Simuladores</a>
           <a href="#testimonials" className="text-white hover:text-yellow-500">Testimonios</a>
+          <a href="#courses" className="text-white hover:text-yellow-500">Cursos</a>
           <a href="#contact" className="text-white hover:text-yellow-500">Contacto</a>
         </div>
 
@@ -60,6 +61,7 @@ export default function NavBar({ title, fixed }) {
             <a href="#services" className="text-gray-700 hover:text-[#203764]">Servicios</a>
             <a href="#gallery" className="text-gray-700 hover:text-[#203764]">Simuladores</a>
             <a href="#testimonials" className="text-gray-700 hover:text-[#203764]">Testimonios</a>
+            <a href="#courses" className="text-gray-700 hover:text-[#203764]">Cursos</a>
             <a href="#contact" className="text-gray-700 hover:text-[#203764]">Contacto</a>
           </div>
 
@@ -67,9 +69,6 @@ export default function NavBar({ title, fixed }) {
           <div className="flex flex-col items-center space-y-4 mt-8">
             <a href="/login" className="w-48 py-2 bg-[#203764] text-white rounded-full text-center">
               Inicia sesión
-            </a>
-            <a href="/register" className="w-48 py-2 bg-yellow-500 text-black rounded-full text-center">
-              Regístrate
             </a>
           </div>
         </div>
