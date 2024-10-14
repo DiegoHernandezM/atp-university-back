@@ -24,6 +24,7 @@
         "@heroicons/react": "^2.1.5",
         "@inertiajs/inertia-react": "^0.8.1",
         "@material-tailwind/react": "^2.1.9",
+        "@paypal/react-paypal-js": "^8.7.0",
         "@pqina/flip": "^1.8.3",
         "framer-motion": "^11.4.0",
         "react-countup": "^6.5.3",

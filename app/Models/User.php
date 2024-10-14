@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'stand_by'
     ];
 
     /**
@@ -53,5 +54,10 @@ class User extends Authenticatable
     public function student()
     {
         return $this->hasOne(Student::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(PayPalUser::class)->orderBy('id', 'desc');
     }
 }
