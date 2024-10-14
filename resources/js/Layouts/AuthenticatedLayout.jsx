@@ -14,7 +14,8 @@ import {
   Bars3Icon,
   IdentificationIcon,
   BookOpenIcon,
-  AcademicCapIcon
+  AcademicCapIcon,
+  WindowIcon
 } from '@heroicons/react/24/solid';
 
 export default function Authenticated({ user, roles, header, children }) {
@@ -87,6 +88,7 @@ export default function Authenticated({ user, roles, header, children }) {
       pages: [
         { icon: <Bars3Icon className="h-5 w-5" />, name: 'Dahsboard', path: route('dashboard.student'), isFunction: false, },
         { icon: <UserCircleIcon className="h-5 w-5" />, name: 'Perfil', path: route('profile.edit'), isFunction: false },
+        { icon: <WindowIcon className="h-5 w-5" />, name: 'Cursos', path: route('courses.list'), isFunction: false },
       ],
     },
     {

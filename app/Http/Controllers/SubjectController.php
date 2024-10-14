@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SubjectRequest;
 use App\Models\Subject;
 use App\Services\SubjectService;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SubjectController extends Controller
@@ -17,10 +16,9 @@ class SubjectController extends Controller
             return Inertia::render('Subjects/Index', [
                 'subjects' => $subjects
             ]);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
-
     }
 
     public function store(SubjectRequest $request, SubjectService $service)
@@ -29,7 +27,7 @@ class SubjectController extends Controller
             $validated = $request->validated();
             $service->createSubject($validated);
             return redirect()->route('subjects.index');
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->route('subjects.index')->withErrors(['error' => 'Hubo un problema al crear la materia. Inténtalo de nuevo.']);
         }
     }
@@ -50,6 +48,18 @@ class SubjectController extends Controller
         try {
             $service->delete($id);
             return redirect()->route('subjects.index');
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function view(Subject $subject)
+    {
+        try {
+            return Inertia::render('Courses/View', [
+                'subject' => $subject,
+                'lessons' => $subject->lessons()->with('resources')->get()
+            ]);
         } catch (\Exception $e) {
             return $e->getMessage();
         }

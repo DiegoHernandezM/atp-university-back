@@ -184,7 +184,7 @@ const CoursesForm = ({ open, onClose, onSuccess, currentCourse }) => {
             </div>
             <div className="mb-4">
               <label htmlFor="gender" className="block text-sm font-medium text-gray-700">
-                Esatdo
+                Estado
               </label>
               <select
                 id="status"
