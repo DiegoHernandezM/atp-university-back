@@ -6,7 +6,13 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 
+
+
 const CoursesGallery = ({ courses }) => {
+  const handleRegister = (course) => {
+    localStorage.setItem('selectedCourse', JSON.stringify(course));
+    window.location.href = `/register`;
+  };
   return (
     <section id="courses" className="courses-section py-20 relative bg-gradient-to-b from-[#EEEEEE] to-[#BDBDBD]">
       <div className="container mx-auto px-4 text-center">
@@ -44,7 +50,12 @@ const CoursesGallery = ({ courses }) => {
                     <Typography variant="h4" color="white" className="mb-4">
                       ${course.price}
                     </Typography>
-                    <Button style={{ backgroundColor: '#203764' }}>Inscribirse</Button>
+                    <Button
+                      style={{ backgroundColor: '#203764' }}
+                      onClick={() => handleRegister(course)}
+                    >
+                      Inscribirse
+                    </Button>
                   </div>
                 </CardBody>
               </Card>

@@ -3,6 +3,7 @@ import { Alert } from "@material-tailwind/react";
 import { useState } from 'react';
 
 export default function PayPalComponent({ course, user, clientId }) {
+    console.log(course);
     const [successMessage, setSuccessMessage] = useState("");
     const style = { "layout": "vertical" };
 

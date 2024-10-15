@@ -25,6 +25,7 @@ class PayPalUserService
     {
 
         $user = $this->mUser->find((int)$request->order['reference_id']);
+        $user->assignRole('student');
         $user->stand_by = false;
         $user->save();
         $createTime = Carbon::parse($request->order['payments']['captures'][0]['create_time'])->format('Y-m-d H:i:s');
@@ -36,7 +37,6 @@ class PayPalUserService
             'status' => $request->order['payments']['captures'][0]['status'],
             'create_time' => $createTime
         ]);
-
         if ($savedUser) {
             $this->mStudent->create([
                 'name' => $user->name,
