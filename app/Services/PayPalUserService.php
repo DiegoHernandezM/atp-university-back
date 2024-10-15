@@ -2,11 +2,14 @@
 
 namespace App\Services;
 
+use App\Mail\WelcomeStudentMail;
 use App\Models\Course;
 use App\Models\PayPalUser;
 use App\Models\Student;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class PayPalUserService
 {
@@ -27,9 +30,13 @@ class PayPalUserService
     public function create($request)
     {
         // Buscar el curso
+        $password = $request->password ?? 'secret1234';
         $course = $this->mCourse->find($request->course['id']);
         $user = $this->mUser->find((int)$request->order['reference_id']);
         $user->assignRole('student');
+        if($user->stand_by === 1) {
+            $user->password = Hash::make($password);
+        }
         $user->stand_by = false;
         $user->save();
         $createTime = Carbon::parse($request->order['payments']['captures'][0]['create_time'])->format('Y-m-d H:i:s');
@@ -52,6 +59,7 @@ class PayPalUserService
             ]);
 
             $student->courses()->attach($course->id);
+            Mail::to($user->email)->send(new WelcomeStudentMail($user, $password));
         }
         return "Estudiante registrado";
     }

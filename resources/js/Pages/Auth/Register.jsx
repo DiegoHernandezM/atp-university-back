@@ -35,6 +35,7 @@ export default function Register() {
   const [errorMessage, setErrorMessage] = useState('')
   const [clientId, setClientId] = useState(null);
   const [user, setUser] = useState([]);
+  const [userPassword, setUserPassword] = useState('');
 
   useEffect(() => {
     fetch('/paypal-client-id')
@@ -59,7 +60,8 @@ export default function Register() {
       onSuccess: (response) => {
         setIsRegistered(true);
         setActiveStep(1);
-        setUser(response.props.user)
+        setUser(response.props.user);
+        setUserPassword(response.props.password);
       },
       onFinish: () => {
         reset('name', 'email', 'password', 'password_confirmation');
@@ -247,7 +249,7 @@ export default function Register() {
           <div className="w-full py-8 px-2 relative">
             <div className="w-full py-8 px-2 relative" style={{ maxWidth: "750px", minHeight: "200px" }}>
               <br />
-              <PayPalComponent course={course} user={user} clientId={clientId} />
+              <PayPalComponent course={course} user={user} clientId={clientId} password={userPassword} />
             </div>
           </div>
         )}
