@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CourseRequest;
+use App\Models\Course;
 use App\Services\CourseService;
 use App\Services\SubjectService;
 use Illuminate\Http\Request;
@@ -19,10 +20,9 @@ class CourseController extends Controller
                 'courses' => $courses,
                 'subjects' => $subjects
             ]);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
-
     }
 
     public function store(CourseRequest $request, CourseService $service)
@@ -31,7 +31,7 @@ class CourseController extends Controller
             $validated = $request->validated();
             $service->createCourse($validated);
             return redirect()->route('courses.index');
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->route('courses.index')->withErrors(['error' => 'Hubo un problema al crear el curso. Inténtalo de nuevo.']);
         }
     }
@@ -62,7 +62,31 @@ class CourseController extends Controller
         try {
             $service->saveCoursesSubject($request->all());
             return redirect()->route('courses.index');
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function list(CourseService $service)
+    {
+        try {
+            $courses = $service->getCourses();
+            return Inertia::render('Courses/List', [
+                'courses' => $courses
+            ]);
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function show(Course $course)
+    {
+        try {
+            return Inertia::render('Courses/Show', [
+                'course' => $course,
+                'subjects' => $course->subjects()->withCount('lessons')->get()
+            ]);
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
     }
