@@ -5,7 +5,8 @@ import { Alert } from '@material-tailwind/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import SubjectCard from '@/Components/Cards/SubjectCard';
 
-export default function List({ auth, course, subjects, ...props }) {
+export default function Show({ auth, course, subjects, ...props }) {
+  console.log(course);
   const success = props?.flash?.success;
 
   return (
