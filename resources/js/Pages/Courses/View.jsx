@@ -13,7 +13,7 @@ export default function View({ auth, subject, lessons, ...props }) {
   const renderContent = () => {
     if (currentLesson.mime_type === 'video/mp4') {
       return (
-        <video controls className="h-3/4 w-full h-96">
+        <video key={currentLesson.url} controls className="h-3/4 w-full h-96">
           <source src={currentLesson.url} type="video/mp4" />
           Tu navegador no es compatible con el componente de video.
         </video>
