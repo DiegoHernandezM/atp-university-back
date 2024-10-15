@@ -1,0 +1,21 @@
+{
+    "name": "Aviation University",
+    "short_name": "ATP U",
+    "description": "Universidad ATP",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#203764",
+    "icons": [
+      {
+        "src": "/images/icon-192x192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "/images/icon-512x512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ]
+  }
