@@ -6,7 +6,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import SubjectCard from '@/Components/Cards/SubjectCard';
 
 export default function Show({ auth, course, subjects, ...props }) {
-  console.log(course);
   const success = props?.flash?.success;
 
   return (
