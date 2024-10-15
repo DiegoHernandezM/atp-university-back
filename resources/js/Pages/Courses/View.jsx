@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { Head } from '@inertiajs/react';
 import { Alert, Button } from '@material-tailwind/react';
@@ -10,13 +10,45 @@ export default function View({ auth, subject, lessons, ...props }) {
   const [currentLesson, setCurrentLesson] = useState(lessons[0]?.resources[0]);
   let lessonCount = 0;
   let resourceCount = 0;
+  const videoRef = useRef(null);
+
+  const handlePlay = () => {
+    videoRef.current.play();
+  };
+
+  const handlePause = () => {
+    videoRef.current.pause();
+  };
+
+  const handleVolumeChange = (event) => {
+    videoRef.current.volume = event.target.value;
+  };
+
   const renderContent = () => {
     if (currentLesson.mime_type === 'video/mp4') {
       return (
-        <video key={currentLesson.url} controls className="h-3/4 w-full h-96">
-          <source src={currentLesson.url} type="video/mp4" />
-          Tu navegador no es compatible con el componente de video.
-        </video>
+        <div className="relative">
+          <video
+            key={currentLesson.url}
+            ref={videoRef}
+            className="h-3/4 w-full h-96"
+          >
+            <source src={currentLesson.url} type="video/mp4" />
+            Tu navegador no es compatible con el componente de video.
+          </video>
+          <div className="flex space-x-4 mt-4 justify-center">
+            <button onClick={handlePlay} className="bg-blue-500 text-white px-4 py-2 rounded">Play</button>
+            <button onClick={handlePause} className="bg-blue-500 text-white px-4 py-2 rounded">Pause</button>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.1"
+              onChange={handleVolumeChange}
+              className="w-32"
+            />
+          </div>
+        </div>
       );
     } else if (currentLesson.mime_type === 'application/pdf') {
       return (
