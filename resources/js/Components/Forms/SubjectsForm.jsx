@@ -6,18 +6,22 @@ import InputError from '@/Components/InputError';
 const SubjectsForm = ({ open, onClose, onSuccess, currentSubject }) => {
   const isEditing = !!currentSubject;
   const { data, setData, post, reset, errors, put } = useForm({
+    id: null,
     title: '',
     description: '',
-    status: ''
+    status: '',
+    cover: null
   });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isEditing) {
       setData({
+        id: currentSubject.id,
         title: currentSubject.title,
         description: currentSubject.description,
-        status: currentSubject.status
+        status: currentSubject.status,
+        cover: null
       });
     } else {
       reset();
@@ -27,11 +31,20 @@ const SubjectsForm = ({ open, onClose, onSuccess, currentSubject }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
+    const formData = new FormData();
+    // Agregar datos al formData
+    formData.append('id', data.id);
+    formData.append('title', data.title);
+    formData.append('status', data.status);
+    formData.append('description', data.description);
 
+    if (data.cover) {
+      formData.append('cover', data.cover);
+    }
     if (isEditing) {
       // Si estamos editando, hacemos un PUT o PATCH
-      put(route('subjects.update', currentSubject.id), {
-        ...data,
+      post(route('subjects.update', currentSubject.id), {
+        data: formData,
         onSuccess: () => {
           setLoading(false);
           onSuccess("Materia actualizada correctamente.");
@@ -44,6 +57,7 @@ const SubjectsForm = ({ open, onClose, onSuccess, currentSubject }) => {
       });
     } else {
       post(route('subjects.store'), {
+        data: formData,
         onSuccess: () => {
           setLoading(false);
           reset();
@@ -117,8 +131,21 @@ const SubjectsForm = ({ open, onClose, onSuccess, currentSubject }) => {
               {errors.description && <InputError message={errors.description} className="mt-2" />}
             </div>
             <div className="mb-4">
+              <label htmlFor="cover" className="block text-sm font-medium text-gray-700 mb-2">
+                Agrega una imagen para portada de la materia (.jpg)
+              </label>
+              <input
+                type="file"
+                id="cover"
+                name="cover"
+                accept=".jpg,.jpeg"
+                onChange={(e) => setData('cover', e.target.files[0])}  // Usamos e.target.files[0] para obtener el archivo
+              />
+              {errors.cover && <InputError message={errors.cover} className="mt-2" />}
+            </div>
+            <div className="mb-4">
               <label htmlFor="gender" className="block text-sm font-medium text-gray-700">
-                Esatdo
+                Estado
               </label>
               <select
                 id="status"

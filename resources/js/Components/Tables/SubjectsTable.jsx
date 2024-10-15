@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Input, Alert, IconButton, Tooltip, Typography, Card, CardBody, CardHeader, CardFooter } from '@material-tailwind/react';
-import { MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon, XCircleIcon, CheckCircleIcon } from '@heroicons/react/24/solid';
+import { MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon, XCircleIcon, CheckCircleIcon, ListBulletIcon } from '@heroicons/react/24/solid';
 
 import SubjectsForm from '../Forms/SubjectsForm.jsx';
 
@@ -109,8 +109,13 @@ const SubjectsTable = ({ subjects }) => {
                           <PencilIcon className="h-4 w-4" />
                         </IconButton>
                       </Tooltip>
+                      <Tooltip content="Lecciones">
+                        <IconButton variant="text" onClick={() => window.location.href = route('lessons.index', subject.id)}>
+                          <ListBulletIcon className="h-4 w-4" />
+                        </IconButton>
+                      </Tooltip>
                       <form method="POST" action={route('subjects.destroy', subject.id)} onSubmit={(e) => {
-                        if (!window.confirm(`¿Estás seguro que deseas eliminar la materia: ${subject.name}?`)) {
+                        if (!window.confirm(`¿Estás seguro que deseas eliminar la materia: ${subject.title}?`)) {
                           e.preventDefault();
                         }
                       }}>

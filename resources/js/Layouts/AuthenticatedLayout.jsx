@@ -13,7 +13,9 @@ import {
   UserGroupIcon,
   Bars3Icon,
   IdentificationIcon,
-  BookOpenIcon
+  BookOpenIcon,
+  AcademicCapIcon,
+  WindowIcon
 } from '@heroicons/react/24/solid';
 
 export default function Authenticated({ user, roles, header, children }) {
@@ -59,6 +61,7 @@ export default function Authenticated({ user, roles, header, children }) {
       pages: [
         { icon: <Bars3Icon className="h-5 w-5" />, name: 'Dahsboard Universidad', path: route('dashboard'), isFunction: false, },
         { icon: <UsersIcon className="h-5 w-5" />, name: 'Estudiantes', path: route('students.index'), isFunction: false },
+        { icon: <AcademicCapIcon className="h-5 w-5" />, name: 'Cursos', path: route('courses.index'), isFunction: false },
         { icon: <BookOpenIcon className="h-5 w-5" />, name: 'Materias', path: route('subjects.index'), isFunction: false },
       ],
     },
@@ -85,6 +88,7 @@ export default function Authenticated({ user, roles, header, children }) {
       pages: [
         { icon: <Bars3Icon className="h-5 w-5" />, name: 'Dahsboard', path: route('dashboard.student'), isFunction: false, },
         { icon: <UserCircleIcon className="h-5 w-5" />, name: 'Perfil', path: route('profile.edit'), isFunction: false },
+        { icon: <WindowIcon className="h-5 w-5" />, name: 'Cursos', path: route('courses.list'), isFunction: false },
       ],
     },
     {

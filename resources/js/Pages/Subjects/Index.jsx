@@ -6,7 +6,7 @@ import { Alert } from '@material-tailwind/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import SubjectsTable from '@/Components/Tables/SubjectsTable';
 
-export default function Students({ auth, subjects, ...props }) {
+export default function Subjects({ auth, subjects, ...props }) {
     const success = props?.flash?.success;
 
     return (

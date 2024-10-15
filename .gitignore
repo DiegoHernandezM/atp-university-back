@@ -5,6 +5,8 @@
 /public/storage
 /storage/*.key
 /storage/.DS_Store
+/resources/js/.DS_Store
+/resources/.DS_Store
 /vendor
 .env
 .env.backup
