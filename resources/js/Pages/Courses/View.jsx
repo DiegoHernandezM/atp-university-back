@@ -13,7 +13,7 @@ export default function View({ auth, subject, lessons, ...props }) {
   const renderContent = () => {
     if (currentLesson.mime_type === 'video/mp4') {
       return (
-        <video controls className="w-full h-96">
+        <video controls className="h-3/4 w-full h-96">
           <source src={currentLesson.url} type="video/mp4" />
           Tu navegador no es compatible con el componente de video.
         </video>
@@ -22,7 +22,7 @@ export default function View({ auth, subject, lessons, ...props }) {
       return (
         <iframe
           src={currentLesson.url}
-          className="w-full h-96"
+          className="h-3/4 w-full h-96"
           title="PDF Viewer"
         ></iframe>
       );
@@ -39,15 +39,15 @@ export default function View({ auth, subject, lessons, ...props }) {
       <div>
         {success && <Alert color="green">{success}</Alert>}
       </div>
-      <div className="container mx-auto px-4 py-8">
+      <div className="mx-auto px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="col-span-2">
-            <div className="bg-white shadow-lg rounded-lg p-4">
+            <div className="h-screen bg-white shadow-lg rounded-lg p-4">
               {renderContent()}
               <h2 className="text-xl font-bold mt-4">{currentLesson.title}</h2>
             </div>
           </div>
-          <div className="bg-white shadow-lg rounded-lg p-4">
+          <div className="h-full bg-white shadow-lg rounded-lg p-4">
             <h3 className="text-lg font-semibold mb-4">Lecciones</h3>
             {lessons.map((lesson) => {
               lessonCount += 1;
