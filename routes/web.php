@@ -32,9 +32,10 @@ Route::middleware('auth')->group(function () {
     require base_path('routes/lessons/lessons.php');
     require base_path('routes/resources/resources.php');
     require base_path('routes/courses/courses.php');
-});
 
+});
 // public
+require base_path('routes/paypal/paypal.php');
 require base_path('routes/public/public.php');
 
 
