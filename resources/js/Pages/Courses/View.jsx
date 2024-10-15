@@ -21,7 +21,7 @@ export default function View({ auth, subject, lessons, ...props }) {
     } else if (currentLesson.mime_type === 'application/pdf') {
       return (
         <iframe
-          src={currentLesson.url}
+          src={`https://docs.google.com/viewer?url=${encodeURIComponent(currentLesson.url)}&embedded=true`}
           className="h-3/4 w-full h-96"
           title="PDF Viewer"
         ></iframe>
