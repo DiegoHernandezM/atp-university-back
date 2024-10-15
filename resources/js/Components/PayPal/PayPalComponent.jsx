@@ -2,8 +2,8 @@ import { PayPalScriptProvider, PayPalButtons, usePayPalScriptReducer } from "@pa
 import { Alert } from "@material-tailwind/react";
 import { useState } from 'react';
 
-export default function PayPalComponent({ course, user, clientId }) {
-    console.log(course);
+export default function PayPalComponent({ course, user, clientId, password }) {
+    console.log(password);
     const [successMessage, setSuccessMessage] = useState("");
     const style = { "layout": "vertical" };
 
@@ -48,7 +48,8 @@ export default function PayPalComponent({ course, user, clientId }) {
                                         ]
                                     }
                                 },
-                                course: course
+                                course: course,
+                                password: password
                             };
 
                             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

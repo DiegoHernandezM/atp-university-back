@@ -44,7 +44,8 @@ class RegisteredUserController extends Controller
         ]);
 
         return Inertia::render('Auth/Register', [
-            'user' => $user
+            'user' => $user,
+            'password' => $request->password
         ]);
     }
 }
