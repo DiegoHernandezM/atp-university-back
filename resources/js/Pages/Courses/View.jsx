@@ -1,8 +1,6 @@
 import React, { useState, useRef } from 'react';
-
 import { Head } from '@inertiajs/react';
 import { Alert, Button } from '@material-tailwind/react';
-
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 export default function View({ auth, subject, lessons, ...props }) {
@@ -24,6 +22,13 @@ export default function View({ auth, subject, lessons, ...props }) {
     videoRef.current.volume = event.target.value;
   };
 
+  const handleResetVideo = () => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play();
+    }
+  };
+
   const renderContent = () => {
     if (currentLesson.mime_type === 'video/mp4') {
       return (
@@ -37,8 +42,24 @@ export default function View({ auth, subject, lessons, ...props }) {
             Tu navegador no es compatible con el componente de video.
           </video>
           <div className="flex space-x-4 mt-4 justify-center">
-            <button onClick={handlePlay} className="bg-blue-500 text-white px-4 py-2 rounded">Play</button>
-            <button onClick={handlePause} className="bg-blue-500 text-white px-4 py-2 rounded">Pause</button>
+            <Button
+              className="mt-2 bg-black text-white font-bold px-4 text-sm py-2 rounded hover:bg-blue-800"
+              onClick={handlePlay}
+            >
+              Play
+            </Button>
+            <Button
+              className="mt-2 bg-black text-white font-bold px-4 text-sm py-2 rounded hover:bg-blue-800"
+              onClick={handlePause}
+            >
+              Pause
+            </Button>
+            <Button
+              className="mt-2 bg-black text-white font-bold px-4 text-sm py-2 rounded hover:bg-blue-800"
+              onClick={handleResetVideo}
+            >
+              Reiniciar
+            </Button>
             <input
               type="range"
               min="0"
