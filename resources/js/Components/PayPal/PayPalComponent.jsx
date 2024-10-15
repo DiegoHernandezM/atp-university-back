@@ -47,7 +47,8 @@ export default function PayPalComponent({ course, user, clientId }) {
                                             }
                                         ]
                                     }
-                                }
+                                },
+                                course: course
                             };
 
                             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

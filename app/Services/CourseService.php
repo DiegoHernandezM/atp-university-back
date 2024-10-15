@@ -96,4 +96,14 @@ class CourseService
         $course->subjects()->sync($data['aSubjects']);
         return true;
     }
+
+    public function getCoursesStudent()
+    {
+        $user = auth()->user();
+        if ($user && $user->student) {
+            $courses = $user->student->courses;
+            return $courses;
+        }
+        return [];
+    }
 }

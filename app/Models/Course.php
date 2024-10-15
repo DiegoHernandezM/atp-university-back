@@ -26,4 +26,9 @@ class Course extends Model
         // Especifica el nombre de la tabla pivote 'course_subjects'
         return $this->belongsToMany(Subject::class, 'course_subjects');
     }
+
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'student_courses');
+    }
 }

@@ -17,7 +17,7 @@ class PayPalUserController
             $service->create($request);
             return response()->json(['success' => true, 'message' => 'Pago procesado exitosamente']);
         } catch(\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Hubo un problema al procesar el pago.'], 500);
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
 

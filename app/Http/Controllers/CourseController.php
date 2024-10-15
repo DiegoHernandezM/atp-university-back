@@ -70,7 +70,7 @@ class CourseController extends Controller
     public function list(CourseService $service)
     {
         try {
-            $courses = $service->getCourses();
+            $courses = $service->getCoursesStudent();
             return Inertia::render('Courses/List', [
                 'courses' => $courses
             ]);
