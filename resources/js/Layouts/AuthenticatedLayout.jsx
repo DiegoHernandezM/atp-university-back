@@ -22,9 +22,7 @@ export default function Authenticated({ user, roles, header, children }) {
   const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
   const handleLogout = async (e) => {
     e.preventDefault(); // Evita el comportamiento por defecto del enlace
-
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Obtener el token CSRF
-
     try {
       const response = await fetch(route('logout'), {
         method: 'POST',
@@ -33,7 +31,6 @@ export default function Authenticated({ user, roles, header, children }) {
           'Content-Type': 'application/json',
         },
       });
-
       if (response.ok) {
         window.location.href = '/'; // Redirigir después de hacer logout
       } else {
