@@ -7,6 +7,7 @@ use App\Models\Lesson;
 use App\Services\ResourceService;
 use Illuminate\Http\Request;
 
+use function Pest\Laravel\json;
 
 class ResourceController extends Controller
 {
@@ -23,6 +24,16 @@ class ResourceController extends Controller
             return redirect()->back();
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function saveprogress(Request $request, ResourceService $service)
+    {
+        try {
+            $service->saveProgress($request);
+            return response()->json(['success' => true, 'message' => 'Progreso guardado.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
 

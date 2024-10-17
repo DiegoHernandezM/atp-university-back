@@ -34,7 +34,7 @@ class PayPalUserService
         $course = $this->mCourse->find($request->course['id']);
         $user = $this->mUser->find((int)$request->order['reference_id']);
         $user->assignRole('student');
-        if($user->stand_by === 1) {
+        if ($user->stand_by === 1) {
             $user->password = Hash::make($password);
         }
         $user->stand_by = false;
@@ -59,6 +59,7 @@ class PayPalUserService
             ]);
 
             $student->courses()->attach($course->id);
+
             Mail::to($user->email)->send(new WelcomeStudentMail($user, $password));
         }
         return "Estudiante registrado";

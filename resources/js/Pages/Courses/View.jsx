@@ -1,14 +1,71 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Head } from '@inertiajs/react';
 import { Alert, Button } from '@material-tailwind/react';
+
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
-export default function View({ auth, subject, lessons, ...props }) {
+export default function View({ auth, subject, lessons, progress, ...props }) {
   const success = props?.flash?.success;
   const [currentLesson, setCurrentLesson] = useState(lessons[0]?.resources[0]);
+
   let lessonCount = 0;
   let resourceCount = 0;
   const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (currentLesson.student_resources[0] && currentLesson.mime_type === 'video/mp4') {
+      videoRef.current.currentTime = currentLesson.student_resources[0].videoProgress ?? 0;
+      console.log(videoRef.current.currentTime);
+    }
+  }, [currentLesson]);
+
+  useEffect(() => {
+    // Guardar el progreso cuando se intenta salir de la página o recargar
+    const handleBeforeUnload = (event) => {
+      handleSaveProgress();
+      event.preventDefault();
+      event.returnValue = ''; // Algunos navegadores requieren esto para mostrar un cuadro de confirmación
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [currentLesson]);
+
+  const handleSaveProgress = () => {
+    if (videoRef.current) {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      const data = { resourceId: currentLesson.id, progress: videoRef.current.currentTime };
+      fetch('/resources/saveprogress', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify(data),
+        credentials: 'same-origin'
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            console.log('Progreso guardado.');
+          } else {
+            console.error('Error:', data);
+          }
+        })
+        .catch(error => {
+          console.error('Error 500:', error);
+        });
+    }
+  };
+
+  const handleResourceChange = (resource) => {
+    handleSaveProgress();
+    setCurrentLesson(resource);
+  };
 
   const handlePlay = () => {
     videoRef.current.play();
@@ -112,7 +169,7 @@ export default function View({ auth, subject, lessons, ...props }) {
                     resourceCount += 1;
                     return (<li key={resource.id}>
                       <Button
-                        onClick={() => setCurrentLesson(resource)}
+                        onClick={() => handleResourceChange(resource)}
                         className={`w-full text-left p-2 mb-2 rounded ${currentLesson.id === resource.id
                           ? 'text-white'
                           : 'bg-gray-200 text-black'

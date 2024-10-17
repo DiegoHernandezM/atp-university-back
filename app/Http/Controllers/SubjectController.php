@@ -53,12 +53,14 @@ class SubjectController extends Controller
         }
     }
 
-    public function view(Subject $subject)
+    public function view(Subject $subject, SubjectService $service)
     {
         try {
+            $service->studentResource($subject);
+            $lessons = $service->getLessons($subject);
             return Inertia::render('Courses/View', [
                 'subject' => $subject,
-                'lessons' => $subject->lessons()->with('resources')->get()
+                'lessons' => $lessons
             ]);
         } catch (\Exception $e) {
             return $e->getMessage();
