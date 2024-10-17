@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
+use App\Mail\ForgotPasswordMail;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -27,25 +31,27 @@ class PasswordResetLinkController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-        ]);
+        try {
+            $validate = Validator::make($request->all(), [
+                'email' => 'required|email|exists:users'
+            ]);
+            if ($validate->fails()) {
+                return back()->with('status', ['message' => 'No existe en nuestros registros este correo. Verifique e intente de nuevo', 'error' => true]);
+            }
+            $user = User::where('email', $request->email)->first();
+            $newPassword = Str::random(10);
+            $user->password = Hash::make($newPassword);
+            $user->save();
 
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+            Auth::logoutOtherDevices($newPassword);
 
-        if ($status == Password::RESET_LINK_SENT) {
-            return back()->with('status', __($status));
+            Mail::to($user->email)->send(new ForgotPasswordMail($user, $newPassword));
+            return back()->with('status', ['message' => 'Se te ha enviado un correo con tus nuevas credenciales', 'error' => false]);
+        } catch (\Exception $e) {
+            return back()->with('status', ['message' => $e->getMessage(), 'error' => true]);
         }
-
-        throw ValidationException::withMessages([
-            'email' => [trans($status)],
-        ]);
     }
+
 }
