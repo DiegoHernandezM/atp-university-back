@@ -132,7 +132,9 @@ class ResourceService
     {
         $student = auth()->user()->student;
         if (!empty($student)) {
-            StudentResource::where(['student_id' => $student->id, 'resource_id' => $data['resourceId']])->update(['videoProgress' => $data['progress']]);
+            $resource = Resource::find($data['resourceId']);
+            $column = $resource->mime_type == 'application/pdf' ? 'pageProgress' : 'videoProgress';
+            StudentResource::where(['student_id' => $student->id, 'resource_id' => $data['resourceId']])->update([$column => $data['progress']]);
         }
     }
 }

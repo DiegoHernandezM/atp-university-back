@@ -1,21 +1,143 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Head } from '@inertiajs/react';
 import { Alert, Button } from '@material-tailwind/react';
-
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import { Viewer, Worker } from '@react-pdf-viewer/core';
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
-export default function View({ auth, subject, lessons, progress, ...props }) {
+export default function View({ auth, subject, lessons, ...props }) {
   const success = props?.flash?.success;
-  const [currentLesson, setCurrentLesson] = useState(lessons[0]?.resources[0]);
+
+  let latestLessonIndex = -1;
+  let latestResourceIndex = -1;
+  let latestUpdatedAt = new Date("1970-01-01T00:00:00.000Z"); // Fecha muy antigua como referencia inicial
+
+  lessons.forEach((lesson, lessonIndex) => {
+    lesson.resources.forEach((resource, resourceIndex) => {
+      resource.student_resources.forEach((studentResource) => {
+        const resourceUpdatedAt = new Date(studentResource.updated_at);
+        if (resourceUpdatedAt > latestUpdatedAt) {
+          latestUpdatedAt = resourceUpdatedAt;
+          latestLessonIndex = lessonIndex;
+          latestResourceIndex = resourceIndex;
+        }
+      });
+    });
+  });
+
+  const [currentLesson, setCurrentLesson] = useState(lessons[latestLessonIndex]?.resources[latestResourceIndex]);
+  const [currentPage, setCurrentPage] = useState(currentLesson?.student_resources[0]?.pageProgress ?? 1);
 
   let lessonCount = 0;
   let resourceCount = 0;
   const videoRef = useRef(null);
+  const viewerRef = useRef(null);
+
+  const renderToolbar = (Toolbar) => (
+    <Toolbar>
+      {(slots) => {
+        const {
+          CurrentPageInput,
+          CurrentScale,
+          GoToNextPage,
+          GoToPreviousPage,
+          NumberOfPages,
+          ZoomIn,
+          ZoomOut,
+        } = slots;
+        return (
+          <div
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+            }}
+          >
+            <div style={{ padding: '0px 2px' }}>
+              <ZoomOut>
+                {(props) => (
+                  <Button
+                    className="mt-2 bg-black text-white font-bold px-4 text-sm py-2 rounded hover:bg-blue-800"
+                    onClick={props.onClick}
+                  >
+                    Zoom out
+                  </Button>
+                )}
+              </ZoomOut>
+            </div>
+            <div style={{ padding: '0px 2px' }}>
+              <CurrentScale>{(props) => <span>{`${Math.round(props.scale * 100)}%`}</span>}</CurrentScale>
+            </div>
+            <div style={{ padding: '0px 2px' }}>
+              <ZoomIn>
+                {(props) => (
+                  <Button
+                    className="mt-2 bg-black text-white font-bold px-4 text-sm py-2 rounded hover:bg-blue-800"
+                    onClick={props.onClick}
+                  >
+                    Zoom in
+                  </Button>
+                )}
+              </ZoomIn>
+            </div>
+            <div style={{ padding: '0px 2px', marginLeft: 'auto' }}>
+              <GoToPreviousPage>
+                {(props) => (
+                  <Button
+                    className="mt-2 bg-black text-white font-bold px-4 text-sm py-2 rounded hover:bg-blue-800"
+                    disabled={props.isDisabled}
+                    onClick={() => {
+                      props.onClick();
+                      setCurrentPage((prevPage) => prevPage - 1);
+                    }}
+                  >
+                    Anterior
+                  </Button>
+                )}
+              </GoToPreviousPage>
+            </div>
+            <div style={{ padding: '0px 2px', width: '4rem' }}>
+              <CurrentPageInput />
+            </div>
+            <div style={{ padding: '0px 2px' }}>
+              / <NumberOfPages />
+            </div>
+            <div style={{ padding: '0px 2px' }}>
+              <GoToNextPage>
+                {(props) => (
+                  <Button
+                    className="mt-2 bg-black text-white font-bold px-4 text-sm py-2 rounded hover:bg-blue-800"
+                    disabled={props.isDisabled}
+                    onClick={() => {
+                      props.onClick();
+                      setCurrentPage((prevPage) => prevPage + 1);
+                    }}
+                  >
+                    Siguiente
+                  </Button>
+                )}
+              </GoToNextPage>
+            </div>
+          </div>
+        );
+      }}
+    </Toolbar>
+  );
+
+  const defaultLayoutPluginInstance = defaultLayoutPlugin({
+    renderToolbar,
+  });
 
   useEffect(() => {
     if (currentLesson.student_resources[0] && currentLesson.mime_type === 'video/mp4') {
       videoRef.current.currentTime = currentLesson.student_resources[0].videoProgress ?? 0;
-      console.log(videoRef.current.currentTime);
+    }
+  }, [currentLesson]);
+
+  useEffect(() => {
+    if (currentLesson.mime_type === 'application/pdf' && viewerRef.current) {
+      viewerRef.current?.jumpToPage(currentLesson.student_resources[0]?.pageProgress ?? 0);
     }
   }, [currentLesson]);
 
@@ -32,12 +154,36 @@ export default function View({ auth, subject, lessons, progress, ...props }) {
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [currentLesson]);
+  }, [currentLesson, currentPage]);
 
   const handleSaveProgress = () => {
     if (videoRef.current) {
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
       const data = { resourceId: currentLesson.id, progress: videoRef.current.currentTime };
+      fetch('/resources/saveprogress', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify(data),
+        credentials: 'same-origin'
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            console.log('Progreso guardado.');
+          } else {
+            console.error('Error:', data);
+          }
+        })
+        .catch(error => {
+          console.error('Error 500:', error);
+        });
+    } else if (currentLesson.mime_type === 'application/pdf') {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      const data = { resourceId: currentLesson.id, progress: currentPage };
       fetch('/resources/saveprogress', {
         method: 'POST',
         headers: {
@@ -65,6 +211,9 @@ export default function View({ auth, subject, lessons, progress, ...props }) {
   const handleResourceChange = (resource) => {
     handleSaveProgress();
     setCurrentLesson(resource);
+    if (resource.mime_type === 'application/pdf') {
+      setCurrentPage(resource.student_resources[0]?.pageProgress ?? 1); // Establecer la página guardada para un recurso PDF
+    }
   };
 
   const handlePlay = () => {
@@ -130,11 +279,17 @@ export default function View({ auth, subject, lessons, progress, ...props }) {
       );
     } else if (currentLesson.mime_type === 'application/pdf') {
       return (
-        <iframe
-          src={`https://docs.google.com/viewer?url=${encodeURIComponent(currentLesson.url)}&embedded=true`}
-          className="h-3/4 w-full h-96"
-          title="PDF Viewer"
-        ></iframe>
+        <div style={{ height: '90vh' }} onContextMenu={(e) => e.preventDefault()}>
+          <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js`}>
+            <Viewer
+              fileUrl={currentLesson.url}
+              plugins={[defaultLayoutPluginInstance]}
+              onPageChange={(e) => setCurrentPage(e.currentPage + 1)}
+              initialPage={parseInt(currentLesson.student_resources[0]?.pageProgress)}
+              ref={viewerRef}
+            />
+          </Worker>
+        </div>
       );
     }
   };
