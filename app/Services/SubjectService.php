@@ -67,7 +67,7 @@ class SubjectService
 
         $resources = $subject->lessons
             ->flatMap(fn($lesson) => $lesson->resources)
-            ->map(fn($resource) => ['student_id' => $student->id, 'resource_id' => $resource->id])
+            ->map(fn($resource) => ['student_id' => $student->id, 'resource_id' => $resource->id, 'updated_at' => new \DateTime])
             ->toArray();
 
         StudentResource::insert($resources);
