@@ -5,7 +5,7 @@ import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
 import { Button, Input, Alert } from "@material-tailwind/react";
 
-export default function Contact() {
+export default function Contact({ landingData, isPrev }) {
   const { data, setData, post, reset, errors } = useForm({
     name: '',
     email: '',
@@ -33,7 +33,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="py-20 bg-gradient-to-b from-[#2196F3] to-[#2196F3] text-white">
+    <section id="contact" className="py-20 bg-gradient-to-b from-[#203764] to-[#203764] text-white">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold mb-6">¿Quieres más información de nuestros servicios?</h2>
         <p className="text-md mb-8">Contáctanos completando el formulario y te responderemos pronto.</p>
@@ -92,33 +92,93 @@ export default function Contact() {
                 {errors.message && <InputError message={errors.message} className="mt-2" />}
               </div>
               <div className="flex items-center gap-4">
-                <Button type="submit" color="blue-gray" fullWidth disabled={loading}>
+                <Button
+                  type="submit"
+                  style={{ backgroundColor: '#203764', color: '#fff' }} // Cambiar el color del fondo y el texto
+                  fullWidth
+                  disabled={loading}
+                >
                   Enviar mensaje
                 </Button>
               </div>
+
             </form>
           </div>
 
-          {/* Información de contacto (4 columnas en dispositivos grandes) */}
-          <div className="col-span-12 md:col-span-4 text-white">
-            <div className="bg-white p-8 rounded-lg shadow-lg text-gray-700">
-              <h3 className="text-xl font-bold mb-4">Información de contacto</h3>
-              <ul className="space-y-4">
-                <li>
-                  <p className="font-medium">Dirección</p>
-                  <p>Aqui va la dirección</p>
-                </li>
-                <li>
-                  <p className="font-medium">Teléfono</p>
-                  <p>+1 123 456 1234</p>
-                </li>
-                <li>
-                  <p className="font-medium">Correo</p>
-                  <p>info@aviationinsigth.net</p>
-                </li>
-              </ul>
+          {/* Si isPrev es true, mostrar datos desde el arreglo landingData */}
+          {isPrev ? (
+            <div className="col-span-12 md:col-span-4 text-white">
+              <div className="bg-white p-8 rounded-lg shadow-lg text-gray-700">
+                <div className="mb-6">
+                  <img src={`/storage/images/logo.png`} alt="Logo" className="mx-auto h-20 w-25" />
+                </div>
+                <h3 className="text-xl font-bold mb-4">Información de contacto</h3>
+                <ul className="space-y-4">
+                  {landingData.map((contact, index) => (
+                    <React.Fragment key={`contact-${index}`}>
+                      <li>
+                        <p className="font-medium">Dirección</p>
+                        <p>{contact.address}</p>
+                      </li>
+                      <li>
+                        <p className="font-medium">Teléfono</p>
+                        <p>{contact.phone}</p>
+                      </li>
+                      <li>
+                        <p className="font-medium">Correo</p>
+                        <p>{contact.email}</p>
+                      </li>
+                    </React.Fragment>
+                  ))}
+                </ul>
+              </div>
             </div>
-          </div>
+          ) : (
+            // Si isPrev es false, usar la lógica con JSON.parse para cargar datos dinámicamente
+            <div className="col-span-12 md:col-span-4 text-white">
+              <div className="bg-white p-8 rounded-lg shadow-lg text-gray-700">
+                <div className="mb-6">
+                  <img src={`/storage/images/logo.png`} alt="Logo" className="mx-auto h-20 w-25" />
+                </div>
+                <h3 className="text-xl font-bold mb-4">Información de contacto</h3>
+                <ul className="space-y-4">
+                  {landingData.section7_contact && JSON.parse(landingData.section7_contact).length > 0 ? (
+                    JSON.parse(landingData.section7_contact).map((contact, index) => (
+                      <React.Fragment key={`parsed-contact-${index}`}>
+                        <li>
+                          <p className="font-medium">Dirección</p>
+                          <p>{contact.address}</p>
+                        </li>
+                        <li>
+                          <p className="font-medium">Teléfono</p>
+                          <p>{contact.phone}</p>
+                        </li>
+                        <li>
+                          <p className="font-medium">Correo</p>
+                          <p>{contact.email}</p>
+                        </li>
+                      </React.Fragment>
+                    ))
+                  ) : (
+                    <>
+                      <li>
+                        <p className="font-medium">Dirección</p>
+                        <p>{landingData.section7_contact?.address || "No disponible"}</p>
+                      </li>
+                      <li>
+                        <p className="font-medium">Teléfono</p>
+                        <p>{landingData.section7_contact?.phone || "Sin telefono"}</p>
+                      </li>
+                      <li>
+                        <p className="font-medium">Correo</p>
+                        <p>{landingData.section7_contact?.email || "info@aviationinsigth.net"}</p>
+                      </li>
+                    </>
+                  )}
+                </ul>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

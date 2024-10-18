@@ -1,9 +1,11 @@
 /.phpunit.cache
 /node_modules
-/public/build
 /public/hot
 /public/storage
 /storage/*.key
+/storage/.DS_Store
+/resources/js/.DS_Store
+/resources/.DS_Store
 /vendor
 .env
 .env.backup
@@ -18,3 +20,4 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+

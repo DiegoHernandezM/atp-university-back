@@ -81,7 +81,7 @@ export default function Login({ status, canResetPassword }) {
 
         <Typography variant="paragraph" className="text-center text-blue-gray-500 font-medium mt-4">
           No estas registrado?
-          <Link to="/auth/sign-up" className="text-gray-900 ml-1">Crear una cuenta</Link>
+          <Link href="/register" className="text-gray-900 ml-1">Crear una cuenta</Link>
         </Typography>
       </form>
 

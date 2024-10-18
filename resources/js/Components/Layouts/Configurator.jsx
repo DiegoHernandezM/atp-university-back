@@ -82,7 +82,7 @@ export function Configurator() {
           <Typography variant="small" color="gray">
             Elige entre uno de los 3 colores disponibles.
           </Typography>
-          <div className="mt-3 flex items-center gap-2">
+          <div className="mt-3 flex gap-2">
             <Button
               variant={sidenavType === "dark" ? "gradient" : "outlined"}
               onClick={() => setSidenavType(dispatch, "dark")}

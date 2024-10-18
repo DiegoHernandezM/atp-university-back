@@ -27,4 +27,5 @@ class LandingPageController extends Controller
             'landingData' => LandingPageContent::first()
         ]);
     }
+
 }

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from '@inertiajs/react';
 import DashboardNavbar from '@/Components/Layouts/DashboardNavbar';
 import DashboardSidebar from '@/Components/Layouts/DasboardSidebar';
+import DashboardSidebarStudent from '@/Components/Layouts/DashboardSidebarStudent';
 import Configurator from '@/Components/Layouts/Configurator';
 import { MaterialTailwindProvider } from '@/context/MaterialTailwindContext';
 import {
@@ -11,16 +12,17 @@ import {
   ArrowLeftEndOnRectangleIcon,
   UserGroupIcon,
   Bars3Icon,
-  IdentificationIcon
+  IdentificationIcon,
+  BookOpenIcon,
+  AcademicCapIcon,
+  WindowIcon
 } from '@heroicons/react/24/solid';
 
-export default function Authenticated({ user, header, children }) {
+export default function Authenticated({ user, roles, header, children }) {
   const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
   const handleLogout = async (e) => {
     e.preventDefault(); // Evita el comportamiento por defecto del enlace
-
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content'); // Obtener el token CSRF
-
     try {
       const response = await fetch(route('logout'), {
         method: 'POST',
@@ -29,7 +31,6 @@ export default function Authenticated({ user, header, children }) {
           'Content-Type': 'application/json',
         },
       });
-
       if (response.ok) {
         window.location.href = '/'; // Redirigir después de hacer logout
       } else {
@@ -46,10 +47,45 @@ export default function Authenticated({ user, header, children }) {
       pages: [
         { icon: <Bars3Icon className="h-5 w-5" />, name: 'Dahsboard', path: route('dashboard'), isFunction: false, },
         { icon: <UserGroupIcon className="h-5 w-5" />, name: 'Administradores', path: route('administrators.get'), isFunction: false },
-        { icon: <UsersIcon className="h-5 w-5" />, name: 'Estudiantes', path: route('students.index'), isFunction: false },
         { icon: <UserCircleIcon className="h-5 w-5" />, name: 'Perfil', path: route('profile.edit'), isFunction: false },
         { icon: <Cog6ToothIcon className="h-5 w-5" />, name: 'Landing', path: route('landing.edit'), isFunction: false },
         { icon: <IdentificationIcon className="h-5 w-5" />, name: 'Contactos', path: route('contacts.get'), isFunction: false },
+      ],
+    },
+    {
+      layout: 'dashboard',
+      title: 'Universidad',
+      pages: [
+        { icon: <Bars3Icon className="h-5 w-5" />, name: 'Dahsboard Universidad', path: route('dashboard'), isFunction: false, },
+        { icon: <UsersIcon className="h-5 w-5" />, name: 'Estudiantes', path: route('students.index'), isFunction: false },
+        { icon: <AcademicCapIcon className="h-5 w-5" />, name: 'Cursos', path: route('courses.index'), isFunction: false },
+        { icon: <BookOpenIcon className="h-5 w-5" />, name: 'Materias', path: route('subjects.index'), isFunction: false },
+      ],
+    },
+    {
+      layout: 'dashboard',
+      title: 'Accesos',
+      pages: [
+        {
+          icon: <ArrowLeftEndOnRectangleIcon className="h-5 w-5" />,
+          name: 'Salir',
+          path: route('logout'),
+          isFunction: true,
+          handleClick: handleLogout
+        },
+      ],
+    },
+    // Puedes agregar más secciones aquí
+  ];
+
+  const routesStudent = [
+    {
+      layout: 'dashboard',
+      title: 'Principal',
+      pages: [
+        { icon: <Bars3Icon className="h-5 w-5" />, name: 'Dahsboard', path: route('dashboard.student'), isFunction: false, },
+        { icon: <UserCircleIcon className="h-5 w-5" />, name: 'Perfil', path: route('profile.edit'), isFunction: false },
+        { icon: <WindowIcon className="h-5 w-5" />, name: 'Cursos', path: route('courses.list'), isFunction: false },
       ],
     },
     {
@@ -72,11 +108,19 @@ export default function Authenticated({ user, header, children }) {
   return (
     <MaterialTailwindProvider> {/* Envuelve todo con el proveedor */}
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex">
-        <DashboardSidebar
-          brandName="ATP UNIVERSITY"
-          routes={routes}
-        />
+        {roles.includes('admin') ? (
+          <DashboardSidebar
+            brandName="ATP UNIVERSITY"
+            routes={routes}
+          />
+        ) : roles.includes('student') ? (
+          <DashboardSidebarStudent
+            brandName="ATP UNIVERSITY"
+            routes={routesStudent}
+          />
+        ) : null}
         <div className="flex-1 flex flex-col lg:ml-80">
+
           <DashboardNavbar />
           <main className="flex-1 p-4">
             {header && (

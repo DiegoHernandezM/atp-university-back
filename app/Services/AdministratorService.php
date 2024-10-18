@@ -20,7 +20,9 @@ class AdministratorService
 
     public function createAdministrator($data)
     {
-        return User::create($data);
+        $user = User::create($data);
+        $user->assignRole('admin');
+        return $user;
     }
 
     public function updateAdministrator(User $user, $data)

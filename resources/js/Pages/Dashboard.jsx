@@ -3,7 +3,7 @@ import { Head } from '@inertiajs/react';
 
 export default function Dashboard({ auth }) {
     return (
-        <AuthenticatedLayout user={auth.user}>
+        <AuthenticatedLayout user={auth.user} roles={auth.roles}>
             <Head title="Dashboard" />
 
             <div className="py-12">
