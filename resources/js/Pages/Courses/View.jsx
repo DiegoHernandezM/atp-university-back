@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { Alert, Button } from '@material-tailwind/react';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
@@ -9,7 +9,6 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 export default function View({ auth, subject, lessons, ...props }) {
   const success = props?.flash?.success;
-
   let latestLessonIndex = -1;
   let latestResourceIndex = -1;
   let latestUpdatedAt = new Date("1970-01-01T00:00:00.000Z"); // Fecha muy antigua como referencia inicial
@@ -18,7 +17,7 @@ export default function View({ auth, subject, lessons, ...props }) {
     lesson.resources.forEach((resource, resourceIndex) => {
       resource.student_resources.forEach((studentResource) => {
         const resourceUpdatedAt = new Date(studentResource.updated_at);
-        if (resourceUpdatedAt > latestUpdatedAt) {
+        if (resourceUpdatedAt >= latestUpdatedAt) {
           latestUpdatedAt = resourceUpdatedAt;
           latestLessonIndex = lessonIndex;
           latestResourceIndex = resourceIndex;
@@ -33,7 +32,6 @@ export default function View({ auth, subject, lessons, ...props }) {
   let lessonCount = 0;
   let resourceCount = 0;
   const videoRef = useRef(null);
-  const viewerRef = useRef(null);
 
   const renderToolbar = (Toolbar) => (
     <Toolbar>
@@ -136,9 +134,6 @@ export default function View({ auth, subject, lessons, ...props }) {
   }, [currentLesson]);
 
   useEffect(() => {
-    if (currentLesson.mime_type === 'application/pdf' && viewerRef.current) {
-      viewerRef.current?.jumpToPage(currentLesson.student_resources[0]?.pageProgress ?? 0);
-    }
   }, [currentLesson]);
 
   useEffect(() => {
@@ -154,6 +149,14 @@ export default function View({ auth, subject, lessons, ...props }) {
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
+  }, [currentLesson, currentPage]);
+
+  useEffect(() => {
+    const handleInertiaNavigate = () => {
+      handleSaveProgress();
+    };
+
+    router.on('navigate', handleInertiaNavigate);
   }, [currentLesson, currentPage]);
 
   const handleSaveProgress = () => {
@@ -209,7 +212,6 @@ export default function View({ auth, subject, lessons, ...props }) {
   };
 
   const handleResourceChange = (resource) => {
-    handleSaveProgress();
     setCurrentLesson(resource);
     if (resource.mime_type === 'application/pdf') {
       setCurrentPage(resource.student_resources[0]?.pageProgress ?? 1); // Establecer la página guardada para un recurso PDF
@@ -285,8 +287,8 @@ export default function View({ auth, subject, lessons, ...props }) {
               fileUrl={currentLesson.url}
               plugins={[defaultLayoutPluginInstance]}
               onPageChange={(e) => setCurrentPage(e.currentPage + 1)}
-              initialPage={parseInt(currentLesson.student_resources[0]?.pageProgress)}
-              ref={viewerRef}
+              initialPage={currentLesson.student_resources[0]?.pageProgress}
+
             />
           </Worker>
         </div>
