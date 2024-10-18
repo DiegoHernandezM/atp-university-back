@@ -5,7 +5,7 @@ import { MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon } from '@heroicons
 import StudentsForm from '../Forms/StudentForm.jsx';
 
 
-const StundentsTable = ({ students }) => {
+const StundentsTable = ({ students, courses }) => {
   const [search, setSearch] = useState('');
   const [filteredStudents, setFilteredStudents] = useState(students);
   const [currentPage, setCurrentPage] = useState(1);
@@ -132,7 +132,7 @@ const StundentsTable = ({ students }) => {
           <Button variant="outlined" size="sm" onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(filteredStudents.length / studentsPerPage)}>Siguiente</Button>
         </CardFooter>
       </Card>
-      <StudentsForm open={openDrawer} onClose={handleCloseDrawer} onSuccess={handleFormSuccess} currentStudent={currentStudent} />
+      <StudentsForm open={openDrawer} onClose={handleCloseDrawer} onSuccess={handleFormSuccess} currentStudent={currentStudent} courses={courses} />
     </>
 
   );

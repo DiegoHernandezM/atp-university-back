@@ -31,6 +31,7 @@ class StudentRequest extends FormRequest
             'zip_code' => 'required|string|max:10',
             'city' => 'required|string|max:255',
             'country' => 'required|string|max:255',
+            'courses' => 'nullable|array'
         ];
         if ($this->isMethod('put')) {
             $rules['email'] = 'nullable|string|email|max:255';

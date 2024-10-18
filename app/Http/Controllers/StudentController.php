@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StudentRequest;
 use App\Models\Student;
+use App\Services\CourseService;
 use App\Services\StudentService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,12 +14,14 @@ class StudentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(StudentService $service)
+    public function index(StudentService $service, CourseService $sCourse)
     {
         try {
             $students = $service->getStudents();
+            $courses = $sCourse->getCourses('landing');
             return Inertia::render('Students/Index', [
-                'students' => $students
+                'students' => $students,
+                'courses' => $courses
             ]);
         } catch(\Exception $e) {
             return $e->getMessage();
