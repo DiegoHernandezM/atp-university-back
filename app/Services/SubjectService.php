@@ -61,7 +61,7 @@ class SubjectService
     public function studentResource($subject)
     {
         $student = auth()->user()->student;
-        if (empty($student) || !empty($student->studentResources)) {
+        if (empty($student) || count($student->studentResources) > 0) {
             return;
         }
 
