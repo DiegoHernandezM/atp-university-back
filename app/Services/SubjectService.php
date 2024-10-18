@@ -61,13 +61,13 @@ class SubjectService
     public function studentResource($subject)
     {
         $student = auth()->user()->student;
-        if (empty($student) || !empty($student->studentResources)) {
+        if (empty($student) || count($student->studentResources) > 0) {
             return;
         }
 
         $resources = $subject->lessons
             ->flatMap(fn($lesson) => $lesson->resources)
-            ->map(fn($resource) => ['student_id' => $student->id, 'resource_id' => $resource->id])
+            ->map(fn($resource) => ['student_id' => $student->id, 'resource_id' => $resource->id, 'updated_at' => new \DateTime])
             ->toArray();
 
         StudentResource::insert($resources);
