@@ -6,7 +6,7 @@ import { Alert } from '@material-tailwind/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import StudentsTable from '@/Components/Tables/StudentsTable';
 
-export default function Students({ auth, students, ...props }) {
+export default function Students({ auth, students, courses, ...props }) {
     const success = props?.flash?.success;
 
     return (
@@ -21,7 +21,7 @@ export default function Students({ auth, students, ...props }) {
             </div>
             <div className="mt-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                    <StudentsTable students={students} />
+                    <StudentsTable students={students} courses={courses} />
                 </div>
             </div >
         </AuthenticatedLayout>
