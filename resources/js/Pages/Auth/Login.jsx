@@ -73,7 +73,7 @@ export default function Login({ status, canResetPassword }) {
         </Button>
         <div className="flex items-center justify-between gap-2 mt-6">
           <Typography variant="small" className="font-medium text-gray-900">
-            <a href="#">
+            <a href="/forgot-password">
               Olvide mí contraseña
             </a>
           </Typography>
@@ -81,7 +81,7 @@ export default function Login({ status, canResetPassword }) {
 
         <Typography variant="paragraph" className="text-center text-blue-gray-500 font-medium mt-4">
           No estas registrado?
-          <Link href="/register" className="text-gray-900 ml-1">Crear una cuenta</Link>
+          <Link href="/#courses" className="text-gray-900 ml-1">Crear una cuenta</Link>
         </Typography>
       </form>
 

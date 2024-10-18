@@ -35,4 +35,14 @@ class Resource extends Model
             Storage::disk('s3')->delete($resource->s3_key);
         });
     }
+
+    public function getStudentResource($studentId)
+    {
+        return $this->studentResources()->where('student_id', $studentId)->first();
+    }
+
+    public function studentResources()
+    {
+        return $this->hasMany(StudentResource::class, 'resource_id');
+    }
 }
