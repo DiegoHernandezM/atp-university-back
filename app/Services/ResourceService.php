@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Resource;
+use App\Models\StudentResource;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -90,8 +91,8 @@ class ResourceService
     {
         // Obtener todos los recursos actuales de la lección
         $existingResources = $this->mResource->where('lesson_id', $lessonId)->get();
-        if(count($newResources) === 0) {
-            foreach($existingResources as $resource) {
+        if (count($newResources) === 0) {
+            foreach ($existingResources as $resource) {
                 $this->deleteResource($resource->id);
             }
         }
@@ -125,5 +126,15 @@ class ResourceService
         Storage::disk('s3')->delete($resource->s3_key);
         // Eliminar el recurso de la base de datos
         $resource->delete();
+    }
+
+    public function saveProgress($data)
+    {
+        $student = auth()->user()->student;
+        if (!empty($student)) {
+            $resource = Resource::find($data['resourceId']);
+            $column = $resource->mime_type == 'application/pdf' ? 'pageProgress' : 'videoProgress';
+            StudentResource::where(['student_id' => $student->id, 'resource_id' => $data['resourceId']])->update([$column => $data['progress']]);
+        }
     }
 }

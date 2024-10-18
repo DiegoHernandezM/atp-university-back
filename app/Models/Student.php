@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Student extends Model
 {
     use HasFactory, SoftDeletes;
@@ -33,5 +34,15 @@ class Student extends Model
     public function courses()
     {
         return $this->belongsToMany(Course::class, 'student_courses');
+    }
+
+    public function resources()
+    {
+        return $this->belongsToMany(Resource::class, 'student_resources');
+    }
+
+    public function studentResources()
+    {
+        return $this->hasMany(StudentResource::class);
     }
 }
