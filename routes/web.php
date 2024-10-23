@@ -17,13 +17,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::get('/dashboard-student', function () {
-    return Inertia::render('DashboardStudent');
-})->middleware(['auth', 'verified'])->name('dashboard.student');
 
 Route::middleware('auth')->group(function () {
     // Routes
@@ -36,6 +29,7 @@ Route::middleware('auth')->group(function () {
     require base_path('routes/lessons/lessons.php');
     require base_path('routes/resources/resources.php');
     require base_path('routes/courses/courses.php');
+    require base_path('routes/dashboards/dashboards.php');
 
 });
 // public

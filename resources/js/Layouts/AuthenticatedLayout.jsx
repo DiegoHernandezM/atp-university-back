@@ -56,7 +56,7 @@ export default function Authenticated({ user, roles, header, children }) {
       layout: 'dashboard',
       title: 'Universidad',
       pages: [
-        { icon: <Bars3Icon className="h-5 w-5" />, name: 'Dahsboard Universidad', path: route('dashboard'), isFunction: false, },
+        { icon: <Bars3Icon className="h-5 w-5" />, name: 'Dahsboard Universidad', path: route('dashboard.university'), isFunction: false, },
         { icon: <UsersIcon className="h-5 w-5" />, name: 'Estudiantes', path: route('students.index'), isFunction: false },
         { icon: <AcademicCapIcon className="h-5 w-5" />, name: 'Cursos', path: route('courses.index'), isFunction: false },
         { icon: <BookOpenIcon className="h-5 w-5" />, name: 'Materias', path: route('subjects.index'), isFunction: false },
