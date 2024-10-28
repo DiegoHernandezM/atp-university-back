@@ -105,10 +105,18 @@ class LandingPageService
         $data = $request->all();
         foreach ($data['section5_simulators'] as $key => $service) {
 
+            // Si el archivo es una imagen
             if (isset($service['image']['file']) && $service['image']['file'] instanceof UploadedFile) {
                 $file = $service['image']['file'];
-                $fileName = $this->saveFile('image', $file, $key, 'image');
+                $fileName = $this->saveFile('images', $file, $key, 'image');
                 $data['section5_simulators'][$key]['image']['url'] = $fileName;
+            }
+
+            // Si el archivo es un video
+            if (isset($service['video']['file']) && $service['video']['file'] instanceof UploadedFile) {
+                $file = $service['video']['file'];
+                $fileName = $this->saveFile('images', $file, $key, 'video');
+                $data['section5_simulators'][$key]['video']['url'] = $fileName;
             }
         }
 
