@@ -39,7 +39,10 @@ class PayPalUserService
         }
         $user->stand_by = false;
         $user->save();
+
         $createTime = Carbon::parse($request->order['payments']['captures'][0]['create_time'])->format('Y-m-d H:i:s');
+        $expiresAt = Carbon::parse($createTime)->addYear()->format('Y-m-d H:i:s');
+
         $savedUser = $this->mPayPal->create([
             'user_id' => (int)$request->order['reference_id'],
             'address' => json_encode($request->order['shipping']['address']),
@@ -58,7 +61,7 @@ class PayPalUserService
                 'user_id' => $user->id,
             ]);
 
-            $student->courses()->attach($course->id);
+            $student->courses()->attach($course->id, ['expires_at' => $expiresAt]);
 
             Mail::to($user->email)->send(new WelcomeStudentMail($user, $password));
         }
