@@ -33,7 +33,7 @@ class Student extends Model
 
     public function courses()
     {
-        return $this->belongsToMany(Course::class, 'student_courses');
+        return $this->belongsToMany(Course::class, 'student_courses')->withPivot('expires_at');
     }
 
     public function resources()

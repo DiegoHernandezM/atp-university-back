@@ -4,11 +4,15 @@ import React from 'react';
 
 export default function CourseCard({ course }) {
 
+  const isExpired = new Date(course.pivot.expires_at) < new Date();
+
   const handleGoToCourse = (course) => {
-    window.location.href = `/courses/${course.id}`;
+    if (!isExpired) {
+      window.location.href = `/courses/${course.id}`;
+    }
   };
   return (
-    <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
+    <div className={`w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4 ${isExpired ? 'opacity-50 pointer-events-none' : ''}`}>
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
         <img src={course.cover} alt={course.title} className="w-full h-36 object-cover" />
         <div className="p-3">
@@ -18,8 +22,9 @@ export default function CourseCard({ course }) {
           <Button
             className="mt-2 bg-black text-white font-bold px-4 text-sm py-2 rounded hover:bg-blue-800"
             onClick={() => handleGoToCourse(course)}
+            disabled={isExpired}
           >
-            IR AL CURSO
+            {isExpired ? 'Curso Expirado' : 'Ir al Curso'}
           </Button>
         </div>
       </div>
