@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
     require base_path('routes/resources/resources.php');
     require base_path('routes/courses/courses.php');
     require base_path('routes/dashboards/dashboards.php');
+    require base_path('routes/quizz/quizz.php');
 
 });
 // public

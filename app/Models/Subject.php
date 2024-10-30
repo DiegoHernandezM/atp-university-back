@@ -10,7 +10,7 @@ class Subject extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['title', 'description', 'status', 'cover'];
+    protected $fillable = ['title', 'description', 'status', 'quizz', 'cover'];
 
     /**
      * Relación uno a muchos con Lesson.

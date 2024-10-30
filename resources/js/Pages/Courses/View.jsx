@@ -1,17 +1,26 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Head, router } from '@inertiajs/react';
-import { Alert, Button } from '@material-tailwind/react';
+import { Alert, Button, Dialog, DialogBody, DialogFooter, IconButton } from '@material-tailwind/react';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import { Viewer, Worker } from '@react-pdf-viewer/core';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import QuizzDialog from '@/Components/Dialogs/QuizzDialog';
 
 export default function View({ auth, subject, lessons, ...props }) {
   const success = props?.flash?.success;
   let latestLessonIndex = -1;
   let latestResourceIndex = -1;
   let latestUpdatedAt = new Date("1970-01-01T00:00:00.000Z"); // Fecha muy antigua como referencia inicial
+  const [isQuizzOpen, setIsQuizzOpen] = useState(false);
+
+  const handleOpenQuizz = () => {
+    setIsQuizzOpen(true);
+  };
+  const handleCloseQuizz = () => {
+    setIsQuizzOpen(false);
+  };
 
   lessons.forEach((lesson, lessonIndex) => {
     lesson.resources.forEach((resource, resourceIndex) => {
@@ -339,6 +348,18 @@ export default function View({ auth, subject, lessons, ...props }) {
                 </ul>
               </div>)
             })}
+            {subject?.quizz && (
+              <>
+                <h3 className="text-lg font-semibold mt-6 mb-4">Cuestionario</h3>
+                <Button
+                  className="w-full text-left p-2 mb-2 rounded text-white hover:bg-blue-700"
+                  onClick={handleOpenQuizz}
+                >
+                  Responder cuestionario
+                </Button>
+                <QuizzDialog open={isQuizzOpen} onClose={handleCloseQuizz} quizz={subject.quizz} subjectId={subject.id}/>
+              </>
+            )}
           </div>
         </div>
       </div>

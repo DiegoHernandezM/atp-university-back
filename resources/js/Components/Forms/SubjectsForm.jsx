@@ -10,7 +10,8 @@ const SubjectsForm = ({ open, onClose, onSuccess, currentSubject }) => {
     title: '',
     description: '',
     status: '',
-    cover: null
+    cover: null,
+    quizz: null,
   });
   const [loading, setLoading] = useState(false);
 
@@ -21,7 +22,8 @@ const SubjectsForm = ({ open, onClose, onSuccess, currentSubject }) => {
         title: currentSubject.title,
         description: currentSubject.description,
         status: currentSubject.status,
-        cover: null
+        cover: null,
+        quizz: null,
       });
     } else {
       reset();
@@ -32,6 +34,7 @@ const SubjectsForm = ({ open, onClose, onSuccess, currentSubject }) => {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData();
+
     // Agregar datos al formData
     formData.append('id', data.id);
     formData.append('title', data.title);
@@ -41,6 +44,11 @@ const SubjectsForm = ({ open, onClose, onSuccess, currentSubject }) => {
     if (data.cover) {
       formData.append('cover', data.cover);
     }
+
+    if (data.quizz) {
+      formData.append('quizz', data.quizz);
+    }
+
     if (isEditing) {
       // Si estamos editando, hacemos un PUT o PATCH
       post(route('subjects.update', currentSubject.id), {
@@ -144,7 +152,20 @@ const SubjectsForm = ({ open, onClose, onSuccess, currentSubject }) => {
               {errors.cover && <InputError message={errors.cover} className="mt-2" />}
             </div>
             <div className="mb-4">
-              <label htmlFor="gender" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="quizz" className="block text-sm font-medium text-gray-700 mb-2">
+                Importa el cuestionario (.xlsx, .xls, .csv)
+              </label>
+              <input
+                type="file"
+                id="quizz"
+                name="quizz"
+                accept=".xlsx,.xls,.csv"
+                onChange={(e) => setData('quizz', e.target.files[0])}  // Usamos e.target.files[0] para obtener el archivo
+              />
+              {errors.quizz && <InputError message={errors.quizz} className="mt-2" />}
+            </div>
+            <div className="mb-4">
+              <label htmlFor="status" className="block text-sm font-medium text-gray-700">
                 Estado
               </label>
               <select
