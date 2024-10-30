@@ -6,6 +6,8 @@ use App\Http\Requests\SubjectRequest;
 use App\Models\Subject;
 use App\Services\SubjectService;
 use Inertia\Inertia;
+use Illuminate\Http\UploadedFile;
+
 
 class SubjectController extends Controller
 {
@@ -25,10 +27,14 @@ class SubjectController extends Controller
     {
         try {
             $validated = $request->validated();
+            if ($request->hasFile('quizz') && $request->file('quizz') instanceof UploadedFile) {
+                $file = $request->file('quizz');
+                $validated['quizz'] = $service->processQuizzFile($file); // Procesar el archivo y obtener el JSON
+            }
             $service->createSubject($validated);
             return redirect()->route('subjects.index');
         } catch (\Exception $e) {
-            return redirect()->route('subjects.index')->withErrors(['error' => 'Hubo un problema al crear la materia. Inténtalo de nuevo.']);
+            return redirect()->route('subjects.index')->withErrors(['error' => 'Hubo un problema al crear la materia. Inténtalo de nuevo. '. $e->getMessage()]);
         }
     }
 

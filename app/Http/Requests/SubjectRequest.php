@@ -26,6 +26,7 @@ class SubjectRequest extends FormRequest
             'description' => 'nullable|string|max:500',
             'status' => 'required|in:active,inactive',
             'cover' => 'nullable|file|mimes:jpeg,jpg|max:20480',  // Solo archivos jpeg y jpg, 20MB máximo
+            'quizz' => 'nullable|file|mimes:xlsx,xls,csv|max:20480', // Archivo Excel opcional con 20MB máximo
         ];
 
         // Verificamos si la solicitud es para actualizar o crear un nuevo registro
