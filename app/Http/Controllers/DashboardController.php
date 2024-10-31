@@ -15,7 +15,7 @@ class DashboardController extends Controller
             return Inertia::render('Dashboard', [
                 'data' => $data
             ]);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
     }
@@ -26,7 +26,7 @@ class DashboardController extends Controller
             return Inertia::render('DashboardStudent', [
                 'data' => $data
             ]);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
     }
@@ -38,7 +38,7 @@ class DashboardController extends Controller
             return Inertia::render('DashboardUniversity', [
                 'data' => $data
             ]);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
     }
@@ -48,7 +48,7 @@ class DashboardController extends Controller
         try {
             $data = $service->getBalance($year);
             return $data;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
     }

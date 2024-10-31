@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardBody, Typography, Button } from "@material-tailwind/react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -7,16 +7,14 @@ import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 
 
-
-const CoursesGallery = ({ courses }) => {
-  const handleRegister = (course) => {
-    localStorage.setItem('selectedCourse', JSON.stringify(course));
-    window.location.href = `/register`;
+const CoursesGallery = ({ courses, handleBuyCourse }) => {
+  const handleBuy = (course) => {
+    handleBuyCourse(course);
   };
   return (
-    <section id="courses" className="courses-section py-20 relative bg-gradient-to-b from-[#EEEEEE] to-[#BDBDBD]">
+    <section id="courses" className="courses-section py-20 relative ">
       <div className="container mx-auto px-4 text-center">
-        <h2 className="text-4xl font-bold mb-12">NUESTROS CURSOS</h2>
+        <h2 className="text-2xl font-bold mb-12">INSCRIBETE A OTRO CURSO</h2>
 
         <Swiper
           spaceBetween={30}
@@ -53,7 +51,7 @@ const CoursesGallery = ({ courses }) => {
                     </Typography>
                     <Button
                       style={{ backgroundColor: '#203764' }}
-                      onClick={() => handleRegister(course)}
+                      onClick={() => handleBuy(course)}
                     >
                       Inscribirse
                     </Button>

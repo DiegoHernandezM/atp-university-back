@@ -3,8 +3,11 @@
 namespace App\Services;
 
 use App\Models\Course;
+use App\Models\Lesson;
 use App\Models\PayPalUser;
+use App\Models\Resource;
 use App\Models\Student;
+use App\Models\Subject;
 use Illuminate\Support\Facades\DB;
 
 
@@ -23,7 +26,28 @@ class DashboardService
 
     public function getLanding() {}
 
-    public function getStudent() {}
+    public function getStudent()
+    {
+        $student = auth()->user()->student;
+        if ($student) {
+            $resources = $student->resources->count();
+            $courses = $student->courses->count();
+            $courseIds = $student->courses->pluck('id')->toArray();
+            $untakenCourses = Course::whereNotIn('id', $courseIds)->get();
+            $subjectIds = Subject::whereHas('courses', function ($q) use ($courseIds) {
+                $q->whereIn('course_id', $courseIds);
+            })->pluck('id')->toArray();
+            $lessonIds = Lesson::whereIn('subject_id', $subjectIds)->pluck('id')->toArray();
+            $allResources = Resource::whereIn('lesson_id', $lessonIds)->count();
+            $progress = $allResources > 0 ? $resources * 100 / $allResources : 0;
+            return [
+                'resources' => $resources,
+                'courses' => $courses,
+                'untakenCourses' => $untakenCourses,
+                'progress' => $progress
+            ];
+        }
+    }
 
     public function getUniveristy()
     {
@@ -66,8 +90,8 @@ class DashboardService
         }
 
         return [
-                'categories' => ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-                'series' => array_values($monthlySales),
+            'categories' => ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            'series' => array_values($monthlySales),
         ];
     }
 }

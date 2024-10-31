@@ -36,9 +36,10 @@ class PayPalUserService
         $user->assignRole('student');
         if ($user->stand_by === 1) {
             $user->password = Hash::make($password);
+            $user->stand_by = false;
+            $user->save();
         }
-        $user->stand_by = false;
-        $user->save();
+
 
         $createTime = Carbon::parse($request->order['payments']['captures'][0]['create_time'])->format('Y-m-d H:i:s');
         $expiresAt = Carbon::parse($createTime)->addYear()->format('Y-m-d H:i:s');
@@ -53,17 +54,20 @@ class PayPalUserService
         ]);
 
         if ($savedUser) {
-            $student = $this->mStudent->create([
-                'name' => $user->name,
-                'address' => $request->order['shipping']['address']['address_line_1'],
-                'zip_code' => $request->order['shipping']['address']['postal_code'],
-                'city' => $request->order['shipping']['address']['admin_area_2'],
-                'user_id' => $user->id,
-            ]);
-
-            $student->courses()->attach($course->id, ['expires_at' => $expiresAt]);
-
-            Mail::to($user->email)->send(new WelcomeStudentMail($user, $password));
+            $studentRegistered = $user->student;
+            if (empty($studentRegistered)) {
+                $student = $this->mStudent->create([
+                    'name' => $user->name,
+                    'address' => $request->order['shipping']['address']['address_line_1'],
+                    'zip_code' => $request->order['shipping']['address']['postal_code'],
+                    'city' => $request->order['shipping']['address']['admin_area_2'],
+                    'user_id' => $user->id,
+                ]);
+                Mail::to($user->email)->send(new WelcomeStudentMail($user, $password));
+                $student->courses()->attach($course->id, ['expires_at' => $expiresAt]);
+            } else {
+                $studentRegistered->courses()->attach($course->id, ['expires_at' => $expiresAt]);
+            }
         }
         return "Estudiante registrado";
     }
