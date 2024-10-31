@@ -13,6 +13,7 @@ class StudentCourse extends Pivot
 
     protected $fillable = [
         'course_id',
-        'student_id'
+        'student_id',
+        'expires_at',
     ];
 }

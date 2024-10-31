@@ -16,7 +16,8 @@ const StudentsForm = ({ open, onClose, onSuccess, currentStudent, courses }) => 
     zip_code: '',
     city: '',
     country: '',
-    courses: []
+    courses: [],
+    expires_at: ''
   });
   const [loading, setLoading] = useState(false);
 
@@ -34,6 +35,10 @@ const StudentsForm = ({ open, onClose, onSuccess, currentStudent, courses }) => 
         city: currentStudent.city,
         country: currentStudent.country,
         courses: currentStudent.courses.map(course => course.id),
+        expires_at: currentStudent?.courses[0]?.pivot?.expires_at
+            ? currentStudent.courses[0].pivot.expires_at.split(" ")[0]
+            : new Date().toISOString().split("T")[0]
+
       });
     } else {
       reset();
@@ -281,6 +286,23 @@ const StudentsForm = ({ open, onClose, onSuccess, currentStudent, courses }) => 
                 onChange={(e) => setData('country', e.target.value)}
               />
               {errors.country && <InputError message={errors.country} className="mt-2" />}
+            </div>
+            <div className="mb-4">
+              <Input
+                  id="expires_at"
+                  name="expires_at"
+                  value={data.expires_at}
+                  type="date"
+                  size="lg"
+                  label="Fecha de Expiración del Curso"
+                  className="!border-t-blue-gray-200 focus:!border-t-gray-900"
+                  labelProps={{
+                    className: "before:content-none after:content-none",
+                  }}
+                  onChange={(e) => setData('expires_at', e.target.value)}
+                  min={new Date().toISOString().split("T")[0]}
+              />
+              {errors.expires_at && <InputError message={errors.expires_at} className="mt-2" />}
             </div>
             <div className="mb-4">
               <h4 className="text-md font-bold mb-2">Cursos</h4>
