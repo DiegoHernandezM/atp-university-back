@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Student;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use App\Mail\WelcomeStudentMail;
@@ -28,6 +29,7 @@ class StudentService
         $emailPartsStudent = explode('@', $data['email']);
         $passwordBaseStudent = $emailPartsStudent[0] . '1234';
         $passwordStudent = Hash::make($passwordBaseStudent);
+        $expiresAt = Carbon::parse($data['expires_at'])->setTime(23, 59, 59)->format('Y-m-d H:i:s');
         $user = User::create([
             'name' => $data['name']. ' ' . $data['f_surname'],
             'email' => $data['email'],
@@ -50,7 +52,7 @@ class StudentService
 
         if(count($data['courses'])) {
             foreach ($data['courses'] as $course) {
-                $student->courses()->attach($course);
+                $student->courses()->attach($course, ['expires_at' => $expiresAt]);
             }
         }
 
@@ -73,8 +75,14 @@ class StudentService
         $student->country = $data['country'];
         $student->save();
 
+        $expiresAt = Carbon::parse($data['expires_at'])->setTime(23, 59, 59)->format('Y-m-d H:i:s');
+        $aDates = [];
         if (isset($data['courses']) && count($data['courses'])) {
             $student->courses()->sync($data['courses']);
+            foreach ($data['courses'] as $courseId) {
+                $aDates[$courseId] = ['expires_at' => $expiresAt];
+            }
+            $student->courses()->sync($aDates);
         }
     }
 
