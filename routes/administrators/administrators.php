@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\AdministratorsController;
+use App\Http\Middleware\RoleMiddleware;
 
-Route::get('/administrators', [AdministratorsController::class, 'get'])->name('administrators.get');
-Route::post('/administrators/store', [AdministratorsController::class, 'store'])->name('administrators.store');
-Route::put('/administrators/update/{user}', [AdministratorsController::class, 'update'])->name('administrators.update');
-Route::delete('administrators/{user}', [AdministratorsController::class, 'destroy'])->name('administrators.destroy');
+Route::middleware(RoleMiddleware::class.':admin')->group(function () {
+    Route::get('/administrators', [AdministratorsController::class, 'get'])->name('administrators.get');
+    Route::post('/administrators/store', [AdministratorsController::class, 'store'])->name('administrators.store');
+    Route::put('/administrators/update/{user}', [AdministratorsController::class, 'update'])->name('administrators.update');
+    Route::delete('administrators/{user}', [AdministratorsController::class, 'destroy'])->name('administrators.destroy');
+});
