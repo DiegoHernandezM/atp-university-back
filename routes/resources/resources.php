@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ResourceController;
+use App\Http\Middleware\RoleMiddleware;
 
 Route::middleware(RoleMiddleware::class.':admin,student')->group(function () {
     Route::post('/resources/store', [ResourceController::class, 'store'])->name('resources.store');
