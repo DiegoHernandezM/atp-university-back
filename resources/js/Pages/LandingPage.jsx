@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import axios from 'axios';
 import NavBar from '@/Components/Landing/NavBar';
 import PrincipalVideo from '@/Components/Landing/PrincipalVideo';
 import Metricts from '@/Components/Landing/Metricts';
@@ -8,6 +9,7 @@ import Simulators from '@/Components/Landing/Simulators';
 import Testimonials from '@/Components/Landing/Testimonials';
 import Courses from '@/Components/Landing/CoursesGalarey';
 import Contact from '@/Components/Landing/Contact';
+
 
 const containerVariants = {
   hidden: { opacity: 1 },
@@ -27,6 +29,17 @@ const countVariants = {
 
 export default function LandingPage({ landingData, courses, fixedNav = true }) {
   const section1_video_extension = landingData.section1_video?.split('.').pop().toLowerCase();
+  useEffect(() => {
+    axios.post('/register-visit', {
+      url: window.location.pathname,
+    })
+    .then((response) => {
+      console.log('Visita registrada con éxito:', response.data);
+    })
+    .catch((error) => {
+      console.error('Error al registrar la visita:', error);
+    });
+  }, []);
   return (
     <div className="landing-page">
       <NavBar title={landingData?.title} fixed={fixedNav} />

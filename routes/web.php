@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
     require base_path('routes/courses/courses.php');
     require base_path('routes/dashboards/dashboards.php');
     require base_path('routes/quizz/quizz.php');
-
+    require base_path('routes/visits/visits.php');
 });
 // public
 require base_path('routes/paypal/paypal.php');

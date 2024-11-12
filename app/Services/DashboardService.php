@@ -2,12 +2,14 @@
 
 namespace App\Services;
 
+use App\Models\ContactForm;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\PayPalUser;
 use App\Models\Resource;
 use App\Models\Student;
 use App\Models\Subject;
+use App\Models\Visit;
 use Illuminate\Support\Facades\DB;
 
 
@@ -16,15 +18,28 @@ class DashboardService
     protected $mCourses;
     protected $mStudent;
     protected $mPaypal;
+    protected $mVisit;
+    protected $mContact;
 
     public function __construct()
     {
         $this->mCourses = new Course();
         $this->mStudent = new Student();
         $this->mPaypal = new PayPalUser();
+        $this->mVisit = new Visit();
+        $this->mContact = new ContactForm();
     }
 
-    public function getLanding() {}
+    public function getLanding()
+    {
+        $visit = $this->mVisit->where('url', '/')->first();
+        $count = $visit ? $visit->count : 0;
+        $contacts = $this->mContact->all();
+        return [
+            'count' => $count,
+            'contacts' => $contacts->count()
+        ];
+    }
 
     public function getStudent()
     {
@@ -92,6 +107,24 @@ class DashboardService
         return [
             'categories' => ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
             'series' => array_values($monthlySales),
+        ];
+    }
+
+    public function getMonthlyVisits($year)
+    {
+        $monthlyVisits = DB::table('visits')
+            ->select(DB::raw('MONTH(created_at) as month'), DB::raw('SUM(count) as total'))
+            ->whereYear('created_at', $year)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->orderBy('month')
+            ->get();
+        $monthlyVisitsData = array_fill(1, 12, 0);
+        foreach ($monthlyVisits as $visit) {
+            $monthlyVisitsData[$visit->month] = (int) $visit->total;
+        }
+        return [
+            'categories' => ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+            'series' => array_values($monthlyVisitsData),
         ];
     }
 }

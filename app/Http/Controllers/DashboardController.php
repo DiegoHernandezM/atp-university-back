@@ -52,4 +52,14 @@ class DashboardController extends Controller
             return $e->getMessage();
         }
     }
+
+    public function getDataVisits($year, DashboardService $service)
+    {
+        try {
+            $data = $service->getMonthlyVisits($year);
+            return $data;
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
 }
