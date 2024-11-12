@@ -8,3 +8,5 @@ Route::get('/dashboard-university', [DashboardController::class, 'getDataUnivers
 
 // Grafica lineal
 Route::get('/dashboard-balance-university/{year}', [DashboardController::class, 'getDataBalance'])->name('dashboard.balance');
+Route::get('/dashboard-visits/{year}', [DashboardController::class, 'getDataVisits'])->name('dashboard.visits');
+
