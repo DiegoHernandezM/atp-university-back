@@ -14,6 +14,46 @@ export default function View({ auth, subject, lessons, ...props }) {
   let latestResourceIndex = -1;
   let latestUpdatedAt = new Date("1970-01-01T00:00:00.000Z"); // Fecha muy antigua como referencia inicial
   const [isQuizzOpen, setIsQuizzOpen] = useState(false);
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+
+
+  // Proteger la impresión y combinaciones de teclas
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey && e.key === 'p') || (e.ctrlKey && e.key === 's')) {
+        e.preventDefault();
+        alert('La acción está deshabilitada en esta página.');
+      }
+    };
+    const handleContextMenu = (e) => e.preventDefault(); // Deshabilitar clic derecho
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('contextmenu', handleContextMenu);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('contextmenu', handleContextMenu);
+    };
+  }, []);
+
+  // Overlay dinámico para prevenir capturas de pantalla
+  useEffect(() => {
+    let timeout;
+    const handleMouseMove = () => {
+      setIsOverlayVisible(false);
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        setIsOverlayVisible(true); // Mostrar overlay después de 5 segundos de inactividad
+      }, 5000);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      clearTimeout(timeout);
+    };
+  }, []);
 
   const handleOpenQuizz = () => {
     setIsQuizzOpen(true);
@@ -315,6 +355,10 @@ export default function View({ auth, subject, lessons, ...props }) {
       <div>
         {success && <Alert color="green">{success}</Alert>}
       </div>
+      {isOverlayVisible && (
+        <div className="absolute top-0 left-0 w-full h-full bg-black opacity-70 z-50 pointer-events-none" >
+        </div>
+      )}
       <div className="mx-auto px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="col-span-2">
@@ -357,7 +401,7 @@ export default function View({ auth, subject, lessons, ...props }) {
                 >
                   Responder cuestionario
                 </Button>
-                <QuizzDialog open={isQuizzOpen} onClose={handleCloseQuizz} quizz={subject.quizz} subjectId={subject.id}/>
+                <QuizzDialog open={isQuizzOpen} onClose={handleCloseQuizz} quizz={subject.quizz} subjectId={subject.id} />
               </>
             )}
           </div>
