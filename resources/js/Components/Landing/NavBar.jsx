@@ -20,7 +20,7 @@ export default function NavBar({ title, fixed }) {
         </div>
 
         {/* Menú en pantallas grandes */}
-        <div className="hidden md:flex space-x-8">
+        <div className="hidden md:flex space-x-10">
           <a href="#video" className="text-white hover:text-yellow-500">Inicio</a>
           <a href="#statistics" className="text-white hover:text-yellow-500">Estadísticas</a>
           <a href="#mission-vision" className="text-white hover:text-yellow-500">Nosotros</a>
@@ -29,6 +29,7 @@ export default function NavBar({ title, fixed }) {
           <a href="#testimonials" className="text-white hover:text-yellow-500">Testimonios</a>
           <a href="#courses" className="text-white hover:text-yellow-500">Cursos</a>
           <a href="#contact" className="text-white hover:text-yellow-500">Contacto</a>
+          <a href="/login" className="text-white hover:text-yellow-500">Inicia sesión</a>
         </div>
 
         {/* Botón menú hamburguesa para pantallas pequeñas */}
