@@ -25,7 +25,7 @@ export default function DashboardStudent({ auth, data }) {
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleViewCourses = () => {
-    window.location.href = route('courses.index');
+    window.location.href = route('courses.list');
   };
 
   useEffect(() => {
