@@ -1,1 +1,0 @@
-import{j as t}from"./app-edJx17xF.js";import{C as a}from"./Contact-CG_11awP.js";import"./InputError-DKsCIfPM.js";import"./InputLabel-BAR0O87b.js";import"./TextInput-DVofMB4k.js";import"./index-CbfDXdoK.js";function c({landingData:o,isPrev:r}){return t.jsx("div",{className:"landing-page",children:t.jsx(a,{landingData:o,isPrev:r})})}export{c as default};
