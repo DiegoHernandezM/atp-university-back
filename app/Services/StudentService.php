@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use App\Mail\WelcomeStudentMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 
 class StudentService
 {
@@ -31,7 +32,7 @@ class StudentService
         $passwordStudent = Hash::make($passwordBaseStudent);
         $expiresAt = Carbon::parse($data['expires_at'])->setTime(23, 59, 59)->format('Y-m-d H:i:s');
         $user = User::create([
-            'name' => $data['name']. ' ' . $data['f_surname'],
+            'name' => $data['name'] . ' ' . $data['f_surname'],
             'email' => $data['email'],
             'password' => $passwordStudent
         ]);
@@ -50,7 +51,7 @@ class StudentService
             'user_id' => $user->id,
         ]);
 
-        if(count($data['courses'])) {
+        if (count($data['courses'])) {
             foreach ($data['courses'] as $course) {
                 $student->courses()->attach($course, ['expires_at' => $expiresAt]);
             }
@@ -90,5 +91,21 @@ class StudentService
     {
         User::where('id', $student['user_id'])->delete();
         return $student->delete();
+    }
+
+    public function closeSession(Student $student)
+    {
+        // Obtener al usuario correspondiente al estudiante
+        $user = User::find($student->user_id);
+        if ($user) {
+            // Limpiar el session_id del usuario
+            $user->session_id = null;
+            $user->save();
+            // Opcional: Invalida la sesión activa del estudiante
+            Session::getHandler()->destroy($user->session_id);
+            return redirect()->back()->with('success', 'Sesión cerrada correctamente.');
+        }
+
+        return redirect()->back()->withErrors(['general' => 'No se pudo cerrar la sesión del estudiante.']);
     }
 }

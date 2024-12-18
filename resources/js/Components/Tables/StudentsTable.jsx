@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Input, Alert, IconButton, Tooltip, Typography, Card, CardBody, CardHeader, CardFooter } from '@material-tailwind/react';
-import { MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
+import { MagnifyingGlassIcon, PencilIcon, PlusIcon, TrashIcon, ComputerDesktopIcon } from '@heroicons/react/24/solid';
 
 import StudentsForm from '../Forms/StudentForm.jsx';
 
@@ -76,56 +76,100 @@ const StundentsTable = ({ students, courses }) => {
             </div>
           </div>
         </CardHeader>
-        <CardBody className="overflow-scroll px-0">
-          <table className="w-full min-w-max table-auto text-left">
-            <thead>
-            <tr>
-              <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">Nombre</th>
-              <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">Email</th>
-              <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">Genero</th>
-              <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">Telefono</th>
-              <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">Direccion</th>
-              <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4">Acciones</th>
-            </tr>
-            </thead>
-            <tbody>
-            {currentStudents.map((student, index) => (
-              <tr key={student.id}>
-                <td className="p-4">
-                  <div className="flex items-center gap-3">
-                    <Typography className="font-bold">{student.name} {student.f_surname} {student.m_surname}</Typography>
-                  </div>
-                </td>
-                <td className="p-4">{student.user.email}</td>
-                  <td className="p-4">{student.gender}</td>
-                  <td className="p-4">{student.phone}</td>
-                  <td className="p-4">{student.address}, {student.zip_code}, {student.city}, {student.country}  </td>
-                <td className="p-4">
-                  <div className="flex items-center space-x-2">
-                    <Tooltip content="Editar">
-                      <IconButton variant="text" onClick={() => handleEditClick(student)}>
-                        <PencilIcon className="h-4 w-4" />
-                      </IconButton>
-                    </Tooltip>
-                    <form method="POST" action={route('students.destroy', student.id)} onSubmit={(e) => {
-                      if (!window.confirm(`¿Estás seguro que deseas eliminar a ${student.name}?`)) {
-                        e.preventDefault();
-                      }
-                    }}>
-                      <input type="hidden" name="_token" value={document.querySelector('meta[name="csrf-token"]').getAttribute('content')} />
-                      <input type="hidden" name="_method" value="DELETE" />
-                      <Tooltip content="Eliminar">
-                        <IconButton type="submit" variant="text" color="red">
-                          <TrashIcon className="h-4 w-4" />
-                        </IconButton>
-                      </Tooltip>
-                    </form>
-                  </div>
-                </td>
-              </tr>
-            ))}
-            </tbody>
-          </table>
+        <CardBody className="p-0">
+          {/* Contenedor principal */}
+          <div className="w-full overflow-hidden">
+            <table className="w-full table-auto text-left">
+              <thead>
+                <tr>
+                  <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-2 text-sm md:p-4">
+                    Nombre
+                  </th>
+                  <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-2 text-sm md:p-4">
+                    Email
+                  </th>
+                  <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-2 text-sm md:p-4">
+                    Género
+                  </th>
+                  <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-2 text-sm md:p-4">
+                    Teléfono
+                  </th>
+                  <th className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-2 text-sm md:p-4">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentStudents.map((student) => (
+                  <tr key={student.id} className="hover:bg-gray-50">
+                    <td className="p-2 text-xs md:p-4 md:text-sm truncate">
+                      {student.name} {student.f_surname} {student.m_surname}
+                    </td>
+                    <td className="p-2 text-xs sm:p-2 md:p-4 md:text-sm truncate">
+                      {student.user.email}
+                    </td>
+                    <td className="p-2 text-xs sm:p-2 md:p-4 md:text-sm truncate">
+                      {student.gender}
+                    </td>
+                    <td className="p-2 text-xs sm:p-2 md:p-4 md:text-sm truncate">
+                      {student.phone}
+                    </td>
+                    <td className="p-2 text-xs sm:p-2 md:p-4 md:text-sm">
+                      <div className="flex items-center space-x-2">
+                        <Tooltip content="Editar">
+                          <IconButton variant="text" onClick={() => handleEditClick(student)}>
+                            <PencilIcon className="h-4 w-4" />
+                          </IconButton>
+                        </Tooltip>
+                        <form
+                          method="POST"
+                          action={route('students.destroy', student.id)}
+                          onSubmit={(e) => {
+                            if (!window.confirm(`¿Estás seguro que deseas eliminar a ${student.name}?`)) {
+                              e.preventDefault();
+                            }
+                          }}
+                        >
+                          <input
+                            type="hidden"
+                            name="_token"
+                            value={document.querySelector('meta[name="csrf-token"]').getAttribute('content')}
+                          />
+                          <input type="hidden" name="_method" value="DELETE" />
+                          <Tooltip content="Eliminar">
+                            <IconButton type="submit" variant="text" color="red">
+                              <TrashIcon className="h-4 w-4" />
+                            </IconButton>
+                          </Tooltip>
+                        </form>
+                        <form
+                          method="POST"
+                          action={route('students.session', student.id)}
+                          onSubmit={(e) => {
+                            if (!window.confirm(`¿Cerrar sesión de: ${student.name}?`)) {
+                              e.preventDefault();
+                            }
+                          }}
+                        >
+                          <input
+                            type="hidden"
+                            name="_token"
+                            value={document.querySelector('meta[name="csrf-token"]').getAttribute('content')}
+                          />
+                          <input type="hidden" name="_method" value="POST" />
+                          <Tooltip content="Cerrar sesión">
+                            <IconButton type="submit" variant="text">
+                              <ComputerDesktopIcon className="h-4 w-4" />
+                            </IconButton>
+                          </Tooltip>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </CardBody>
         <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
           <Button variant="outlined" size="sm" onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>Anterior</Button>
@@ -134,7 +178,6 @@ const StundentsTable = ({ students, courses }) => {
       </Card>
       <StudentsForm open={openDrawer} onClose={handleCloseDrawer} onSuccess={handleFormSuccess} currentStudent={currentStudent} courses={courses} />
     </>
-
   );
 };
 

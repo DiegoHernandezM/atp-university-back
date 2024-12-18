@@ -76,4 +76,14 @@ class StudentController extends Controller
             return $e->getMessage();
         }
     }
+
+    public function closeSessionStudent(Student $student, StudentService $service)
+    {
+        try {
+            $service->closeSession($student);
+            return redirect()->route('students.index');
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
 }
