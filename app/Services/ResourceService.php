@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\Resource;
 use App\Models\StudentResource;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Str;
 
 class ResourceService
 {
@@ -53,7 +53,7 @@ class ResourceService
     public function createResource($lessonId, $resourceData)
     {
         // Llamamos a handleFileUpload para manejar el archivo y obtener los detalles del archivo
-        $fileDetails = $this->handleFileUpload($resourceData['file']);
+        $fileDetails = $this->handleFileUpload($resourceData['file'], $resourceData['type']);
 
         // Crear el recurso en la base de datos con los datos obtenidos
         $this->mResource->create([
@@ -70,22 +70,135 @@ class ResourceService
     /**
      * Manejar la subida de archivos.
      */
-    public function handleFileUpload($file)
+    public function handleFileUpload($file, $type = null)
     {
-        // Subir el archivo a S3 y obtener la ruta
-        $filePath = $file->store('resources', 's3');
-        $url = Storage::disk('s3')->url($filePath);
-        $s3Key = $filePath;
-        $size = $file->getSize();
-        $mimeType = $file->getMimeType();
+        if ($type === 'zip') {
+            $a = $this->handleGeniallyUpload($file);
+            return $a;
+        }
 
+        // Subida normal a S3
+        $path = $file->store('resources', 's3');
         return [
-            'url' => $url,
-            's3_key' => $s3Key,
-            'size' => $size,
-            'mime_type' => $mimeType,
+            'url' => Storage::disk('s3')->url($path),
+            's3_key' => $path,
+            'size' => $file->getSize(),
+            'mime_type' => $file->getMimeType(),
         ];
     }
+
+    public function handleGeniallyUpload($file)
+    {
+        $zip = new \ZipArchive();
+        $uniqueFolder = Str::random(10); // Nombre único para la carpeta
+        $resourceFolder = 'resources/genially/' . $uniqueFolder; // Carpeta en S3 donde se suben los archivos descomprimidos
+
+        // Ruta local para guardar el ZIP temporalmente
+        $zipPath = $file->storeAs('temp', $file->getClientOriginalName());
+        $zipFullPath = storage_path('app/' . $zipPath);
+
+        // Intentamos abrir el archivo ZIP
+        if ($zip->open($zipFullPath) === true) {
+            // Ruta local donde descomprimimos el ZIP
+            $tempExtractPath = storage_path('app/temp/' . Str::random(10)); // Usamos una ruta clara para descomprimir
+            // Aseguramos que la carpeta de extracción exista
+            if (!is_dir($tempExtractPath)) {
+                mkdir($tempExtractPath, 0777, true);
+            }
+            $zip->extractTo($tempExtractPath); // Descomprimir en la ruta temporal
+            $zip->close();
+        } else {
+            throw new \Exception("Error al descomprimir el archivo ZIP.");
+        }
+
+        //Storage::delete($zipPath);
+
+        // Función recursiva para subir archivos y carpetas a S3
+        $this->uploadFilesRecursively($tempExtractPath, $resourceFolder);
+
+        // Buscar el archivo principal 'genially.html'
+        $htmlFile = $this->findHtmlFile($tempExtractPath);
+
+        if (!$htmlFile) {
+            throw new \Exception("Archivo genially.html no encontrado.");
+        }
+
+        // Obtener la URL pública del archivo 'genially.html' en S3
+        $htmlS3Path = Storage::disk('s3')->url($resourceFolder . '/' . basename($htmlFile));
+
+        // Limpiar los archivos temporales locales después de subirlos a S3
+        $this->deleteDirectoryRecursively($tempExtractPath);
+        return [
+            'url' => $htmlS3Path, // URL pública del archivo genially.html
+            's3_key' => $resourceFolder . '/' . basename($htmlFile), // Ruta relativa en S3
+            'size' => filesize($zipFullPath), // Tamaño del archivo ZIP original (opcional)
+            'mime_type' => 'text/html', // MIME tipo del archivo genially.html
+        ];
+    }
+
+    private function deleteDirectoryRecursively($directory)
+    {
+        // Asegurarse de que el directorio exista
+        if (is_dir($directory)) {
+            // Obtener todos los archivos y subdirectorios
+            $files = array_diff(scandir($directory), array('.', '..'));
+
+            // Eliminar todos los archivos y subdirectorios
+            foreach ($files as $file) {
+                $filePath = $directory . DIRECTORY_SEPARATOR . $file;
+                if (is_dir($filePath)) {
+                    // Llamar recursivamente si es un subdirectorio
+                    $this->deleteDirectoryRecursively($filePath);
+                } else {
+                    // Eliminar el archivo
+                    unlink($filePath);
+                }
+            }
+
+            // Finalmente eliminar el directorio
+            rmdir($directory);
+        }
+    }
+
+    private function uploadFilesRecursively($localPath, $s3Folder)
+    {
+        $files = scandir($localPath);
+
+        foreach ($files as $file) {
+            if ($file !== '.' && $file !== '..') {
+                $localFilePath = $localPath . '/' . $file;
+                $s3FilePath = $s3Folder . '/' . $file;
+
+                if (is_dir($localFilePath)) {
+                    // Si es una carpeta, llamamos recursivamente
+                    $this->uploadFilesRecursively($localFilePath, $s3FilePath);
+                } else {
+                    // Si es un archivo, lo subimos a S3
+                    Storage::disk('s3')->put($s3FilePath, file_get_contents($localFilePath));
+                }
+            }
+        }
+    }
+
+    private function findHtmlFile($directory)
+    {
+        $files = scandir($directory);
+        foreach ($files as $file) {
+            if ($file !== '.' && $file !== '..') {
+                $filePath = $directory . '/' . $file;
+                if (is_dir($filePath)) {
+                    $htmlFile = $this->findHtmlFile($filePath);
+                    if ($htmlFile) {
+                        return $htmlFile;
+                    }
+                } elseif (Str::endsWith($file, 'genially.html')) {
+                    return $filePath;
+                }
+            }
+        }
+        return null;
+    }
+
 
     public function syncResources($lessonId, $newResources)
     {
