@@ -37,14 +37,17 @@ export default function View({ auth, subject, lessons, ...props }) {
   }, []);
 
   // Overlay dinámico para prevenir capturas de pantalla
+  /*
   useEffect(() => {
+
     let timeout;
     const handleMouseMove = () => {
       setIsOverlayVisible(false);
       clearTimeout(timeout);
       timeout = setTimeout(() => {
         setIsOverlayVisible(true); // Mostrar overlay después de 5 segundos de inactividad
-      }, 5000);
+      }, 10000);
+
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -54,6 +57,7 @@ export default function View({ auth, subject, lessons, ...props }) {
       clearTimeout(timeout);
     };
   }, []);
+  */
 
   const handleOpenQuizz = () => {
     setIsQuizzOpen(true);
@@ -342,11 +346,19 @@ export default function View({ auth, subject, lessons, ...props }) {
           </Worker>
         </div>
       );
-    } else if (currentLesson.mime_type === 'genially') {
+    } else if (currentLesson.mime_type === 'text/html') {
       return (
         <div style={{ height: '90vh' }} onContextMenu={(e) => e.preventDefault()}>
-          // Todo::aqui hare la insercion de el iframe de genially
-        </div>
+        <iframe
+          src={currentLesson.url} // Usamos el URL de Genially proporcionado
+          frameBorder="0"
+          width="100%"
+          height="100%"
+          title="Presentación Genially"
+        >
+          Tu navegador no soporta iframes.
+        </iframe>
+      </div>
       );
     }
   };
