@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Models\Resource;
 use App\Models\StudentResource;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Str;
 
 class ResourceService
 {
@@ -70,20 +70,55 @@ class ResourceService
     /**
      * Manejar la subida de archivos.
      */
-    public function handleFileUpload($file)
+    public function handleFileUpload($file, $type = null)
     {
-        // Subir el archivo a S3 y obtener la ruta
-        $filePath = $file->store('resources', 's3');
-        $url = Storage::disk('s3')->url($filePath);
-        $s3Key = $filePath;
-        $size = $file->getSize();
-        $mimeType = $file->getMimeType();
+        if ($type === 'genially') {
+            return $this->handleGeniallyUpload($file);
+        }
+
+        // Subida normal a S3
+        $path = $file->store('resources', 's3');
+        return [
+            'url' => Storage::disk('s3')->url($path),
+            's3_key' => $path,
+            'size' => $file->getSize(),
+            'mime_type' => $file->getMimeType(),
+        ];
+    }
+
+    public function handleGeniallyUpload($file)
+    {
+        $zip = new \ZipArchive();
+        $resourceFolder = 'resources/' . Str::random(10); // Genera un nombre de carpeta único
+        $storagePath = storage_path('app/' . $resourceFolder); // Ruta local donde se descomprime el ZIP
+
+        // Crear la carpeta si no existe
+        if (!Storage::exists($resourceFolder)) {
+            Storage::makeDirectory($resourceFolder);
+        }
+
+        // Guardar temporalmente el ZIP
+        $zipPath = $file->storeAs('temp', $file->getClientOriginalName());
+        $zipFullPath = storage_path('app/' . $zipPath);
+
+        if ($zip->open($zipFullPath) === true) {
+            $zip->extractTo($storagePath); // Extrae el ZIP a la carpeta creada
+            $zip->close();
+        }
+
+        // Eliminar el archivo ZIP temporal
+        Storage::delete($zipPath);
+
+        // Buscar el archivo principal genially.html
+        $htmlFile = collect(Storage::allFiles($resourceFolder))->first(function ($path) {
+            return Str::endsWith($path, 'genially.html');
+        });
 
         return [
-            'url' => $url,
-            's3_key' => $s3Key,
-            'size' => $size,
-            'mime_type' => $mimeType,
+            'url' => Storage::url($htmlFile), // URL pública del archivo principal
+            's3_key' => $htmlFile, // Ruta relativa del archivo
+            'size' => $file->getSize(),
+            'mime_type' => 'text/html', // MIME del archivo principal
         ];
     }
 

@@ -26,8 +26,8 @@ class ResourceRequest extends FormRequest
             'resources' => 'nullable|array', // Permite que resources sea un array o nulo
             'resources.*.id' => 'nullable|exists:resources,id', // Si se proporciona, el ID debe existir
             'resources.*.title' => 'required_with:resources|string|max:255', // Solo es requerido si hay resources
-            'resources.*.type' => 'required_with:resources|in:pdf,video', // Solo es requerido si hay resources
-            'resources.*.file' => 'nullable|file|mimes:pdf,mp4|max:20480', // Archivo opcional
+            'resources.*.type' => 'required_with:resources|in:pdf,video,zip', // Agrega 'zip' como tipo permitido
+            'resources.*.file' => 'nullable|file|mimes:pdf,mp4,zip|max:20480',
         ];
     }
 }

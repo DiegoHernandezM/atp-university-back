@@ -176,6 +176,7 @@ export default function ResourcesDialog({ open, onClose, currentLesson, successM
                     <option value="">Seleccione</option>
                     <option value="pdf">PDF</option>
                     <option value="video">Video</option>
+                    <option value="zip">Genially (zip)</option>
                   </select>
                   {errors[`type_${index}`] && (
                     <span className="text-red-500 text-sm">{errors[`type_${index}`]}</span>

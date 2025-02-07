@@ -342,6 +342,12 @@ export default function View({ auth, subject, lessons, ...props }) {
           </Worker>
         </div>
       );
+    } else if (currentLesson.mime_type === 'genially') {
+      return (
+        <div style={{ height: '90vh' }} onContextMenu={(e) => e.preventDefault()}>
+          // Todo::aqui hare la insercion de el iframe de genially
+        </div>
+      );
     }
   };
 
