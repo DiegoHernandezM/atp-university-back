@@ -11,7 +11,7 @@ class LessonService
 
     protected $mLesson;
     protected $mResource;
-    protected$mStudentResource;
+    protected $mStudentResource;
 
     public function __construct()
     {
@@ -42,17 +42,22 @@ class LessonService
     public function delete(Lesson $lesson)
     {
         $resources = $this->mResource->where('lesson_id', $lesson->id)->get();
-        if(count($resources) > 0) {
-            foreach($resources as $resource) {
-                $sResources = $this->mStudentResource->where('resource_id', $resource)->get();
-                if(count($sResources) > 0) {
-                    foreach($sResources as $sResource) {
+
+        if ($resources->isNotEmpty()) {
+            foreach ($resources as $resource) {
+                // Obtener correctamente los registros de student_resources asociados al recurso
+                $sResources = $this->mStudentResource->where('resource_id', $resource->id)->get();
+
+                if ($sResources->isNotEmpty()) {
+                    foreach ($sResources as $sResource) {
                         $sResource->delete();
                     }
                 }
+
                 $resource->delete();
             }
         }
+
         return $lesson->delete();
     }
 }
