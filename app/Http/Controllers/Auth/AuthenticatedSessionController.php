@@ -41,10 +41,6 @@ class AuthenticatedSessionController extends Controller
 
         // Si el usuario tiene el rol de estudiante
         if ($user->hasRole('student')) {
-            if ($user->session_id && Session::getId() !== $user->session_id) {
-                // Enviar error si ya tiene una sesión activa
-                return back()->withErrors(['general' => 'Tu sesión anterior está activa en otro dispositivo.']);
-            }
             // Asignar la nueva sesión activa al usuario
             $user->session_id = Session::getId();
             $user->save();
