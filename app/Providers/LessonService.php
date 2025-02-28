@@ -4,17 +4,20 @@ namespace App\Providers;
 
 use App\Models\Lesson;
 use App\Models\Resource;
+use App\Models\StudentResource;
 
 class LessonService
 {
 
     protected $mLesson;
     protected $mResource;
+    protected$mStudentResource;
 
     public function __construct()
     {
         $this->mLesson = new Lesson();
         $this->mResource = new Resource();
+        $this->mStudentResource = new StudentResource();
     }
 
     public function getLessons($subject)
@@ -41,6 +44,12 @@ class LessonService
         $resources = $this->mResource->where('lesson_id', $lesson->id)->get();
         if(count($resources) > 0) {
             foreach($resources as $resource) {
+                $sResources = $this->mStudentResource->where('resource_id', $resource)->get();
+                if(count($sResources) > 0) {
+                    foreach($sResources as $sResource) {
+                        $sResource->delete();
+                    }
+                }
                 $resource->delete();
             }
         }
