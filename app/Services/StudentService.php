@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use App\Mail\WelcomeStudentMail;
+use App\Models\StudentResource;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 
@@ -89,6 +90,13 @@ class StudentService
 
     public function delete(Student $student)
     {
+
+        $resources = StudentResource::where('student_id', $student->id)->get();
+        if ($resources->isNotEmpty()) {
+            foreach ($resources as $sResource) {
+                $sResource->delete();
+            }
+        }
         User::where('id', $student['user_id'])->delete();
         return $student->delete();
     }
