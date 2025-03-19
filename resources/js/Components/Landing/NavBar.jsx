@@ -20,20 +20,19 @@ export default function NavBar({ title, fixed }) {
         </div>
 
         {/* Menú en pantallas grandes */}
-        <div className="hidden md:flex space-x-10">
+        <div className="hidden tablet:flex space-x-10">
           <a href="#video" className="text-white hover:text-yellow-500">Inicio</a>
           <a href="#statistics" className="text-white hover:text-yellow-500">Estadísticas</a>
           <a href="#mission-vision" className="text-white hover:text-yellow-500">Nosotros</a>
           <a href="#services" className="text-white hover:text-yellow-500">Servicios</a>
           <a href="#simulators" className="text-white hover:text-yellow-500">Simuladores</a>
-          <a href="#testimonials" className="text-white hover:text-yellow-500">Testimonios</a>
           <a href="#courses" className="text-white hover:text-yellow-500">Cursos</a>
           <a href="#contact" className="text-white hover:text-yellow-500">Contacto</a>
           <a href="/login" className="text-white hover:text-yellow-500">Inicia sesión</a>
         </div>
 
         {/* Botón menú hamburguesa para pantallas pequeñas */}
-        <div className="md:hidden">
+        <div className="tablet:hidden">
           <button onClick={toggleMenu} className="text-white focus:outline-none">
             {/* Icono de menú hamburguesa */}
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
