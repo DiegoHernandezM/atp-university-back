@@ -113,13 +113,13 @@ export default function ServicesSection({ landingData: initialLandingData, onSuc
 
   // Función para agregar una nueva sección de servicio
   const addNewServiceSection = () => {
-      setLandingData(prevData => ({
-          ...prevData,
-          section4_services: [
-              ...prevData.section4_services,
-              { title: '', description: '', link: '', phone: '', button_image: null, background_image: null, calendar:[{day: '', month: '', course: '', code: '', remark: ''}] }
-          ]
-      }));
+    setLandingData(prevData => ({
+      ...prevData,
+      section4_services: [
+        ...prevData.section4_services,
+        { title: '', description: '', link: '', phone: '', button_image: null, background_image: null, calendar: [{ day: '', month: '', course: '', code: '', remark: '' }] }
+      ]
+    }));
   };
 
   // Función para eliminar una sección de servicio
@@ -193,13 +193,12 @@ export default function ServicesSection({ landingData: initialLandingData, onSuc
             <Typography variant="h6" color="blue-gray" className="mb-1">
               Descripción
             </Typography>
-            <input
-              type="text"
+            <textarea
               value={count.description ?? ''}
               onChange={(e) => handleServicesChange(index, 'description', e.target.value)}
               className="mt-1 block w-full border-gray-300 rounded-md"
+              rows="4" // You can adjust the number of rows as needed
             />
-
             <Typography variant="h6" color="blue-gray" className="mb-1">
               Link
             </Typography>

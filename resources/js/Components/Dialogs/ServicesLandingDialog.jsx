@@ -33,8 +33,8 @@ export default function ServicesLandingDialog({ open, onClose, selectedService, 
           className="absolute inset-0 bg-cover bg-center opacity-60"
           style={{
             backgroundImage: isPrev
-                ? `url(${selectedService?.background_image?.url})`
-                : `url('/storage/images/${selectedService?.background_image?.url}')`
+              ? `url(${selectedService?.background_image?.url})`
+              : `url('/storage/images/${selectedService?.background_image?.url}')`
           }}>
         </div>
 
@@ -64,12 +64,11 @@ export default function ServicesLandingDialog({ open, onClose, selectedService, 
         </Typography>
 
         {/* Texto adicional */}
-        <Typography
+        <div
           variant="h1"
           className="text-black text-sm sm:text-base lg:text-xl mt-10 mb-20"
-        >
-          {selectedService?.description || ''}
-        </Typography>
+          dangerouslySetInnerHTML={{ __html: selectedService?.description || '' }}
+        />
         {/* Diálogo secundario */}
         <Dialog open={openSecondaryDialog} size="sm" handler={handleOpenSecondaryDialog} className="bg-gradient-to-b from-gray-100 to-white">
           <CoursesLandingTable flights={selectedService?.calendar} />
