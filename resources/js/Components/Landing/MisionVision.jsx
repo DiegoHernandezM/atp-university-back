@@ -3,6 +3,8 @@ import { Carousel, Typography } from '@material-tailwind/react';
 
 export default function MisionVision({ landingData, isPrev }) {
   let file = '';
+  let file2 = '';
+  let file3 = '';
   if (isPrev && landingData?.section3_image && landingData.section3_image.startsWith('blob')) {
     file = landingData.section3_image;
   } else if (isPrev && landingData?.section3_image && !landingData.section3_image.startsWith('blob')) {
@@ -10,6 +12,26 @@ export default function MisionVision({ landingData, isPrev }) {
   } else {
     file = landingData?.section3_image && landingData.section3_image !== ""
         ? `/storage/images/${landingData.section3_image}`
+        : '/storage/logo.png';
+  }
+
+  if (isPrev && landingData?.section3_image_mision && landingData.section3_image_mision.startsWith('blob')) {
+    file2 = landingData.section3_image_mision;
+  } else if (isPrev && landingData?.section3_image_mision && !landingData.section3_image_mision.startsWith('blob')) {
+    file2 = `storage/images/${landingData.section3_image_mision}`;
+  } else {
+    file2 = landingData?.section3_image_mision && landingData.section3_image_mision !== ""
+        ? `/storage/images/${landingData.section3_image_mision}`
+        : '/storage/logo.png';
+  }
+
+  if (isPrev && landingData?.section3_image_vision && landingData.section3_image_vision.startsWith('blob')) {
+    file3 = landingData.section3_image_vision;
+  } else if (isPrev && landingData?.section3_image_vision && !landingData.section3_image_vision.startsWith('blob')) {
+    file3 = `storage/images/${landingData.section3_image_vision}`;
+  } else {
+    file3 = landingData?.section3_image_vision && landingData.section3_image_vision !== ""
+        ? `/storage/images/${landingData.section3_image_vision}`
         : '/storage/logo.png';
   }
 
@@ -56,7 +78,7 @@ export default function MisionVision({ landingData, isPrev }) {
             <div className="relative h-full w-full flex items-center flex-col-reverse md:flex-row">
               <div className="hidden md:block w-1/2 h-full relative ">
                 <img
-                    src={file}
+                    src={file2}
                     alt="image 1"
                     className="h-full w-full object-cover rounded-xl"
                 />
@@ -90,7 +112,7 @@ export default function MisionVision({ landingData, isPrev }) {
               <div className="hidden md:block w-1/2 h-full relative ">
                 {/* Imagen */}
                 <img
-                    src={file}
+                    src={file3}
                     alt="image 2"
                     className="h-full w-full object-cover rounded-xl"
                     style={{ zIndex: 1 }}

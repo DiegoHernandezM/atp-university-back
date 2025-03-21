@@ -54,26 +54,26 @@ class LandingPageService
     public function createAboutSection($request)
     {
         $data = $request->all();
+        $updateData = [
+            'section3_about' => $data['section3_about'],
+            'section3_mission' => $data['section3_mission'],
+            'section3_vision' => $data['section3_vision']
+        ];
 
-        if ($request->hasFile('section3_image')) {
-            $files = $request->file('section3_image');
-            if (is_array($files)) {
-                foreach ($files as $file) {
-                    $this->content->update([
-                        'section3_image' => $this->saveFile('section3_image', $file),
-                        'section3_about' => $data['section3_about'],
-                        'section3_mission' => $data['section3_mission'],
-                        'section3_vision' => $data['section3_vision']
-                    ]);
+        $fileFields = ['section3_image', 'section3_image_mision', 'section3_image_vision'];
+
+        foreach ($fileFields as $field) {
+            if ($request->hasFile($field)) {
+                $files = $request->file($field);
+                if (is_array($files)) {
+                    foreach ($files as $file) {
+                        $updateData[$field] = $this->saveFile($field, $file);
+                    }
                 }
             }
-        } else {
-            $this->content->update([
-                'section3_about' => $data['section3_about'],
-                'section3_mission' => $data['section3_mission'],
-                'section3_vision' => $data['section3_vision']
-            ]);
         }
+
+        $this->content->update($updateData);
         return $this->content;
     }
 

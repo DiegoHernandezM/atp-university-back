@@ -8,13 +8,19 @@ Modal.setAppElement('#app');
 
 export default function AboutSection({ landingData: initialData, onSuccess }) {
     const [selectedFile, setSelectedFile] = useState(null);
+    const [selectedFileMision, setSelectedFileMision] = useState(null);
+    const [selectedFileVision, setSelectedFileVision] = useState(null);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [landingData, setLandingData] = useState({
         section3_image: '',
+        section3_image_mision: '',
+        section3_image_vision: '',
         section3_about: '',
         section3_mission: '',
         section3_vision: '',
         type: '',
+        type_mision: '',
+        type_vision: '',
         section: ''
     });
 
@@ -24,6 +30,8 @@ export default function AboutSection({ landingData: initialData, onSuccess }) {
         setLandingData(prevState => ({
             ...prevState,
             section3_image: initialData?.section3_image || null,
+            section3_image_mision: initialData?.section3_image_mision || null,
+            section3_image_vision: initialData?.section3_image_vision || null,
             section3_about: initialData?.section3_about || '',
             section3_mission: initialData?.section3_mission || '',
             section3_vision: initialData?.section3_vision || '',
@@ -37,6 +45,8 @@ export default function AboutSection({ landingData: initialData, onSuccess }) {
             section3_mission: landingData?.section3_mission || '',
             section3_vision: landingData?.section3_vision || '',
             section3_image: selectedFile || null,
+            section3_image_mision: selectedFileMision || null,
+            section3_image_vision: selectedFileVision || null,
             section: 'about'
         });
     }, [landingData, selectedFile]);
@@ -53,6 +63,38 @@ export default function AboutSection({ landingData: initialData, onSuccess }) {
                 ...prevState,
                 section3_image: fileUrl,
                 type: file.type
+            }));
+        }
+    };
+
+    const handleFileChangeMision = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            if (selectedFileMision?.url) {
+                URL.revokeObjectURL(selectedFileMision.url);
+            }
+            const fileUrl = URL.createObjectURL(file);
+            setSelectedFileMision({ url: fileUrl, file, type_mision: file.type });
+            setLandingData(prevState => ({
+                ...prevState,
+                section3_image_mision: fileUrl,
+                type_mision: file.type
+            }));
+        }
+    };
+
+    const handleFileChangeVision = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            if (selectedFileVision?.url) {
+                URL.revokeObjectURL(selectedFileVision.url);
+            }
+            const fileUrl = URL.createObjectURL(file);
+            setSelectedFileVision({ url: fileUrl, file, type_vision: file.type });
+            setLandingData(prevState => ({
+                ...prevState,
+                section3_image_vision: fileUrl,
+                type_vision: file.type
             }));
         }
     };
@@ -99,6 +141,12 @@ export default function AboutSection({ landingData: initialData, onSuccess }) {
         if (selectedFile) {
             formData.append('section3_image', selectedFile.file); // Asegúrate de usar el archivo real
         }
+        if (selectedFileMision) {
+            formData.append('section3_image_mision', selectedFileMision.file); // Asegúrate de usar el archivo real
+        }
+        if (selectedFileVision) {
+            formData.append('section3_image_vision', selectedFileVision.file); // Asegúrate de usar el archivo real
+        }
 
         post('/landing', {
             data: formData,
@@ -143,45 +191,8 @@ export default function AboutSection({ landingData: initialData, onSuccess }) {
                             className: "before:content-none after:content-none",
                         }}
                     />
-                </div>
-
-                <div className="mt-4">
                     <Typography variant="h6" color="blue-gray" className="mb-1">
-                        Misión
-                    </Typography>
-                    <Input
-                        name="section3_mission"
-                        placeholder="Escribe tu misión"
-                        id="section3_mission"
-                        value={landingData.section3_mission}
-                        onChange={handleChangeMission}
-                        className="!border-t-blue-gray-200 focus:!border-t-gray-900 w-full"
-                        labelProps={{
-                            className: "before:content-none after:content-none",
-                        }}
-                    />
-                </div>
-
-                <div className="mt-4">
-                    <Typography variant="h6" color="blue-gray" className="mb-1">
-                        Visión
-                    </Typography>
-                    <Input
-                        name="section3_vision"
-                        placeholder="Escribe tu visión"
-                        id="section3_vision"
-                        value={landingData.section3_vision}
-                        onChange={handleChangeVision}
-                        className="!border-t-blue-gray-200 focus:!border-t-gray-900 w-full"
-                        labelProps={{
-                            className: "before:content-none after:content-none",
-                        }}
-                    />
-                </div>
-
-                <div className="mt-4">
-                    <Typography variant="h6" color="blue-gray" className="mb-1">
-                        Agregar imagen
+                        Imagen nosotros
                     </Typography>
                     <input
                         type="file"
@@ -191,9 +202,6 @@ export default function AboutSection({ landingData: initialData, onSuccess }) {
                         accept="image/*"
                         onChange={handleFileChange}
                     />
-                </div>
-
-                <div className="flex flex-wrap gap-4 mt-4">
                     <Button
                         size="sm"
                         variant="gradient"
@@ -216,7 +224,108 @@ export default function AboutSection({ landingData: initialData, onSuccess }) {
                         </svg>
                         Seleccionar Archivo
                     </Button>
+                </div>
 
+                <div className="mt-4">
+                    <Typography variant="h6" color="blue-gray" className="mb-1">
+                        Misión
+                    </Typography>
+                    <Input
+                        name="section3_mission"
+                        placeholder="Escribe tu misión"
+                        id="section3_mission"
+                        value={landingData.section3_mission}
+                        onChange={handleChangeMission}
+                        className="!border-t-blue-gray-200 focus:!border-t-gray-900 w-full"
+                        labelProps={{
+                            className: "before:content-none after:content-none",
+                        }}
+                    />
+                    <Typography variant="h6" color="blue-gray" className="mb-1">
+                        Imagen misión
+                    </Typography>
+                    <input
+                        type="file"
+                        name="section3_image_mision"
+                        id="section3_image_mision"
+                        className="hidden"
+                        accept="image/*"
+                        onChange={handleFileChangeMision}
+                    />
+                    <Button
+                        size="sm"
+                        variant="gradient"
+                        className="rounded-full flex items-center gap-3"
+                        onClick={() => document.getElementById('section3_image_mision').click()}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={2}
+                            stroke="currentColor"
+                            className="h-5 w-5"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
+                            />
+                        </svg>
+                        Seleccionar Archivo
+                    </Button>
+                </div>
+
+                <div className="mt-4">
+                    <Typography variant="h6" color="blue-gray" className="mb-1">
+                        Visión
+                    </Typography>
+                    <Input
+                        name="section3_vision"
+                        placeholder="Escribe tu visión"
+                        id="section3_vision"
+                        value={landingData.section3_vision}
+                        onChange={handleChangeVision}
+                        className="!border-t-blue-gray-200 focus:!border-t-gray-900 w-full"
+                        labelProps={{
+                            className: "before:content-none after:content-none",
+                        }}
+                    />
+                    <Typography variant="h6" color="blue-gray" className="mb-1">
+                        Imagen visión
+                    </Typography>
+                    <input
+                        type="file"
+                        name="section3_image_vision"
+                        id="section3_image_vision"
+                        className="hidden"
+                        accept="image/*"
+                        onChange={handleFileChangeVision}
+                    />
+                    <Button
+                        size="sm"
+                        variant="gradient"
+                        className="rounded-full flex items-center gap-3"
+                        onClick={() => document.getElementById('section3_image_vision').click()}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={2}
+                            stroke="currentColor"
+                            className="h-5 w-5"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
+                            />
+                        </svg>
+                        Seleccionar Archivo
+                    </Button>
+                </div>
+                <div className="flex flex-wrap gap-4 mt-4">
                     <Button
                         size="sm"
                         variant="gradient"
