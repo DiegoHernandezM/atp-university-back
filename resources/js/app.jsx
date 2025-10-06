@@ -13,23 +13,7 @@ createInertiaApp({
   resolve: (name) => resolvePageComponent(`./Pages/${name}.jsx`, import.meta.glob('./Pages/**/*.jsx')),
   setup({ el, App, props }) {
     const root = createRoot(el);
-
     root.render(<App {...props} />);
   },
-  progress: {
-    color: '#4B5563',
-  },
+  progress: { color: '#4B5563' },
 });
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then(registration => {
-        console.log('Service Worker registrado con éxito:', registration);
-      })
-      .catch(error => {
-        console.error('Error al registrar el Service Worker:', error);
-      });
-  });
-}
-
