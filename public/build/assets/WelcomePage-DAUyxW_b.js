@@ -1,1 +1,0 @@
-import{j as e}from"./app-v1_Ww59o.js";import{N as s,P as a}from"./PrincipalVideo-CjXHIE4b.js";import"./proxy-DwjyzKqM.js";function p({landingData:i,fixedNav:r=!0,isPrev:t}){return e.jsxs("div",{className:"landing-page",children:[e.jsx(s,{title:i.title,fixed:r}),e.jsx(a,{landingData:i,isPrev:t})]})}export{p as default};
