@@ -16,7 +16,22 @@ export default function Simulators({ landingData, isPrev = false }) {
               {landingData.map((simulator, index) => {
                 return (
                   <div className="relative h-96 w-full" key={`simulator-prev-${index}`}>
-                    <img src={simulator?.image?.url ?? 'https://via.placeholder.com/1280'} alt={simulator.title} className="h-full w-full rounded-lg object-cover" />
+                    {simulator?.video?.url ? (
+                      <video
+                        autoPlay
+                        muted
+                        playsInline
+                        loop
+                        src={simulator.video.url}
+                        className="h-full w-full rounded-lg object-cover"
+                      />
+                    ) : (
+                      <img
+                        src={simulator?.image?.url ?? 'https://via.placeholder.com/1280'}
+                        alt={simulator.title}
+                        className="h-full w-full rounded-lg object-cover"
+                      />
+                    )}
                     <figcaption className="absolute bottom-8 left-2/4 flex w-[calc(100%-4rem)] -translate-x-2/4 justify-between rounded-xl border border-white bg-white/75 py-4 px-6 shadow-lg shadow-black/5 saturate-200 backdrop-blur-sm">
                       <div>
                         <Typography variant="h5" color="blue-gray">

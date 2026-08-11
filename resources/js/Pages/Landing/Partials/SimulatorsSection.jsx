@@ -73,7 +73,13 @@ export default function SimulatorsSection({ landingData: initialLandingData, onS
             setSelectedImage({ url: fileUrl });
 
             const updatedSimulators = [...landingData.section5_simulators];
-            updatedSimulators[index].image = { url: fileUrl, file: file };
+            const isVideo = file.type.startsWith('video/');
+
+            updatedSimulators[index] = {
+                ...updatedSimulators[index],
+                image: isVideo ? null : { url: fileUrl, file },
+                video: isVideo ? { url: fileUrl, file } : null,
+            };
             setLandingData(prevState => ({
                 ...prevState,
                 section5_simulators: updatedSimulators
@@ -160,7 +166,7 @@ export default function SimulatorsSection({ landingData: initialLandingData, onS
                                     name="image"
                                     id={`image_${index}`}
                                     className="hidden"
-                                    accept="image/*"
+                                    accept="image/*,video/*"
                                     onChange={(e) => handleFileChange(e, index)}
                                 />
                                 <Button
